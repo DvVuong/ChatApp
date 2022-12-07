@@ -9,11 +9,11 @@ import Foundation
 import Firebase
 import FirebaseFirestore
 protocol SignInPresenterDelegate: NSObject {
-    
+    func showUserList()
 }
 class SignInPresenter {
     private weak var view: SignInPresenterDelegate?
-     var users = [UserRespone]()
+    private var users: UserRespone?
     private let db = Firestore.firestore()
     init(with view: SignInPresenterDelegate) {
         self.view = view
@@ -28,18 +28,19 @@ class SignInPresenter {
                 for document in querySnapshot.documents {
                     let dictionary = document.data() as [String: Any]
                     let value = UserRespone(dict: dictionary)
-                    self.users.append(value)
+                    self.users = value
                 }
             }
         }
     }
-    func numberOfUser() -> Int {
-        return users.count
-    }
-    func cellForUser(_ index: Int)  -> UserRespone? {
-        if index >= 0 && index < numberOfUser() {
-            return nil
+    func validateEmailPassword(_ email: String, _ password: String, completion: () -> Void, Failure: () -> Void) {
+        guard let  email = users?.email, let password = users?.password else { return }
+        if email == email, password == password {
+            completion()
+        }else {
+            Failure()
         }
-        return users[index]
+        
     }
+    
 }

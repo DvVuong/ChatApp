@@ -12,12 +12,13 @@ class ListUserViewController: UIViewController {
         let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "listUserScreen") as! ListUserViewController
         return vc
     }
-     lazy var presenter = SignInPresenter(with: self)
+     lazy var presenter = ListUserPresenter(with: self)
     @IBOutlet private var userTableView: UITableView!
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .blue
+        
         setupUI()
+        presenter.getUser()
         
     }
     private func setupUI() {
@@ -26,6 +27,7 @@ class ListUserViewController: UIViewController {
     private func setupUITable() {
         userTableView.delegate = self
         userTableView.dataSource = self
+        userTableView.tableFooterView = UIView()
     }
 }
 extension ListUserViewController: UITableViewDelegate, UITableViewDataSource {
@@ -34,13 +36,23 @@ extension ListUserViewController: UITableViewDelegate, UITableViewDataSource {
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell  = userTableView.dequeueReusableCell(withIdentifier: "userCell", for: indexPath) as! ListUserTableViewCell
-        if let index = presenter.cellForUser(indexPath.row) {
+        if let index = presenter.cellForUsers(at: indexPath.row) {
             cell.updateUI(index)
         }
-        
         return cell
     }
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return UITableView.automaticDimension
+    }
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let vc = DetailViewViewController.instance()
+        guard let item = presenter.cellForUsers(at: indexPath.row) else { return}
+        vc.title = item.name
+        navigationController?.pushViewController(vc, animated: true)
+    }
 }
-extension ListUserViewController: SignInPresenterDelegate {
-   
+extension ListUserViewController: ListUserPresenterDelegate {
+    func showUsersList() {
+        self.userTableView.reloadData()
+    }
 }

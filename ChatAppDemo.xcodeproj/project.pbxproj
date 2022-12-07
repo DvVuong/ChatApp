@@ -18,8 +18,10 @@
 		9D155BAE2940538F003C802E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9D155BAD2940538F003C802E /* Assets.xcassets */; };
 		9D155BB12940538F003C802E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9D155BAF2940538F003C802E /* LaunchScreen.storyboard */; };
 		9D155BBB29407093003C802E /* SignUpViewcontroller.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D155BBA29407093003C802E /* SignUpViewcontroller.swift */; };
-		9D155BBD2940757D003C802E /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9D155BBC2940757D003C802E /* GoogleService-Info.plist */; };
 		9D155BBF294082CF003C802E /* SignInPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D155BBE294082CF003C802E /* SignInPresenter.swift */; };
+		E20577142940EE0900654B8A /* ListUserPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E20577132940EE0900654B8A /* ListUserPresenter.swift */; };
+		E240D4932941064F0090066D /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = E240D4922941064F0090066D /* GoogleService-Info.plist */; };
+		E240D495294126CF0090066D /* DetailViewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E240D494294126CE0090066D /* DetailViewViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -38,8 +40,10 @@
 		9D155BB02940538F003C802E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		9D155BB22940538F003C802E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9D155BBA29407093003C802E /* SignUpViewcontroller.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpViewcontroller.swift; sourceTree = "<group>"; };
-		9D155BBC2940757D003C802E /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		9D155BBE294082CF003C802E /* SignInPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInPresenter.swift; sourceTree = "<group>"; };
+		E20577132940EE0900654B8A /* ListUserPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListUserPresenter.swift; sourceTree = "<group>"; };
+		E240D4922941064F0090066D /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		E240D494294126CE0090066D /* DetailViewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -97,14 +101,16 @@
 				9D155BA62940538D003C802E /* SceneDelegate.swift */,
 				9D155BBE294082CF003C802E /* SignInPresenter.swift */,
 				9D0BE35329409A8300AFC3F7 /* ListUserViewController.swift */,
+				E20577132940EE0900654B8A /* ListUserPresenter.swift */,
 				9D155BA82940538D003C802E /* ViewController.swift */,
 				9D155BAA2940538D003C802E /* Main.storyboard */,
+				E240D494294126CE0090066D /* DetailViewViewController.swift */,
 				9D155BBA29407093003C802E /* SignUpViewcontroller.swift */,
 				9D155BAD2940538F003C802E /* Assets.xcassets */,
 				9D155BAF2940538F003C802E /* LaunchScreen.storyboard */,
 				9D155BB22940538F003C802E /* Info.plist */,
-				9D155BBC2940757D003C802E /* GoogleService-Info.plist */,
 				9D0BE3512940912200AFC3F7 /* User.swift */,
+				E240D4922941064F0090066D /* GoogleService-Info.plist */,
 			);
 			path = ChatAppDemo;
 			sourceTree = "<group>";
@@ -170,7 +176,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9D155BB12940538F003C802E /* LaunchScreen.storyboard in Resources */,
-				9D155BBD2940757D003C802E /* GoogleService-Info.plist in Resources */,
+				E240D4932941064F0090066D /* GoogleService-Info.plist in Resources */,
 				9D155BAE2940538F003C802E /* Assets.xcassets in Resources */,
 				9D155BAC2940538D003C802E /* Main.storyboard in Resources */,
 			);
@@ -228,10 +234,12 @@
 				9D155BA92940538D003C802E /* ViewController.swift in Sources */,
 				9D0BE35429409A8300AFC3F7 /* ListUserViewController.swift in Sources */,
 				9D155BA52940538D003C802E /* AppDelegate.swift in Sources */,
+				E20577142940EE0900654B8A /* ListUserPresenter.swift in Sources */,
 				9D0BE3522940912200AFC3F7 /* User.swift in Sources */,
 				9D0BE3562940A1FA00AFC3F7 /* ListUserTableViewCell.swift in Sources */,
 				9D155BBB29407093003C802E /* SignUpViewcontroller.swift in Sources */,
 				9D155BA72940538D003C802E /* SceneDelegate.swift in Sources */,
+				E240D495294126CF0090066D /* DetailViewViewController.swift in Sources */,
 				9D155BBF294082CF003C802E /* SignInPresenter.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -380,6 +388,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = P4XWF3FX86;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ChatAppDemo/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -409,6 +418,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = P4XWF3FX86;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ChatAppDemo/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;

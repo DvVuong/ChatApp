@@ -8,7 +8,7 @@
 import UIKit
 
 class ListUserTableViewCell: UITableViewCell {
-    @IBOutlet private weak var lbNameUser: UILabel!
+    @IBOutlet  weak var lbNameUser: UILabel!
 
     override func awakeFromNib() {
         super.awakeFromNib()

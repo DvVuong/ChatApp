@@ -24,6 +24,9 @@ class ViewController: UIViewController {
         setupUI()
         presenter.ftechUser()
     }
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        view.endEditing(true)
+    }
     private func setupUI() {
         setupLable()
         setupView()
@@ -44,23 +47,24 @@ class ViewController: UIViewController {
         // Email
         tfEmail.attributedPlaceholder = NSAttributedString(string: "Enter Your Email", attributes: [.foregroundColor: UIColor.blue])
         // Passwork
-        tfPasswork.attributedPlaceholder = NSAttributedString(string: "Enter Your Passwork", attributes: [.foregroundColor: UIColor.brown])
+        tfPasswork.attributedPlaceholder = NSAttributedString(string: "Enter Your Password", attributes: [.foregroundColor: UIColor.brown])
     }
     private func setupBtSigin() {
         btSigin.layer.cornerRadius = 8
         btSigin.addTarget(self, action: #selector(didTapSigin(_:)), for: .touchUpInside)
     }
     @objc func didTapSigin(_ sender: UIButton) {
-        for item in presenter.users {
-            if tfEmail.text == item.email, tfPasswork.text == item.password {
-                let vc = ListUserViewController.instance()
-                
-                navigationController?.pushViewController(vc, animated: true)
-            }
-            else {
-                print("vuongdv","tai khoan khong ton tai")
-            }
+        presenter.validateEmailPassword(tfEmail.text!, tfPasswork.text!) {
+            let vc = ListUserViewController.instance()
+            navigationController?.pushViewController(vc, animated: true)
+        } Failure: {
+            print("vuongdv", "Sai ten hoac mat khau")
         }
+
+//        presenter.validateEmailPassword(tfEmail.text!, tfPasswork.text!) {
+//            let vc = ListUserViewController.instance()
+//            navigationController?.pushViewController(vc, animated: true)
+//        }
     }
     private func setupBtSignUp() {
         btSignUp.addTarget(self, action: #selector(didTapSigup(_:)), for: .touchUpInside)
@@ -73,5 +77,7 @@ class ViewController: UIViewController {
 
 }
 extension ViewController: SignInPresenterDelegate {
-    
+    func showUserList() {
+        print("Something")
+    }
 }
