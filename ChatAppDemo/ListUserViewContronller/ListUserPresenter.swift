@@ -13,7 +13,9 @@ protocol ListUserPresenterDelegate: NSObject {
 class ListUserPresenter {
     private weak var view: ListUserPresenterDelegate?
     private var db = Firestore.firestore()
-     var users = [UserRespone]()
+    var users = [UserRespone]()
+    private var finalUser = [UserRespone]()
+    var currentUser: UserRespone?
     init(with view: ListUserPresenterDelegate) {
         self.view = view
     }
@@ -28,11 +30,20 @@ class ListUserPresenter {
                 for document in querySnapshot.documents {
                     let dictionary = document.data()
                     let value = UserRespone(dict: dictionary)
-                   self.users.append(value)
-                    self.view?.showUsersList()
-                    print("vuongdv1", self.users)
+                    if self.currentUser?.id != value.id {
+                        self.users.append(value)
+                        self.view?.showUsersList()
+                    }
                 }
             }
+        }
+    }
+    func searchUser(_ text: String) {
+        self.finalUser = self.users
+        if text.isEmpty {
+            self.finalUser = self.users
+        } else {
+            self.finalUser = self.users.map({$0.name.})
         }
     }
     func numberOfUser() -> Int {

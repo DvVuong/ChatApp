@@ -1,15 +1,14 @@
 //
-//  ListUserTableViewCell.swift
+//  ReceiverUserCell.swift
 //  ChatAppDemo
 //
-//  Created by BeeTech on 07/12/2022.
+//  Created by BeeTech on 08/12/2022.
 //
 
 import UIKit
 
-class ListUserTableViewCell: UITableViewCell {
-    @IBOutlet  weak var lbNameUser: UILabel!
-
+class ReceiverUserCell: UITableViewCell {
+    @IBOutlet weak var lbMessage: UILabel!
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
@@ -19,10 +18,6 @@ class ListUserTableViewCell: UITableViewCell {
         super.setSelected(selected, animated: animated)
 
         // Configure the view for the selected state
-    }
-    func updateUI(_ user: UserRespone) {
-        self.lbNameUser.text = user.name
-         
     }
 
 }

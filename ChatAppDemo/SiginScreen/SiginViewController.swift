@@ -7,7 +7,7 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class SiginViewController: UIViewController {
     @IBOutlet private weak var lbTitle: UILabel!
     @IBOutlet private weak var tfEmail: UITextField!
     @IBOutlet private weak var tfPasswork: UITextField!
@@ -48,23 +48,20 @@ class ViewController: UIViewController {
         tfEmail.attributedPlaceholder = NSAttributedString(string: "Enter Your Email", attributes: [.foregroundColor: UIColor.blue])
         // Passwork
         tfPasswork.attributedPlaceholder = NSAttributedString(string: "Enter Your Password", attributes: [.foregroundColor: UIColor.brown])
+        tfPasswork.isSecureTextEntry = true
     }
     private func setupBtSigin() {
         btSigin.layer.cornerRadius = 8
         btSigin.addTarget(self, action: #selector(didTapSigin(_:)), for: .touchUpInside)
     }
     @objc func didTapSigin(_ sender: UIButton) {
-        presenter.validateEmailPassword(tfEmail.text!, tfPasswork.text!) {
+        presenter.validateEmailPassword(tfEmail.text!, tfPasswork.text!) { currentUser in
             let vc = ListUserViewController.instance()
+            vc.currentUser = currentUser
             navigationController?.pushViewController(vc, animated: true)
         } Failure: {
             print("vuongdv", "Sai ten hoac mat khau")
         }
-
-//        presenter.validateEmailPassword(tfEmail.text!, tfPasswork.text!) {
-//            let vc = ListUserViewController.instance()
-//            navigationController?.pushViewController(vc, animated: true)
-//        }
     }
     private func setupBtSignUp() {
         btSignUp.addTarget(self, action: #selector(didTapSigup(_:)), for: .touchUpInside)
@@ -76,7 +73,7 @@ class ViewController: UIViewController {
 
 
 }
-extension ViewController: SignInPresenterDelegate {
+extension SiginViewController: SignInPresenterDelegate {
     func showUserList() {
         print("Something")
     }
