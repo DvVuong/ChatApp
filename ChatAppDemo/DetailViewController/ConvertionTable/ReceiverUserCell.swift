@@ -8,16 +8,77 @@
 import UIKit
 
 class ReceiverUserCell: UITableViewCell {
-    @IBOutlet weak var lbMessage: UILabel!
+    private var bubleView: UIView = {
+        let bubleView = UIView()
+        bubleView.backgroundColor = .systemGray
+        bubleView.layer.cornerRadius = 8
+        bubleView.layer.masksToBounds = true
+        bubleView.translatesAutoresizingMaskIntoConstraints = false
+        return bubleView
+    }()
+    private var lbMessage: UILabel = {
+        let lbMessage = UILabel()
+        lbMessage.textAlignment = .right
+        lbMessage.numberOfLines = 0
+        lbMessage.textColor = .black
+        lbMessage.translatesAutoresizingMaskIntoConstraints = false
+        return lbMessage
+    }()
+    private var imgMessage: UIImageView = {
+       let imgMessage = UIImageView()
+        imgMessage.contentMode = .scaleToFill
+        imgMessage.layer.cornerRadius = 8
+        imgMessage.layer.masksToBounds = true
+        imgMessage.isHidden = true
+        imgMessage.translatesAutoresizingMaskIntoConstraints = false
+        return imgMessage
+    }()
     override func awakeFromNib() {
         super.awakeFromNib()
-        // Initialization code
+        //Setup contrains BubbleView
+        contentView.addSubview(bubleView)
+        bubleView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 1).isActive = true
+        bubleView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 5).isActive = true
+        bubleView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -3).isActive = true
+        
+        // Setup contrains LbMessage
+        contentView.addSubview(lbMessage)
+        lbMessage.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 5).isActive = true
+        lbMessage.widthAnchor.constraint(lessThanOrEqualToConstant: 250).isActive = true
+        bubleView.widthAnchor.constraint(equalTo: lbMessage.widthAnchor, constant: 10).isActive = true
+        lbMessage.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10).isActive = true
+        lbMessage.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -5).isActive = true
+        
+        //SetupContrain imgMessage
+        contentView.addSubview(imgMessage)
+        imgMessage.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 5).isActive = true
+        imgMessage.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10).isActive = true
+        imgMessage.widthAnchor.constraint(equalToConstant: 150).isActive = true
+        imgMessage.heightAnchor.constraint(equalToConstant: 160).isActive = true
+        
+        
+        
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
 
         // Configure the view for the selected state
+        
+    }
+    func updateUI(with message: MessageRespone) {
+        lbMessage.text = message.text
+        ImageService.share.fetchImage(with: message.image) { image in
+            DispatchQueue.main.async {
+                self.imgMessage.image = image
+            }
+        }
+        if message.text.isEmpty {
+            self.imgMessage.isHidden = false
+            self.bubleView.isHidden = true
+        }else {
+            self.imgMessage.isHidden = true
+        }
     }
 
 }

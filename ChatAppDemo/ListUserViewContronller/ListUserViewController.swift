@@ -13,6 +13,7 @@ class ListUserViewController: UIViewController {
         return vc
     }
      lazy var presenter = ListUserPresenter(with: self)
+     lazy var presenterCell = ListCellPresenter()
     @IBOutlet private var userTableView: UITableView!
     @IBOutlet private weak var searchUser: UITextField!
     var currentUser: UserRespone?
@@ -35,6 +36,7 @@ class ListUserViewController: UIViewController {
         userTableView.delegate = self
         userTableView.dataSource = self
         userTableView.tableFooterView = UIView()
+        userTableView.separatorStyle = .none
     }
     private func setupSearchUser() {
         searchUser.layer.cornerRadius = 8
@@ -55,16 +57,16 @@ extension ListUserViewController: UITableViewDelegate, UITableViewDataSource {
         let cell  = userTableView.dequeueReusableCell(withIdentifier: "userCell", for: indexPath) as! ListUserTableViewCell
         if let index = presenter.cellForUsers(at: indexPath.row) {
             cell.updateUI(index)
+            cell.lbNameUser.attributedText = presenterCell.setHigligh(searchUser.text!, index.name)
         }
-        cell.delegate = self
         return cell
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 100
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let vc = DetailViewViewController.instance()
         guard let item = presenter.cellForUsers(at: indexPath.row) else { return}
+        let vc = DetailViewViewController.instance()
         vc.title = item.name
         vc.receivername = item.name
         vc.receiverID = item.id
@@ -73,12 +75,12 @@ extension ListUserViewController: UITableViewDelegate, UITableViewDataSource {
     }
 }
 extension ListUserViewController: ListUserPresenterDelegate {
+    func showSearchUser() {
+        self.userTableView.reloadData()
+    }
+    
     func showUsersList() {
         self.userTableView.reloadData()
     }
 }
-extension ListUserViewController: ListUserTableViewCellDelegate {
-    func showAvatar() {
-        self.userTableView.reloadData()
-    }
-}
+

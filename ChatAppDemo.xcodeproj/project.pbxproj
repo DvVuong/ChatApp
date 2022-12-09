@@ -19,6 +19,8 @@
 		9D155BB12940538F003C802E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9D155BAF2940538F003C802E /* LaunchScreen.storyboard */; };
 		9D155BBB29407093003C802E /* SignUpViewcontroller.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D155BBA29407093003C802E /* SignUpViewcontroller.swift */; };
 		9D155BBF294082CF003C802E /* SignInPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D155BBE294082CF003C802E /* SignInPresenter.swift */; };
+		9D7AD6BA2942CAFE00162976 /* ListCellPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D7AD6B92942CAFD00162976 /* ListCellPresenter.swift */; };
+		9D7AD6BD294342F300162976 /* CustomLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D7AD6BC294342F300162976 /* CustomLabel.swift */; };
 		9D9134A4294177810065578D /* ImageService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D9134A3294177810065578D /* ImageService.swift */; };
 		9D9134A7294186B20065578D /* DetailPresenterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D9134A6294186B20065578D /* DetailPresenterView.swift */; };
 		9D9134A92941E11D0065578D /* MessageRespone.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D9134A82941E11D0065578D /* MessageRespone.swift */; };
@@ -46,6 +48,8 @@
 		9D155BB22940538F003C802E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9D155BBA29407093003C802E /* SignUpViewcontroller.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpViewcontroller.swift; sourceTree = "<group>"; };
 		9D155BBE294082CF003C802E /* SignInPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInPresenter.swift; sourceTree = "<group>"; };
+		9D7AD6B92942CAFD00162976 /* ListCellPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListCellPresenter.swift; sourceTree = "<group>"; };
+		9D7AD6BC294342F300162976 /* CustomLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomLabel.swift; sourceTree = "<group>"; };
 		9D9134A3294177810065578D /* ImageService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageService.swift; sourceTree = "<group>"; };
 		9D9134A6294186B20065578D /* DetailPresenterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailPresenterView.swift; sourceTree = "<group>"; };
 		9D9134A82941E11D0065578D /* MessageRespone.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageRespone.swift; sourceTree = "<group>"; };
@@ -88,6 +92,7 @@
 		9D155B982940538D003C802E = {
 			isa = PBXGroup;
 			children = (
+				9D7AD6BB294342CE00162976 /* CustomLable */,
 				9D155BA32940538D003C802E /* ChatAppDemo */,
 				9D155BA22940538D003C802E /* Products */,
 				6056874DD0ABCA7DE5F703BB /* Pods */,
@@ -124,10 +129,19 @@
 			path = ChatAppDemo;
 			sourceTree = "<group>";
 		};
+		9D7AD6BB294342CE00162976 /* CustomLable */ = {
+			isa = PBXGroup;
+			children = (
+				9D7AD6BC294342F300162976 /* CustomLabel.swift */,
+			);
+			path = CustomLable;
+			sourceTree = "<group>";
+		};
 		9D91349E294176AB0065578D /* ListUserTable */ = {
 			isa = PBXGroup;
 			children = (
 				9D0BE3552940A1FA00AFC3F7 /* ListUserTableViewCell.swift */,
+				9D7AD6B92942CAFD00162976 /* ListCellPresenter.swift */,
 			);
 			path = ListUserTable;
 			sourceTree = "<group>";
@@ -307,7 +321,9 @@
 				9D0BE35429409A8300AFC3F7 /* ListUserViewController.swift in Sources */,
 				9D155BA52940538D003C802E /* AppDelegate.swift in Sources */,
 				E20577142940EE0900654B8A /* ListUserPresenter.swift in Sources */,
+				9D7AD6BD294342F300162976 /* CustomLabel.swift in Sources */,
 				9D0BE3522940912200AFC3F7 /* User.swift in Sources */,
+				9D7AD6BA2942CAFE00162976 /* ListCellPresenter.swift in Sources */,
 				9D9134A92941E11D0065578D /* MessageRespone.swift in Sources */,
 				9D0BE3562940A1FA00AFC3F7 /* ListUserTableViewCell.swift in Sources */,
 				9D155BBB29407093003C802E /* SignUpViewcontroller.swift in Sources */,

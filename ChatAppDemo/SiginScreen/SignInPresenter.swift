@@ -30,7 +30,6 @@ class SignInPresenter {
                     let dictionary = document.data()
                     let value = UserRespone(dict: dictionary)
                     self.users.append(value)
-                    print(self.users)
                 }
             }
         }

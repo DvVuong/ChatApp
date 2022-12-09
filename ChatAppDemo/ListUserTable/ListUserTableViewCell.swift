@@ -7,14 +7,10 @@
 
 import UIKit
 
-protocol ListUserTableViewCellDelegate {
-    func showAvatar()
-}
 class ListUserTableViewCell: UITableViewCell {
-    @IBOutlet private weak var lbNameUser: UILabel!
+    @IBOutlet weak var lbNameUser: UILabel!
     @IBOutlet private weak var lmMessage: UILabel!
     @IBOutlet private weak var imgAvt: UIImageView!
-    var delegate: ListUserTableViewCellDelegate?
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
@@ -29,7 +25,7 @@ class ListUserTableViewCell: UITableViewCell {
         // Configure the view for the selected state
     }
     func updateUI(_ user: UserRespone) {
-        self.lbNameUser.text = user.name
+        //self.lbNameUser.text = user.name
         ImageService.share.fetchImage(with: user.avatar) { image in
             DispatchQueue.main.async {
                 self.imgAvt.image = image

@@ -9,6 +9,7 @@ import Foundation
 import FirebaseFirestore
 protocol ListUserPresenterDelegate: NSObject {
     func showUsersList()
+    func showSearchUser()
 }
 class ListUserPresenter {
     private weak var view: ListUserPresenterDelegate?
@@ -32,6 +33,7 @@ class ListUserPresenter {
                     let value = UserRespone(dict: dictionary)
                     if self.currentUser?.id != value.id {
                         self.users.append(value)
+                        self.finalUser = self.users
                         self.view?.showUsersList()
                     }
                 }
@@ -39,20 +41,25 @@ class ListUserPresenter {
         }
     }
     func searchUser(_ text: String) {
-        self.finalUser = self.users
+        let lowcaseText = text.lowercased()
         if text.isEmpty {
             self.finalUser = self.users
         } else {
-            self.finalUser = self.users.map({$0.name.})
+            self.finalUser = self.users.filter{$0.name
+                                                .folding(options: .diacriticInsensitive, locale: nil)
+                                                .lowercased()
+                                                .contains(lowcaseText)
+            }
         }
+        view?.showSearchUser()
     }
     func numberOfUser() -> Int {
-        return users.count
+        return finalUser.count
     }
     func cellForUsers(at index: Int) -> UserRespone? {
         if index <= 0 && index > numberOfUser() {
             return nil
         }
-        return users[index]
+        return finalUser[index]
     }
 }

@@ -38,7 +38,7 @@ class DetailViewViewController: UIViewController {
     private func setupConvertionTable() {
         convertiontable.delegate = self
         convertiontable.dataSource = self
-        convertiontable.backgroundColor = .yellow
+        convertiontable.separatorStyle = .none
         convertiontable.tableFooterView = UIView()
     }
     private func setupMessageTextField() {
@@ -58,6 +58,7 @@ class DetailViewViewController: UIViewController {
     @objc private func didTapSend(_ sender: UIButton) {
         presenter.sendMessage(with: tfMessage.text!)
         tfMessage.text = ""
+        presenter.getMessage()
     }
     
     @objc private func chooseImage(_ tapGes: UITapGestureRecognizer) {
@@ -65,12 +66,23 @@ class DetailViewViewController: UIViewController {
         self.imgPicker.sourceType = .photoLibrary
         present(self.imgPicker, animated: true)
     }
+    private func scrollToBottom() {
+        DispatchQueue.main.async {
+            let indexPath = IndexPath(row: self.presenter.numberOfMessage() - 1, section: 0)
+            self.convertiontable.scrollToRow(at: indexPath, at: .bottom, animated: true)
+        }
+        
+    }
 }
 extension DetailViewViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         let image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage
         guard let image = image else { return }
-        presenter.sendImageMessage(with: image)
+        if #available(iOS 15, *) {
+            presenter.sendImageMessage(with: image)
+        } else {
+            // Fallback on earlier versions
+        }
         self.imgPicker.dismiss(animated: true)
     }
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
@@ -81,6 +93,7 @@ extension DetailViewViewController: UIImagePickerControllerDelegate, UINavigatio
 extension DetailViewViewController: DetailPresenterViewDelegate {
     func showMessage() {
         self.convertiontable.reloadData()
+        scrollToBottom()
     }
 }
 extension DetailViewViewController: UITableViewDelegate, UITableViewDataSource {
@@ -88,20 +101,30 @@ extension DetailViewViewController: UITableViewDelegate, UITableViewDataSource {
         return presenter.numberOfMessage()
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        for id in presenter.message {
-            if self.currentUser?.id == id.sendId && receiverID == id.receiverID {
-                let cell = convertiontable.dequeueReusableCell(withIdentifier: "senderCell", for: indexPath) as! SenderUserCell
-                cell.lbMessage.text = presenter.message[indexPath.row].text
-                cell.backgroundColor = .blue
+        guard let currentId = currentUser?.id else { return UITableViewCell ()}
+        let sendId = presenter.message[indexPath.item].sendId
+        if currentId == sendId {
+            guard let cell = convertiontable.dequeueReusableCell(withIdentifier: "senderCell", for: indexPath) as? SenderUserCell else { return UITableViewCell() }
+             let message = presenter.cellForMessage(at: indexPath.row)
+                cell.updateUI(with: message)
+            
                 return cell
-            }
-            else {
-                let cell = convertiontable.dequeueReusableCell(withIdentifier: "receiverCell", for: indexPath) as! ReceiverUserCell
-                cell.lbMessage.text = presenter.message[indexPath.row].text
-                cell.backgroundColor = .brown
+            
+            } else {
+                guard let cell = convertiontable.dequeueReusableCell(withIdentifier: "receiverCell", for: indexPath) as? ReceiverUserCell else { return UITableViewCell() }
+                
+                 let message = presenter.cellForMessage(at: indexPath.item)
+                    cell.updateUI(with: message)
                 return cell
             }
         }
-        return UITableViewCell()
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        if presenter.message[indexPath.row].text.isEmpty {
+            return 180
+        }
+        else {
+            
+            return UITableView.automaticDimension
+        }
     }
 }

@@ -60,7 +60,7 @@ class SiginViewController: UIViewController {
             vc.currentUser = currentUser
             navigationController?.pushViewController(vc, animated: true)
         } Failure: {
-            print("vuongdv", "Sai ten hoac mat khau")
+            return
         }
     }
     private func setupBtSignUp() {
@@ -75,6 +75,6 @@ class SiginViewController: UIViewController {
 }
 extension SiginViewController: SignInPresenterDelegate {
     func showUserList() {
-        print("Something")
+        
     }
 }
