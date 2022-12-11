@@ -14,31 +14,35 @@ protocol DetailPresenterViewDelegate: NSObject {
 class DetailPresenterView {
     private weak var view: DetailPresenterViewDelegate?
     private var imgUrl:String = ""
-    var receiverID: String = ""
-    var receivername: String = ""
-    var currentUser: UserRespone?
+    private var currentUser: UserRespone?
+    private var receiverUser: UserRespone?
     var message:[MessageRespone] = []
     private weak var db = Firestore.firestore()
     init(with view: DetailPresenterViewDelegate) {
         self.view = view
+            }
+    convenience init(view: DetailPresenterViewDelegate, data: UserRespone, currentUser: UserRespone) {
+        self.init(with: view)
+        self.receiverUser = data
+        self.currentUser = currentUser
+
     }
     func sendMessage(with message: String) {
+        guard let receiverUser = receiverUser else { return }
         let autoKey = self.db?.collection("Message").document().documentID
         guard let keyDocument = autoKey else { return }
-        if #available(iOS 15, *) {
-            db!.collection("Message").document(keyDocument).setData([
-                "nameSender": self.currentUser!.name,
-                "receivername": receivername,
-                "text": message,
-                "image": imgUrl,
-                "sendId": self.currentUser!.id,
-                "receiverID": receiverID,
-                "time": Date.now.timeIntervalSince1970
-            ])
-        }
+        db!.collection("Message").document(keyDocument).setData([
+            "nameSender": self.currentUser!.name,
+            "receivername": receiverUser.name,
+            "text": message,
+            "image": imgUrl,
+            "sendId": self.currentUser!.id,
+            "receiverID": receiverUser.id,
+            "time": Int(Date().timeIntervalSince1970)
+        ])
     }
-    @available(iOS 15, *)
     func sendImageMessage(with image: UIImage) {
+        guard let receiverUser = receiverUser else { return }
         let storeRef = Storage.storage().reference()
         let imageKey = NSUUID().uuidString
         let image = image.jpegData(compressionQuality: 0.5)!
@@ -56,15 +60,22 @@ class DetailPresenterView {
                             "sendId": self.currentUser!.id,
                             "text": "",
                             "image": self.imgUrl,
-                            "receivername": self.receivername,
-                            "receiverID": self.receiverID,
-                            "time": Date.now.timeIntervalSince1970
+                            "receivername": receiverUser.name,
+                            "receiverID": receiverUser.id,
+                            "time": Int(Date().timeIntervalSince1970)
                         ])
                     }
                 }
             }
+    func currentUserID() -> String? {
+        guard let id = currentUser?.id else { return nil }
+        return id
+    }
     
     func getMessage() {
+        guard let reciverUser = receiverUser else {
+            return
+        }
         message.removeAll()
         self.db?.collection("Message").getDocuments(completion: { querySnapshot, error in
             if error != nil {
@@ -73,9 +84,11 @@ class DetailPresenterView {
                 guard let document = querySnapshot?.documents else { return }
                 for item in document {
                     let value = MessageRespone(dict: item.data())
+                    if reciverUser.id == value.sendId || reciverUser.id == value.receiverID {
                     self.message.append(value)
                     self.sortMessage()
                     self.view?.showMessage()
+                    }
                 }
             }
         })
@@ -90,7 +103,7 @@ class DetailPresenterView {
         
     }
     func sortMessage() {
-        var timer: [Double] = []
+        var timer: [Int] = []
         var messageBytime = [MessageRespone]()
         self.message.forEach { message in
             timer.append(message.time)

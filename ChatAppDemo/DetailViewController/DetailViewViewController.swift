@@ -8,8 +8,9 @@
 import UIKit
 
 class DetailViewViewController: UIViewController {
-    static func instance() -> DetailViewViewController {
+    static func instance(_ data: UserRespone, currentUser: UserRespone) -> DetailViewViewController {
         let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "DetailScreen") as! DetailViewViewController
+        vc.presenter = DetailPresenterView(view: vc, data: data, currentUser: currentUser)
         return vc
     }
     @IBOutlet private weak var image: UIImageView!
@@ -17,17 +18,11 @@ class DetailViewViewController: UIViewController {
     @IBOutlet private weak var btSendMessage: UIButton!
     @IBOutlet private weak var convertiontable: UITableView!
     private var imgPicker = UIImagePickerController()
-    lazy var presenter = DetailPresenterView(with: self)
-    var currentUser: UserRespone?
-    var receivername: String = ""
-    var receiverID: String = ""
+    lazy var presenter =  DetailPresenterView(with: self)
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
         presenter.getMessage()
-        presenter.currentUser = currentUser
-        presenter.receiverID = receiverID
-        presenter.receivername = receivername
     }
     private func setupUI() {
         setupMessageTextField()
@@ -56,9 +51,14 @@ class DetailViewViewController: UIViewController {
         btSendMessage.addTarget(self, action: #selector(didTapSend(_:)), for: .touchUpInside)
         }
     @objc private func didTapSend(_ sender: UIButton) {
-        presenter.sendMessage(with: tfMessage.text!)
-        tfMessage.text = ""
-        presenter.getMessage()
+        if tfMessage.text == "" {
+            return
+        }
+        else {
+            presenter.sendMessage(with: tfMessage.text!)
+            tfMessage.text = ""
+            presenter.getMessage()
+        }
     }
     
     @objc private func chooseImage(_ tapGes: UITapGestureRecognizer) {
@@ -78,11 +78,8 @@ extension DetailViewViewController: UIImagePickerControllerDelegate, UINavigatio
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         let image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage
         guard let image = image else { return }
-        if #available(iOS 15, *) {
-            presenter.sendImageMessage(with: image)
-        } else {
-            // Fallback on earlier versions
-        }
+        presenter.sendImageMessage(with: image)
+        
         self.imgPicker.dismiss(animated: true)
     }
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
@@ -101,18 +98,16 @@ extension DetailViewViewController: UITableViewDelegate, UITableViewDataSource {
         return presenter.numberOfMessage()
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let currentId = currentUser?.id else { return UITableViewCell ()}
+        let currentId = presenter.currentUserID()
         let sendId = presenter.message[indexPath.item].sendId
         if currentId == sendId {
             guard let cell = convertiontable.dequeueReusableCell(withIdentifier: "senderCell", for: indexPath) as? SenderUserCell else { return UITableViewCell() }
              let message = presenter.cellForMessage(at: indexPath.row)
                 cell.updateUI(with: message)
-            
                 return cell
             
             } else {
                 guard let cell = convertiontable.dequeueReusableCell(withIdentifier: "receiverCell", for: indexPath) as? ReceiverUserCell else { return UITableViewCell() }
-                
                  let message = presenter.cellForMessage(at: indexPath.item)
                     cell.updateUI(with: message)
                 return cell
@@ -123,7 +118,6 @@ extension DetailViewViewController: UITableViewDelegate, UITableViewDataSource {
             return 180
         }
         else {
-            
             return UITableView.automaticDimension
         }
     }

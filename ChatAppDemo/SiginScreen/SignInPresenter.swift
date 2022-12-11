@@ -14,11 +14,12 @@ protocol SignInPresenterDelegate: NSObject {
 class SignInPresenter {
     private weak var view: SignInPresenterDelegate?
     private var users = [UserRespone]()
-    var currentUser: UserRespone?
+    private var currentUser: UserRespone?
     private let db = Firestore.firestore()
     init(with view: SignInPresenterDelegate) {
         self.view = view
     }
+
     func ftechUser() {
         db.collection("user").getDocuments() { (querySnapshot, error) in
             if error != nil {
@@ -26,20 +27,23 @@ class SignInPresenter {
             }
             else {
                 guard let querySnapshot = querySnapshot else { return }
-                for document in querySnapshot.documents {
-                    let dictionary = document.data()
-                    let value = UserRespone(dict: dictionary)
+                _ =  querySnapshot.documents.map { db in
+                    let value = UserRespone(name: db["name"] as? String ?? ""
+                                            , email: db["email"] as? String ?? ""
+                                            , password: db["password"] as? String ?? ""
+                                            , avatar: db["avatar"] as? String ?? ""
+                                            , id: db["id"] as? String ?? "")
                     self.users.append(value)
                 }
             }
         }
     }
     func validateEmailPassword(_ email: String, _ password: String, completion: (_ currentUser: UserRespone) -> Void, Failure: () -> Void) {
-        
         var currentUser: UserRespone?
         users.forEach { user in
             if user.email == email && user.password == password {
                 currentUser = user
+                DataManager.shareInstance.saveUser(currentUser!)
                 completion(currentUser!)
             }
             else {
@@ -47,5 +51,14 @@ class SignInPresenter {
             }
         }
     }
-    
+    func showUserInfo() -> (email: String, password: String )  {
+        var email: String = ""
+        var password: String = ""
+        let info = DataManager.shareInstance.getUser()
+        _ = info.map { item in
+            email = item.email
+            password = item.password
+        }
+        return (email, password)
+    }
 }

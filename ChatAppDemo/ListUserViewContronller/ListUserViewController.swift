@@ -8,21 +8,19 @@
 import UIKit
 
 class ListUserViewController: UIViewController {
-    static func instance() -> ListUserViewController {
+    static func instance(_ currentUser: UserRespone) -> ListUserViewController {
         let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "listUserScreen") as! ListUserViewController
+        vc.presenter = ListUserPresenter(view: vc, data: currentUser)
         return vc
     }
      lazy var presenter = ListUserPresenter(with: self)
      lazy var presenterCell = ListCellPresenter()
     @IBOutlet private var userTableView: UITableView!
     @IBOutlet private weak var searchUser: UITextField!
-    var currentUser: UserRespone?
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
         presenter.getUser()
-        presenter.currentUser = currentUser
-        
     }
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
@@ -65,12 +63,10 @@ extension ListUserViewController: UITableViewDelegate, UITableViewDataSource {
         return 100
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        guard let item = presenter.cellForUsers(at: indexPath.row) else { return}
-        let vc = DetailViewViewController.instance()
-        vc.title = item.name
-        vc.receivername = item.name
-        vc.receiverID = item.id
-        vc.currentUser = currentUser
+        guard let data = presenter.cellForUsers(at: indexPath.row) else { return}
+        guard let currentUser = presenter.currentUserId() else { return }
+        let vc = DetailViewViewController.instance(data, currentUser: currentUser)
+        vc.title = data.name
         navigationController?.pushViewController(vc, animated: true)
     }
 }

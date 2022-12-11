@@ -29,6 +29,8 @@
 		E20577142940EE0900654B8A /* ListUserPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E20577132940EE0900654B8A /* ListUserPresenter.swift */; };
 		E240D4932941064F0090066D /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = E240D4922941064F0090066D /* GoogleService-Info.plist */; };
 		E240D495294126CF0090066D /* DetailViewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E240D494294126CE0090066D /* DetailViewViewController.swift */; };
+		E2C8114629461BC200E40FBC /* DataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2C8114529461BC200E40FBC /* DataManager.swift */; };
+		E2C8115329463AC100E40FBC /* UserDataBase.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = E2C8115129463AC100E40FBC /* UserDataBase.xcdatamodeld */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -58,6 +60,8 @@
 		E20577132940EE0900654B8A /* ListUserPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListUserPresenter.swift; sourceTree = "<group>"; };
 		E240D4922941064F0090066D /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		E240D494294126CE0090066D /* DetailViewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewViewController.swift; sourceTree = "<group>"; };
+		E2C8114529461BC200E40FBC /* DataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataManager.swift; sourceTree = "<group>"; };
+		E2C8115229463AC100E40FBC /* UserDataBase.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = UserDataBase.xcdatamodel; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -92,6 +96,7 @@
 		9D155B982940538D003C802E = {
 			isa = PBXGroup;
 			children = (
+				E2C8114A294622B500E40FBC /* DataService */,
 				9D7AD6BB294342CE00162976 /* CustomLable */,
 				9D155BA32940538D003C802E /* ChatAppDemo */,
 				9D155BA22940538D003C802E /* Products */,
@@ -149,8 +154,8 @@
 		9D91349F294176C90065578D /* SiginScreen */ = {
 			isa = PBXGroup;
 			children = (
-				9D155BBE294082CF003C802E /* SignInPresenter.swift */,
 				9D155BA82940538D003C802E /* SiginViewController.swift */,
+				9D155BBE294082CF003C802E /* SignInPresenter.swift */,
 			);
 			path = SiginScreen;
 			sourceTree = "<group>";
@@ -198,6 +203,15 @@
 				9D9134AD2941E9460065578D /* ReceiverUserCell.swift */,
 			);
 			path = ConvertionTable;
+			sourceTree = "<group>";
+		};
+		E2C8114A294622B500E40FBC /* DataService */ = {
+			isa = PBXGroup;
+			children = (
+				E2C8114529461BC200E40FBC /* DataManager.swift */,
+				E2C8115129463AC100E40FBC /* UserDataBase.xcdatamodeld */,
+			);
+			path = DataService;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -321,8 +335,10 @@
 				9D0BE35429409A8300AFC3F7 /* ListUserViewController.swift in Sources */,
 				9D155BA52940538D003C802E /* AppDelegate.swift in Sources */,
 				E20577142940EE0900654B8A /* ListUserPresenter.swift in Sources */,
+				E2C8115329463AC100E40FBC /* UserDataBase.xcdatamodeld in Sources */,
 				9D7AD6BD294342F300162976 /* CustomLabel.swift in Sources */,
 				9D0BE3522940912200AFC3F7 /* User.swift in Sources */,
+				E2C8114629461BC200E40FBC /* DataManager.swift in Sources */,
 				9D7AD6BA2942CAFE00162976 /* ListCellPresenter.swift in Sources */,
 				9D9134A92941E11D0065578D /* MessageRespone.swift in Sources */,
 				9D0BE3562940A1FA00AFC3F7 /* ListUserTableViewCell.swift in Sources */,
@@ -554,6 +570,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		E2C8115129463AC100E40FBC /* UserDataBase.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				E2C8115229463AC100E40FBC /* UserDataBase.xcdatamodel */,
+			);
+			currentVersion = E2C8115229463AC100E40FBC /* UserDataBase.xcdatamodel */;
+			path = UserDataBase.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 9D155B992940538D003C802E /* Project object */;
 }

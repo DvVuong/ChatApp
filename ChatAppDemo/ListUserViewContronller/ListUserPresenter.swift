@@ -16,9 +16,13 @@ class ListUserPresenter {
     private var db = Firestore.firestore()
     var users = [UserRespone]()
     private var finalUser = [UserRespone]()
-    var currentUser: UserRespone?
+    private var currentUser: UserRespone?
     init(with view: ListUserPresenterDelegate) {
         self.view = view
+    }
+    convenience init(view: ListUserViewController, data: UserRespone) {
+        self.init(with: view)
+        self.currentUser = data
     }
     func getUser() {
         db.collection("user").getDocuments { querySnapshot, error in
@@ -28,10 +32,13 @@ class ListUserPresenter {
                 guard let querySnapshot = querySnapshot else {
                     return
                 }
-                for document in querySnapshot.documents {
-                    let dictionary = document.data()
-                    let value = UserRespone(dict: dictionary)
-                    if self.currentUser?.id != value.id {
+                _ =  querySnapshot.documents.map { db in
+                    let value = UserRespone(name: db["name"] as? String ?? ""
+                                            , email: db["email"] as? String ?? ""
+                                            , password: db["password"] as? String ?? ""
+                                            , avatar: db["avatar"] as? String ?? ""
+                                            , id: db["id"] as? String ?? "")
+                    if self.currentUser?.id != db["id"] as? String ?? "" {
                         self.users.append(value)
                         self.finalUser = self.users
                         self.view?.showUsersList()
@@ -52,6 +59,9 @@ class ListUserPresenter {
             }
         }
         view?.showSearchUser()
+    }
+    func currentUserId() -> UserRespone?{
+        return currentUser
     }
     func numberOfUser() -> Int {
         return finalUser.count

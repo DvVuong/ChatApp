@@ -13,7 +13,7 @@ struct MessageRespone: Codable {
     let recevernmae: String
     let sendId: String
     let text: String
-    let time: Double
+    let time: Int
     init(dict: [String: Any]) {
         self.image = dict["image"] as? String ?? ""
         self.nameSender = dict["nameSender"] as? String ?? ""
@@ -21,6 +21,6 @@ struct MessageRespone: Codable {
         self.recevernmae = dict["recevernmae"] as? String ?? ""
         self.sendId = dict["sendId"] as? String ?? ""
         self.text = dict["text"] as? String ?? ""
-        self.time = dict["time"] as? Double ?? 0
+        self.time = dict["time"] as? Int ?? 0
     }
 }

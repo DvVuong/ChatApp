@@ -33,6 +33,14 @@ class ReceiverUserCell: UITableViewCell {
         imgMessage.translatesAutoresizingMaskIntoConstraints = false
         return imgMessage
     }()
+    private var lbTime: UILabel = {
+       let lbTime = UILabel()
+        lbTime.textColor = .systemGray
+        lbTime.textAlignment = .right
+        lbTime.font = UIFont.systemFont(ofSize: 12)
+        lbTime.translatesAutoresizingMaskIntoConstraints = false
+        return lbTime
+    }()
     override func awakeFromNib() {
         super.awakeFromNib()
         //Setup contrains BubbleView
@@ -56,6 +64,13 @@ class ReceiverUserCell: UITableViewCell {
         imgMessage.widthAnchor.constraint(equalToConstant: 150).isActive = true
         imgMessage.heightAnchor.constraint(equalToConstant: 160).isActive = true
         
+        //Setup Contrains lbTime
+        contentView.addSubview(lbTime)
+        lbTime.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10).isActive = true
+        lbTime.widthAnchor.constraint(equalToConstant: 80).isActive = true
+        lbTime.heightAnchor.constraint(equalToConstant: 10).isActive = true
+        lbTime.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -1).isActive = true
+        
         
         
     }
@@ -68,6 +83,11 @@ class ReceiverUserCell: UITableViewCell {
     }
     func updateUI(with message: MessageRespone) {
         lbMessage.text = message.text
+        // Setup Time
+        let time = Date(timeIntervalSince1970: TimeInterval(message.time))
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "hh:mm:ss a"
+        lbTime.text = dateFormatter.string(from: time)
         ImageService.share.fetchImage(with: message.image) { image in
             DispatchQueue.main.async {
                 self.imgMessage.image = image
