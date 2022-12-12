@@ -17,8 +17,11 @@
 		9D155BAC2940538D003C802E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9D155BAA2940538D003C802E /* Main.storyboard */; };
 		9D155BAE2940538F003C802E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9D155BAD2940538F003C802E /* Assets.xcassets */; };
 		9D155BB12940538F003C802E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9D155BAF2940538F003C802E /* LaunchScreen.storyboard */; };
-		9D155BBB29407093003C802E /* SignUpViewcontroller.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D155BBA29407093003C802E /* SignUpViewcontroller.swift */; };
+		9D155BBB29407093003C802E /* RegisterViewcontroller.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D155BBA29407093003C802E /* RegisterViewcontroller.swift */; };
 		9D155BBF294082CF003C802E /* SignInPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D155BBE294082CF003C802E /* SignInPresenter.swift */; };
+		9D41EF142947120D00768CBA /* ResgiterPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D41EF132947120D00768CBA /* ResgiterPresenter.swift */; };
+		9D79ABF82946DD6D00ECB986 /* MessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D79ABF62946DD6D00ECB986 /* MessageCell.swift */; };
+		9D79ABF92946DD6D00ECB986 /* MessageCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9D79ABF72946DD6D00ECB986 /* MessageCell.xib */; };
 		9D7AD6BA2942CAFE00162976 /* ListCellPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D7AD6B92942CAFD00162976 /* ListCellPresenter.swift */; };
 		9D7AD6BD294342F300162976 /* CustomLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D7AD6BC294342F300162976 /* CustomLabel.swift */; };
 		9D9134A4294177810065578D /* ImageService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D9134A3294177810065578D /* ImageService.swift */; };
@@ -48,8 +51,11 @@
 		9D155BAD2940538F003C802E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		9D155BB02940538F003C802E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		9D155BB22940538F003C802E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		9D155BBA29407093003C802E /* SignUpViewcontroller.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpViewcontroller.swift; sourceTree = "<group>"; };
+		9D155BBA29407093003C802E /* RegisterViewcontroller.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterViewcontroller.swift; sourceTree = "<group>"; };
 		9D155BBE294082CF003C802E /* SignInPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInPresenter.swift; sourceTree = "<group>"; };
+		9D41EF132947120D00768CBA /* ResgiterPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResgiterPresenter.swift; sourceTree = "<group>"; };
+		9D79ABF62946DD6D00ECB986 /* MessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageCell.swift; sourceTree = "<group>"; };
+		9D79ABF72946DD6D00ECB986 /* MessageCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MessageCell.xib; sourceTree = "<group>"; };
 		9D7AD6B92942CAFD00162976 /* ListCellPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListCellPresenter.swift; sourceTree = "<group>"; };
 		9D7AD6BC294342F300162976 /* CustomLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomLabel.swift; sourceTree = "<group>"; };
 		9D9134A3294177810065578D /* ImageService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageService.swift; sourceTree = "<group>"; };
@@ -116,6 +122,7 @@
 		9D155BA32940538D003C802E /* ChatAppDemo */ = {
 			isa = PBXGroup;
 			children = (
+				9D41EF102947087E00768CBA /* RegisterScreen */,
 				9D9134A2294177590065578D /* ImgService */,
 				9D9134A02941770F0065578D /* Models */,
 				9D91349F294176C90065578D /* SiginScreen */,
@@ -127,11 +134,28 @@
 				9D155BAA2940538D003C802E /* Main.storyboard */,
 				9D155BB22940538F003C802E /* Info.plist */,
 				9D155BA62940538D003C802E /* SceneDelegate.swift */,
-				9D155BBA29407093003C802E /* SignUpViewcontroller.swift */,
 				9D155BA42940538D003C802E /* AppDelegate.swift */,
 				E240D4922941064F0090066D /* GoogleService-Info.plist */,
 			);
 			path = ChatAppDemo;
+			sourceTree = "<group>";
+		};
+		9D41EF102947087E00768CBA /* RegisterScreen */ = {
+			isa = PBXGroup;
+			children = (
+				9D155BBA29407093003C802E /* RegisterViewcontroller.swift */,
+				9D41EF132947120D00768CBA /* ResgiterPresenter.swift */,
+			);
+			path = RegisterScreen;
+			sourceTree = "<group>";
+		};
+		9D79ABF52946DD5000ECB986 /* CustomCell */ = {
+			isa = PBXGroup;
+			children = (
+				9D79ABF62946DD6D00ECB986 /* MessageCell.swift */,
+				9D79ABF72946DD6D00ECB986 /* MessageCell.xib */,
+			);
+			path = CustomCell;
 			sourceTree = "<group>";
 		};
 		9D7AD6BB294342CE00162976 /* CustomLable */ = {
@@ -189,6 +213,7 @@
 		9D9134A5294186810065578D /* DetailViewController */ = {
 			isa = PBXGroup;
 			children = (
+				9D79ABF52946DD5000ECB986 /* CustomCell */,
 				9D9134AA2941E8310065578D /* ConvertionTable */,
 				E240D494294126CE0090066D /* DetailViewViewController.swift */,
 				9D9134A6294186B20065578D /* DetailPresenterView.swift */,
@@ -274,6 +299,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9D79ABF92946DD6D00ECB986 /* MessageCell.xib in Resources */,
 				9D155BB12940538F003C802E /* LaunchScreen.storyboard in Resources */,
 				E240D4932941064F0090066D /* GoogleService-Info.plist in Resources */,
 				9D155BAE2940538F003C802E /* Assets.xcassets in Resources */,
@@ -330,7 +356,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9D41EF142947120D00768CBA /* ResgiterPresenter.swift in Sources */,
 				9D9134AC2941E8610065578D /* SenderUserCell.swift in Sources */,
+				9D79ABF82946DD6D00ECB986 /* MessageCell.swift in Sources */,
 				9D155BA92940538D003C802E /* SiginViewController.swift in Sources */,
 				9D0BE35429409A8300AFC3F7 /* ListUserViewController.swift in Sources */,
 				9D155BA52940538D003C802E /* AppDelegate.swift in Sources */,
@@ -342,7 +370,7 @@
 				9D7AD6BA2942CAFE00162976 /* ListCellPresenter.swift in Sources */,
 				9D9134A92941E11D0065578D /* MessageRespone.swift in Sources */,
 				9D0BE3562940A1FA00AFC3F7 /* ListUserTableViewCell.swift in Sources */,
-				9D155BBB29407093003C802E /* SignUpViewcontroller.swift in Sources */,
+				9D155BBB29407093003C802E /* RegisterViewcontroller.swift in Sources */,
 				9D155BA72940538D003C802E /* SceneDelegate.swift in Sources */,
 				9D9134A4294177810065578D /* ImageService.swift in Sources */,
 				E240D495294126CF0090066D /* DetailViewViewController.swift in Sources */,

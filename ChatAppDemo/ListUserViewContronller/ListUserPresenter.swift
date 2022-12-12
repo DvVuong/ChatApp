@@ -10,6 +10,7 @@ import FirebaseFirestore
 protocol ListUserPresenterDelegate: NSObject {
     func showUsersList()
     func showSearchUser()
+    func deleteUser(at index: Int)
 }
 class ListUserPresenter {
     private weak var view: ListUserPresenterDelegate?
@@ -71,5 +72,9 @@ class ListUserPresenter {
             return nil
         }
         return finalUser[index]
+    }
+    func deleteUser(_ index: Int, completion: @escaping () -> Void) {
+        self.finalUser.remove(at: index)
+        completion()
     }
 }

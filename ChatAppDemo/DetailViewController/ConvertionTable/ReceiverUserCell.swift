@@ -55,7 +55,7 @@ class ReceiverUserCell: UITableViewCell {
         lbMessage.widthAnchor.constraint(lessThanOrEqualToConstant: 250).isActive = true
         bubleView.widthAnchor.constraint(equalTo: lbMessage.widthAnchor, constant: 10).isActive = true
         lbMessage.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10).isActive = true
-        lbMessage.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -5).isActive = true
+        lbMessage.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10).isActive = true
         
         //SetupContrain imgMessage
         contentView.addSubview(imgMessage)

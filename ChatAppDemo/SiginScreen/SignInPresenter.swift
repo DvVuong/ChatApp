@@ -10,6 +10,7 @@ import Firebase
 import FirebaseFirestore
 protocol SignInPresenterDelegate: NSObject {
     func showUserList()
+    func showNewUser(email: String, password: String)
 }
 class SignInPresenter {
     private weak var view: SignInPresenterDelegate?
@@ -38,18 +39,21 @@ class SignInPresenter {
             }
         }
     }
-    func validateEmailPassword(_ email: String, _ password: String, completion: (_ currentUser: UserRespone) -> Void, Failure: () -> Void) {
+    func validateEmailPassword(_ email: String, _ password: String, completion: (_ currentUser: UserRespone?, Bool) -> Void) {
         var currentUser: UserRespone?
         users.forEach { user in
             if user.email == email && user.password == password {
                 currentUser = user
                 DataManager.shareInstance.saveUser(currentUser!)
-                completion(currentUser!)
+                completion(currentUser!, true)
             }
             else {
-                Failure()
+                completion(nil, false)
             }
         }
+    }
+    func userData() -> [UserRespone] {
+        return users
     }
     func showUserInfo() -> (email: String, password: String )  {
         var email: String = ""
@@ -60,5 +64,8 @@ class SignInPresenter {
             password = item.password
         }
         return (email, password)
+    }
+    func getNewUser(_ email: String, password: String) {
+        view?.showNewUser(email: email, password: password)
     }
 }

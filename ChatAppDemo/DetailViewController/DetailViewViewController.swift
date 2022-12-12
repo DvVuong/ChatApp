@@ -35,10 +35,13 @@ class DetailViewViewController: UIViewController {
         convertiontable.dataSource = self
         convertiontable.separatorStyle = .none
         convertiontable.tableFooterView = UIView()
+//        let nib = UINib(nibName: "MessageCell", bundle: nil)
+//        convertiontable.register(nib, forCellReuseIdentifier: "messageCell")
     }
     private func setupMessageTextField() {
         tfMessage.attributedPlaceholder = NSAttributedString(string: "Aa", attributes: [.foregroundColor:UIColor.white])
         tfMessage.layer.cornerRadius = 8
+        tfMessage.delegate = self
         tfMessage.layer.masksToBounds = true
     }
     private func setupImage() {
@@ -51,6 +54,10 @@ class DetailViewViewController: UIViewController {
         btSendMessage.addTarget(self, action: #selector(didTapSend(_:)), for: .touchUpInside)
         }
     @objc private func didTapSend(_ sender: UIButton) {
+        self.sendMessage()
+    }
+    
+    private func sendMessage() {
         if tfMessage.text == "" {
             return
         }
@@ -78,8 +85,9 @@ extension DetailViewViewController: UIImagePickerControllerDelegate, UINavigatio
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         let image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage
         guard let image = image else { return }
-        presenter.sendImageMessage(with: image)
-        
+        presenter.sendImageMessage(with: image) {
+            self.convertiontable.reloadData()
+        }
         self.imgPicker.dismiss(animated: true)
     }
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
@@ -103,7 +111,7 @@ extension DetailViewViewController: UITableViewDelegate, UITableViewDataSource {
         if currentId == sendId {
             guard let cell = convertiontable.dequeueReusableCell(withIdentifier: "senderCell", for: indexPath) as? SenderUserCell else { return UITableViewCell() }
              let message = presenter.cellForMessage(at: indexPath.row)
-                cell.updateUI(with: message)
+            cell.updateUI(with: message)
                 return cell
             
             } else {
@@ -114,11 +122,18 @@ extension DetailViewViewController: UITableViewDelegate, UITableViewDataSource {
             }
         }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if presenter.message[indexPath.row].text.isEmpty {
+        let message = presenter.cellForMessage(at: indexPath.row)
+        if message.text.isEmpty {
             return 180
         }
         else {
             return UITableView.automaticDimension
         }
+    }
+}
+extension DetailViewViewController: UITextFieldDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        self.sendMessage()
+        return true
     }
 }

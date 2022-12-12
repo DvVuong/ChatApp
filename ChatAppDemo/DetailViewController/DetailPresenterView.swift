@@ -10,6 +10,7 @@ import FirebaseFirestore
 import FirebaseStorage
 protocol DetailPresenterViewDelegate: NSObject {
     func showMessage()
+     
 }
 class DetailPresenterView {
     private weak var view: DetailPresenterViewDelegate?
@@ -41,7 +42,7 @@ class DetailPresenterView {
             "time": Int(Date().timeIntervalSince1970)
         ])
     }
-    func sendImageMessage(with image: UIImage) {
+    func sendImageMessage(with image: UIImage, completion: @escaping () -> Void) {
         guard let receiverUser = receiverUser else { return }
         let storeRef = Storage.storage().reference()
         let imageKey = NSUUID().uuidString
@@ -66,6 +67,7 @@ class DetailPresenterView {
                         ])
                     }
                 }
+        completion()
             }
     func currentUserID() -> String? {
         guard let id = currentUser?.id else { return nil }
@@ -73,34 +75,25 @@ class DetailPresenterView {
     }
     
     func getMessage() {
-        guard let reciverUser = receiverUser else {
-            return
-        }
+        guard let reciverUser = receiverUser else {return}
+        guard let senderUser = self.currentUser else { return }
         message.removeAll()
-        self.db?.collection("Message").getDocuments(completion: { querySnapshot, error in
+        self.db?.collection("Message").getDocuments{ querySnapshot, error in
             if error != nil {
                 print("vuongdv", error!.localizedDescription)
             }else {
                 guard let document = querySnapshot?.documents else { return }
                 for item in document {
                     let value = MessageRespone(dict: item.data())
-                    if reciverUser.id == value.sendId || reciverUser.id == value.receiverID {
-                    self.message.append(value)
-                    self.sortMessage()
-                    self.view?.showMessage()
+                    if ( value.receiverID == reciverUser.id && value.sendId == senderUser.id)
+                        || (value.receiverID == senderUser.id && value.sendId == reciverUser.id) {
+                        self.message.append(value)
+                        self.sortMessage()
+                        self.view?.showMessage()
                     }
                 }
             }
-        })
-    }
-    func listentDataChange() {
-        db?.collection("Message").document().addSnapshotListener({ doccumentSnapshot, error in
-            guard let document = doccumentSnapshot else { return }
-            let data = document.data()
-            print("vuongdv", data as Any)
-        })
-        
-        
+        }
     }
     func sortMessage() {
         var timer: [Int] = []

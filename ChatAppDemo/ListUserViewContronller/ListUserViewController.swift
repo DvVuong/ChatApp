@@ -69,6 +69,17 @@ extension ListUserViewController: UITableViewDelegate, UITableViewDataSource {
         vc.title = data.name
         navigationController?.pushViewController(vc, animated: true)
     }
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        let delete = UIContextualAction(style: .normal, title: "Delete") { action, _, _ in
+            self.presenter.deleteUser(indexPath.row) {
+                self.userTableView.reloadData()
+            }
+        }
+        delete.image = UIImage(systemName: "trash.fill")
+        delete.backgroundColor = .red
+        let swipe = UISwipeActionsConfiguration(actions: [delete])
+        return swipe
+    }
 }
 extension ListUserViewController: ListUserPresenterDelegate {
     func showSearchUser() {
@@ -78,5 +89,10 @@ extension ListUserViewController: ListUserPresenterDelegate {
     func showUsersList() {
         self.userTableView.reloadData()
     }
+    func deleteUser(at index: Int) {
+//        self.userTableView.deleteRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
+        self.userTableView.reloadData()
+    }
+    
 }
 

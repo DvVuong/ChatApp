@@ -43,7 +43,7 @@ class SenderUserCell: UITableViewCell {
         lbMessage.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 5).isActive = true
         lbMessage.widthAnchor.constraint(lessThanOrEqualToConstant: 250).isActive = true
         lbMessage.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10).isActive = true
-        lbMessage.heightAnchor.constraint(equalTo: contentView.heightAnchor, constant: -15).isActive = true
+        lbMessage.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -15).isActive = true
         
         //Setup Contrains lbTime
         contentView.addSubview(lbTime)
@@ -82,7 +82,6 @@ class SenderUserCell: UITableViewCell {
         }
         if message.text.isEmpty {
             self.imgMessage.isHidden = false
-            self.lbMessage.isHidden = true
         }else {
             self.imgMessage.isHidden = true
         }

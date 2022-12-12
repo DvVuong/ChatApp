@@ -10,23 +10,24 @@ import UIKit
 class SiginViewController: UIViewController {
     @IBOutlet private weak var lbTitle: UILabel!
     @IBOutlet private weak var tfEmail: UITextField!
-    @IBOutlet private weak var tfPasswork: UITextField!
+    @IBOutlet private weak var tfPassword: UITextField!
     @IBOutlet private weak var btSigin: UIButton!
     @IBOutlet private weak var viewEmail: UIView!
-    @IBOutlet private weak var viewPasswork: UIView!
+    @IBOutlet private weak var viewPassword: UIView!
     @IBOutlet private weak var viewSignUp: UIView!
     @IBOutlet private weak var btSignUp: UIButton!
     @IBOutlet private weak var btCheckForSaveData: UIButton!
     
-    private var selected: Bool = true
+    private var selected: Bool = false
     lazy var presenter = SignInPresenter(with: self)
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
-        presenter.ftechUser()
+        
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        presenter.ftechUser()
         navigationController?.setNavigationBarHidden(true, animated: animated)
     }
     override func viewWillDisappear(_ animated: Bool) {
@@ -43,10 +44,11 @@ class SiginViewController: UIViewController {
         setupUITextField()
         setupBtSigin()
         setupBtSaveData()
+        setupBtSignUp()
     }
     private func setupView() {
         viewEmail.layer.cornerRadius = 8
-        viewPasswork.layer.cornerRadius = 8
+        viewPassword.layer.cornerRadius = 8
         viewSignUp.layer.cornerRadius = 8
     }
     
@@ -57,23 +59,19 @@ class SiginViewController: UIViewController {
     private func setupUITextField() {
         // Email
          let email = presenter.showUserInfo().email
-            print("vuongdv", email)
             if email.isEmpty {
                 tfEmail.attributedPlaceholder = NSAttributedString(string: "Enter Your Email", attributes: [.foregroundColor: UIColor.blue])
-                print("vuongdv", email)
             } else {
                 tfEmail.text = email
             }
         // Password
        let password = presenter.showUserInfo().password
-           print("vuongdv", password)
            if password.isEmpty {
-               tfPasswork.attributedPlaceholder = NSAttributedString(string: "Enter Your Password", attributes: [.foregroundColor: UIColor.brown])
-               tfPasswork.isSecureTextEntry = true
-               print("vuongdv", password)
+               tfPassword.attributedPlaceholder = NSAttributedString(string: "Enter Your Password", attributes: [.foregroundColor: UIColor.brown])
+               tfPassword.isSecureTextEntry = true
            } else {
-               tfPasswork.text = password
-               tfPasswork.isSecureTextEntry = true
+               tfPassword.text = password
+               tfPassword.isSecureTextEntry = true
            }
 }
     private func setupBtSigin() {
@@ -93,28 +91,46 @@ class SiginViewController: UIViewController {
                 
             }else {
                 btCheckForSaveData.setImage(UIImage(systemName: "square"), for: .normal)
-                
             }
-           
     }
 }
     @objc func didTapSigin(_ sender: UIButton) {
-        presenter.validateEmailPassword(tfEmail.text!, tfPasswork.text!) { currentUser in
-            let vc = ListUserViewController.instance(currentUser)
-            navigationController?.pushViewController(vc, animated: true)
-        } Failure: {
-            return
+        presenter.ftechUser()
+        presenter.validateEmailPassword(tfEmail.text!, tfPassword.text!) { currentUser, bool in
+            if bool {
+                guard let currentUser = currentUser else { return }
+                let vc = ListUserViewController.instance(currentUser)
+               navigationController?.pushViewController(vc, animated: true)
+                self.tfEmail.text = ""
+                self.tfPassword.text = ""
+            }else {
+                return
+            }
         }
+
     }
     private func setupBtSignUp() {
         btSignUp.addTarget(self, action: #selector(didTapSigup(_:)), for: .touchUpInside)
     }
     @objc func didTapSigup(_ sender: UIButton) {
-        
+        let vc  = RegisterViewcontroller.instance(presenter.userData())
+        vc.delegate = self
+        navigationController?.pushViewController(vc, animated: true)
     }
 }
 extension SiginViewController: SignInPresenterDelegate {
+    func showNewUser(email: String, password: String) {
+        self.tfEmail.text = email
+        self.tfPassword.text = password
+    }
+    
     func showUserList() {
         
+    }
+}
+extension SiginViewController: RegisterViewcontrollerDelegate {
+    func callBackAccountResgiter(_ vc: RegisterViewcontroller, email: String, password: String) {
+        presenter.getNewUser(email, password: password)
+        navigationController?.popViewController(animated: true)
     }
 }
