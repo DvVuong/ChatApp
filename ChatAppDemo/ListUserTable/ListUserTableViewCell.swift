@@ -28,7 +28,12 @@ class ListUserTableViewCell: UITableViewCell {
         guard let user = user else { return }
         self.lbNameUser.text = user.name
         if let message = message {
-            self.lbMessage.text = message.text
+            if message.text.isEmpty {
+                self.lbMessage.text = "Tap to chat"
+            }else {
+                self.lbMessage.text = message.text
+            }
+            
         }
         
         ImageService.share.fetchImage(with: user.avatar) { image in

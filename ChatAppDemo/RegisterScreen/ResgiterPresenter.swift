@@ -49,6 +49,13 @@ class ResgiterPresenterView {
     }
     func validateEmaiPassoword(_ email: String, password: String, completion:(Bool) -> Void)  {
         var isvalid: Bool = true
+        if email.isEmpty {
+            isvalid = false
+            return
+        } else if password.isEmpty {
+            isvalid = false
+            return
+        }
         self.user.forEach { user in
             if email == user.email {
                 isvalid = false
