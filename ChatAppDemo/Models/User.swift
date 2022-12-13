@@ -12,5 +12,12 @@ struct UserRespone {
     let password: String
     let avatar: String
     let id: String
+    init(dict: [String: Any]) {
+        self.name = dict["name"] as? String ?? ""
+        self.email = dict["email"] as? String ?? ""
+        self.password = dict["password"] as? String ?? ""
+        self.avatar = dict["avatar"] as? String ?? ""
+        self.id = dict["id"] as? String ?? ""
+    }
 }
 

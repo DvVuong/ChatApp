@@ -28,29 +28,32 @@ class SignInPresenter {
             }
             else {
                 guard let querySnapshot = querySnapshot else { return }
-                _ =  querySnapshot.documents.map { db in
-                    let value = UserRespone(name: db["name"] as? String ?? ""
-                                            , email: db["email"] as? String ?? ""
-                                            , password: db["password"] as? String ?? ""
-                                            , avatar: db["avatar"] as? String ?? ""
-                                            , id: db["id"] as? String ?? "")
-                    self.users.append(value)
+                for doc in querySnapshot.documents {
+                let value = UserRespone(dict: doc.data())
+                self.users.append(value)
                 }
+//                _ =  querySnapshot.documents.map { db in
+//                    let value = UserRespone(name: db["name"] as? String ?? ""
+//                                            , email: db["email"] as? String ?? ""
+//                                            , password: db["password"] as? String ?? ""
+//                                            , avatar: db["avatar"] as? String ?? ""
+//                                            , id: db["id"] as? String ?? "")
+//                    self.users.append(value)
+//                }
             }
         }
     }
     func validateEmailPassword(_ email: String, _ password: String, completion: (_ currentUser: UserRespone?, Bool) -> Void) {
         var currentUser: UserRespone?
+        var isvalid: Bool = false
         users.forEach { user in
             if user.email == email && user.password == password {
                 currentUser = user
-                DataManager.shareInstance.saveUser(currentUser!)
-                completion(currentUser!, true)
-            }
-            else {
-                completion(nil, false)
+                //DataManager.shareInstance.saveUser(currentUser!)
+                isvalid = true
             }
         }
+        completion(currentUser, isvalid)
     }
     func userData() -> [UserRespone] {
         return users

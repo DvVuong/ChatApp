@@ -50,6 +50,8 @@ class SiginViewController: UIViewController {
         viewEmail.layer.cornerRadius = 8
         viewPassword.layer.cornerRadius = 8
         viewSignUp.layer.cornerRadius = 8
+        tfEmail.text = "long@gmail.com"
+        tfPassword.text = "123456"
     }
     
     private func setupLable() {
@@ -100,10 +102,11 @@ class SiginViewController: UIViewController {
             if bool {
                 guard let currentUser = currentUser else { return }
                 let vc = ListUserViewController.instance(currentUser)
-               navigationController?.pushViewController(vc, animated: true)
-                self.tfEmail.text = ""
-                self.tfPassword.text = ""
-            }else {
+                navigationController?.pushViewController(vc, animated: true)
+//                self.tfEmail.text = ""
+//                self.tfPassword.text = ""
+            }
+            else {
                 return
             }
         }

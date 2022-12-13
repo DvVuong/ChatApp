@@ -414,8 +414,8 @@
                                         </tableViewCellContentView>
                                         <connections>
                                             <outlet property="imgAvt" destination="yv4-pk-5P8" id="PtB-pn-8ZJ"/>
+                                            <outlet property="lbMessage" destination="aqj-OH-Tal" id="Iex-X6-GO0"/>
                                             <outlet property="lbNameUser" destination="pHC-se-8k8" id="erG-n2-mJA"/>
-                                            <outlet property="lmMessage" destination="aqj-OH-Tal" id="d8l-o2-QUd"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>

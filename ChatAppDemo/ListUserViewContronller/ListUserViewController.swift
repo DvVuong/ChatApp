@@ -20,7 +20,6 @@ class ListUserViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
-        presenter.getUser()
     }
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
@@ -29,6 +28,13 @@ class ListUserViewController: UIViewController {
     private func setupUI() {
         setupUITable()
         setupSearchUser()
+        UIView.animate(withDuration: 0, delay: 0) {
+            self.presenter.getUser {
+                self.presenter.getMessageForUser {
+                    self.userTableView.reloadData()
+                }
+            }
+        }
     }
     private func setupUITable() {
         userTableView.delegate = self
@@ -53,10 +59,8 @@ extension ListUserViewController: UITableViewDelegate, UITableViewDataSource {
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell  = userTableView.dequeueReusableCell(withIdentifier: "userCell", for: indexPath) as! ListUserTableViewCell
-        if let index = presenter.cellForUsers(at: indexPath.row) {
-            cell.updateUI(index)
-            cell.lbNameUser.attributedText = presenterCell.setHigligh(searchUser.text!, index.name)
-        }
+        cell.updateUI(presenter.cellForUsers(at: indexPath.row), message: presenter.showMessageForUser(presenter.users[indexPath.row].id))
+//        cell.lbNameUser.attributedText = presenterCell.setHigligh(searchUser.text!, index.name)
         return cell
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

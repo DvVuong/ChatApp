@@ -30,16 +30,16 @@ class DetailPresenterView {
     }
     func sendMessage(with message: String) {
         guard let receiverUser = receiverUser else { return }
-        let autoKey = self.db?.collection("Message").document().documentID
+        let autoKey = self.db?.collection("message").document().documentID
         guard let keyDocument = autoKey else { return }
-        db!.collection("Message").document(keyDocument).setData([
+        db!.collection("message").document(keyDocument).setData([
             "nameSender": self.currentUser!.name,
             "receivername": receiverUser.name,
             "text": message,
             "image": imgUrl,
             "sendId": self.currentUser!.id,
             "receiverID": receiverUser.id,
-            "time": Int(Date().timeIntervalSince1970)
+            "time": Date().timeIntervalSince1970
         ])
     }
     func sendImageMessage(with image: UIImage, completion: @escaping () -> Void) {
@@ -54,16 +54,16 @@ class DetailPresenterView {
                     if error != nil {return}
                     guard let url = url else {return}
                     self.imgUrl = "\(url)"
-                        let autoKey = self.db?.collection("Message").document().documentID
+                        let autoKey = self.db?.collection("message").document().documentID
                         guard let keyDocument = autoKey else { return }
-                        self.db!.collection("Message").document(keyDocument).setData([
+                        self.db!.collection("message").document(keyDocument).setData([
                             "nameSender": self.currentUser!.name,
                             "sendId": self.currentUser!.id,
                             "text": "",
                             "image": self.imgUrl,
                             "receivername": receiverUser.name,
                             "receiverID": receiverUser.id,
-                            "time": Int(Date().timeIntervalSince1970)
+                            "time": Date().timeIntervalSince1970
                         ])
                     }
                 }
@@ -75,10 +75,11 @@ class DetailPresenterView {
     }
     
     func getMessage() {
+        self.message.removeAll()
         guard let reciverUser = receiverUser else {return}
         guard let senderUser = self.currentUser else { return }
         message.removeAll()
-        self.db?.collection("Message").getDocuments{ querySnapshot, error in
+        self.db?.collection("message").getDocuments{ querySnapshot, error in
             if error != nil {
                 print("vuongdv", error!.localizedDescription)
             }else {
@@ -96,7 +97,7 @@ class DetailPresenterView {
         }
     }
     func sortMessage() {
-        var timer: [Int] = []
+        var timer: [Double] = []
         var messageBytime = [MessageRespone]()
         self.message.forEach { message in
             timer.append(message.time)

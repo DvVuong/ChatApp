@@ -21,12 +21,12 @@ open class DataManager: NSObject {
         do {
             let result = try context.fetch(userFetch)
             for item in result {
-                let user = UserRespone(name: item.name ?? ""
-                                       , email: item.email ?? ""
-                                       , password: item.password ?? ""
-                                       , avatar: item.avatar ?? ""
-                                       , id: item.id ?? "")
-                users.append(user)
+//                let user = UserRespone(name: item.name ?? ""
+//                                       , email: item.email ?? ""
+//                                       , password: item.password ?? ""
+//                                       , avatar: item.avatar ?? ""
+//                                       , id: item.id ?? "")
+//                users.append(user)
             }
             return users
         }
