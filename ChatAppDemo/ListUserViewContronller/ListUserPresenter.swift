@@ -8,59 +8,41 @@
 import Foundation
 import FirebaseFirestore
 protocol ListUserPresenterDelegate: NSObject {
-    func showUsersList()
     func showSearchUser()
     func deleteUser(at index: Int)
 }
 class ListUserPresenter {
     private weak var view: ListUserPresenterDelegate?
     private var db = Firestore.firestore()
-    var users = [UserRespone]()
+    private var users = [UserRespone]()
     private var finalUser = [UserRespone]()
     private var currentUser: UserRespone?
     private var allMessages = [MessageRespone]()
     private var message = [String: MessageRespone]()
     private var lastMessage = [MessageRespone]()
-    init(with view: ListUserPresenterDelegate) {
+    init(with view: ListUserPresenterDelegate, data: UserRespone) {
         self.view = view
-    }
-    convenience init(view: ListUserViewController, data: UserRespone) {
-        self.init(with: view)
         self.currentUser = data
     }
-    func getUser(_ completed: @escaping() -> Void) {
+    func fetchUser(_ completed: @escaping() -> Void) {
         self.message.removeAll()
         guard let currentID = currentUser?.id else { return }
         db.collection("user").getDocuments { querySnapshot, error in
-            if error != nil {
-                print("vuongdv", error!.localizedDescription)
-            }else {
-                guard let querySnapshot = querySnapshot else {
-                    return
+            if error != nil {return}
+            guard let querySnapshot = querySnapshot else {
+                return
+            }
+            for doc in querySnapshot.documents {
+                let value = UserRespone(dict: doc.data())
+                if currentID != value.id {
+                    self.users.append(value)
+                    self.finalUser = self.users
                 }
-                for doc in querySnapshot.documents {
-                    let value = UserRespone(dict: doc.data())
-                    if currentID != value.id {
-                        self.users.append(value)
-                        self.finalUser = self.users
-                    }
-                }
-//                querySnapshot.documents.map { db in
-//                    let value = UserRespone(name: db["name"] as? String ?? ""
-//                                            , email: db["email"] as? String ?? ""
-//                                            , password: db["password"] as? String ?? ""
-//                                            , avatar: db["avatar"] as? String ?? ""
-//                                            , id: db["id"] as? String ?? "")
-//                    if self.currentUser?.id != db["id"] as? String ?? "" {
-//                        self.users.append(value)
-//                        self.finalUser = self.users
-//                    }
-//                }
                 completed()
             }
         }
     }
-    func getMessageForUser( completed: @escaping () -> Void) {
+    func fetchMessageForUser( completed: @escaping () -> Void) {
         self.allMessages.removeAll()
         guard let senderID = currentUser?.id else  { return }
         db.collection("message").addSnapshotListener { querySnapshot, error in
@@ -86,7 +68,7 @@ class ListUserPresenter {
             completed()
         }
     }
-    func showMessageForUser(_ id: String) -> MessageRespone? {
+    func showMessageForUserId(_ id: String) -> MessageRespone? {
         return message[id]
     }
     func searchUser(_ text: String) {
@@ -101,6 +83,9 @@ class ListUserPresenter {
             }
         }
         view?.showSearchUser()
+    }
+    func usersId(_ index: Int) -> UserRespone? {
+        return users[index]
     }
     func currentUserId() -> UserRespone?{
         return currentUser

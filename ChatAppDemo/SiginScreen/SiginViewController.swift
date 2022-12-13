@@ -27,7 +27,7 @@ class SiginViewController: UIViewController {
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        presenter.ftechUser()
+        presenter.fetchUser()
         navigationController?.setNavigationBarHidden(true, animated: animated)
     }
     override func viewWillDisappear(_ animated: Bool) {
@@ -38,7 +38,6 @@ class SiginViewController: UIViewController {
         view.endEditing(true)
     }
     private func setupUI() {
-        
         setupLable()
         setupView()
         setupUITextField()
@@ -97,14 +96,12 @@ class SiginViewController: UIViewController {
     }
 }
     @objc func didTapSigin(_ sender: UIButton) {
-        presenter.ftechUser()
+        presenter.fetchUser()
         presenter.validateEmailPassword(tfEmail.text!, tfPassword.text!) { currentUser, bool in
             if bool {
                 guard let currentUser = currentUser else { return }
                 let vc = ListUserViewController.instance(currentUser)
                 navigationController?.pushViewController(vc, animated: true)
-//                self.tfEmail.text = ""
-//                self.tfPassword.text = ""
             }
             else {
                 return
@@ -122,18 +119,15 @@ class SiginViewController: UIViewController {
     }
 }
 extension SiginViewController: SignInPresenterDelegate {
-    func showNewUser(email: String, password: String) {
+    func showUserRegiter(_ email: String, password: String) {
         self.tfEmail.text = email
         self.tfPassword.text = password
     }
-    
-    func showUserList() {
-        
-    }
+
 }
 extension SiginViewController: RegisterViewcontrollerDelegate {
     func callBackAccountResgiter(_ vc: RegisterViewcontroller, email: String, password: String) {
-        presenter.getNewUser(email, password: password)
+        presenter.showUserResgiter(email, password: password)
         navigationController?.popViewController(animated: true)
     }
 }

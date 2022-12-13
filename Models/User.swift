@@ -6,7 +6,7 @@
 //
 
 import Foundation
-struct UserRespone {
+public struct UserRespone {
     let name: String
     let email: String
     let password: String

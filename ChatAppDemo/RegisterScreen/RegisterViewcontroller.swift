@@ -32,6 +32,10 @@ class RegisterViewcontroller: UIViewController {
         super.viewDidLoad()
         setupUI()
     }
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.setNavigationBarHidden(true, animated: animated)
+    }
     private func setupUI() {
         setupView()
         setupImgAvatar()
@@ -83,23 +87,36 @@ class RegisterViewcontroller: UIViewController {
     }
     @objc private func didTapSignUp(_ sender: UIButton) {
         if tfEmail.text == "" && tfPassword.text != tfConfirmPassword.text {
+            showAlertFailure("Email không được rỗng")
             return
-        }else {
+        }else if tfPassword.text == "" {
+            showAlertFailure("Password không được rỗng")
+            return
+        }
+        else {
             presenter.validateEmaiPassoword(tfEmail.text!, password: tfPassword.text!) { bool in
                 if bool {
                     presenter.createAccount(email: tfEmail.text!, password: tfPassword.text!, name: tfName.text!)
-//                    showAlert("Đăng ký thành công")
-                    delegate?.callBackAccountResgiter(self, email: tfEmail.text!, password: tfPassword.text!)
-                    
+                    showAlertSuccess("Đăng ký thành công")
                 }else {
-                    showAlert("Email đã tồn tại")
+                    showAlertFailure("Email đã tồn tại")
+                    
                 }
             }
         }
     }
-    func showAlert(_ title: String)  {
+    func showAlertSuccess(_ title: String)  {
         let aler = UIAlertController(title: title, message: nil, preferredStyle: .alert)
-        let action = UIAlertAction(title: "Cancel", style: .cancel)
+        let action = UIAlertAction(title: "Xác nhận", style: .default) { action in
+            self.delegate?.callBackAccountResgiter(self, email: self.tfEmail.text!, password: self.tfPassword.text!)
+        }
+        
+        aler.addAction(action)
+        present(aler, animated: true)
+    }
+    func showAlertFailure(_ title: String) {
+        let aler = UIAlertController(title: title, message: nil, preferredStyle: .alert)
+        let action = UIAlertAction(title: "Xác nhận", style: .cancel)
         aler.addAction(action)
         present(aler, animated: true)
     }

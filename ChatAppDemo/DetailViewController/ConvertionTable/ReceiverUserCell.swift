@@ -8,19 +8,14 @@
 import UIKit
 
 class ReceiverUserCell: UITableViewCell {
-    private var bubleView: UIView = {
-        let bubleView = UIView()
-        bubleView.backgroundColor = .systemGray
-        bubleView.layer.cornerRadius = 8
-        bubleView.layer.masksToBounds = true
-        bubleView.translatesAutoresizingMaskIntoConstraints = false
-        return bubleView
-    }()
-    private var lbMessage: UILabel = {
-        let lbMessage = UILabel()
+    private var lbMessage: CustomLabel = {
+        let lbMessage = CustomLabel()
         lbMessage.textAlignment = .right
         lbMessage.numberOfLines = 0
-        lbMessage.textColor = .black
+        lbMessage.textColor = .white
+        lbMessage.layer.cornerRadius = 6
+        lbMessage.layer.masksToBounds = true
+        lbMessage.backgroundColor = .systemGray
         lbMessage.translatesAutoresizingMaskIntoConstraints = false
         return lbMessage
     }()
@@ -43,19 +38,12 @@ class ReceiverUserCell: UITableViewCell {
     }()
     override func awakeFromNib() {
         super.awakeFromNib()
-        //Setup contrains BubbleView
-        contentView.addSubview(bubleView)
-        bubleView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 1).isActive = true
-        bubleView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 5).isActive = true
-        bubleView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -3).isActive = true
-        
         // Setup contrains LbMessage
         contentView.addSubview(lbMessage)
         lbMessage.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 5).isActive = true
         lbMessage.widthAnchor.constraint(lessThanOrEqualToConstant: 250).isActive = true
-        bubleView.widthAnchor.constraint(equalTo: lbMessage.widthAnchor, constant: 10).isActive = true
         lbMessage.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10).isActive = true
-        lbMessage.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10).isActive = true
+        lbMessage.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -15).isActive = true
         
         //SetupContrain imgMessage
         contentView.addSubview(imgMessage)
@@ -95,8 +83,7 @@ class ReceiverUserCell: UITableViewCell {
         }
         if message.text.isEmpty {
             self.imgMessage.isHidden = false
-            self.bubleView.isHidden = true
-        }else {
+        }else{
             self.imgMessage.isHidden = true
         }
     }

@@ -10,7 +10,7 @@ import UIKit
 class DetailViewViewController: UIViewController {
     static func instance(_ data: UserRespone, currentUser: UserRespone) -> DetailViewViewController {
         let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "DetailScreen") as! DetailViewViewController
-        vc.presenter = DetailPresenterView(view: vc, data: data, currentUser: currentUser)
+        vc.presenter = DetailPresenter(with: vc, data: data, currentUser: currentUser)
         return vc
     }
     @IBOutlet private weak var image: UIImageView!
@@ -18,11 +18,11 @@ class DetailViewViewController: UIViewController {
     @IBOutlet private weak var btSendMessage: UIButton!
     @IBOutlet private weak var convertiontable: UITableView!
     private var imgPicker = UIImagePickerController()
-    lazy var presenter =  DetailPresenterView(with: self)
+    private var presenter: DetailPresenter!
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
-        presenter.getMessage()
+        presenter.fetchMessage()
     }
     private func setupUI() {
         setupMessageTextField()
@@ -35,8 +35,6 @@ class DetailViewViewController: UIViewController {
         convertiontable.dataSource = self
         convertiontable.separatorStyle = .none
         convertiontable.tableFooterView = UIView()
-//        let nib = UINib(nibName: "MessageCell", bundle: nil)
-//        convertiontable.register(nib, forCellReuseIdentifier: "messageCell")
     }
     private func setupMessageTextField() {
         tfMessage.attributedPlaceholder = NSAttributedString(string: "Aa", attributes: [.foregroundColor:UIColor.white])
@@ -52,7 +50,7 @@ class DetailViewViewController: UIViewController {
         btSendMessage.setTitle(" ", for: .normal)
         btSendMessage.setImage(UIImage(named: "paperplane.fill"), for: .normal)
         btSendMessage.addTarget(self, action: #selector(didTapSend(_:)), for: .touchUpInside)
-        }
+    }
     @objc private func didTapSend(_ sender: UIButton) {
         self.sendMessage()
     }
@@ -64,7 +62,7 @@ class DetailViewViewController: UIViewController {
         else {
             presenter.sendMessage(with: tfMessage.text!)
             tfMessage.text = ""
-            presenter.getMessage()
+            presenter.fetchMessage()
         }
     }
     
@@ -110,17 +108,17 @@ extension DetailViewViewController: UITableViewDelegate, UITableViewDataSource {
         let sendId = presenter.message[indexPath.item].sendId
         if currentId == sendId {
             guard let cell = convertiontable.dequeueReusableCell(withIdentifier: "senderCell", for: indexPath) as? SenderUserCell else { return UITableViewCell() }
-             let message = presenter.cellForMessage(at: indexPath.row)
+            let message = presenter.cellForMessage(at: indexPath.row)
             cell.updateUI(with: message)
-                return cell
+            return cell
             
-            } else {
-                guard let cell = convertiontable.dequeueReusableCell(withIdentifier: "receiverCell", for: indexPath) as? ReceiverUserCell else { return UITableViewCell() }
-                 let message = presenter.cellForMessage(at: indexPath.item)
-                    cell.updateUI(with: message)
-                return cell
-            }
+        } else {
+            guard let cell = convertiontable.dequeueReusableCell(withIdentifier: "receiverCell", for: indexPath) as? ReceiverUserCell else { return UITableViewCell() }
+            let message = presenter.cellForMessage(at: indexPath.item)
+            cell.updateUI(with: message)
+            return cell
         }
+    }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         let message = presenter.cellForMessage(at: indexPath.row)
         if message.text.isEmpty {

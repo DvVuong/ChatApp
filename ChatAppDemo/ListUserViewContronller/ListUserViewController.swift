@@ -10,27 +10,23 @@ import UIKit
 class ListUserViewController: UIViewController {
     static func instance(_ currentUser: UserRespone) -> ListUserViewController {
         let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "listUserScreen") as! ListUserViewController
-        vc.presenter = ListUserPresenter(view: vc, data: currentUser)
+        vc.presenter = ListUserPresenter(with: vc, data: currentUser)
         return vc
     }
-     lazy var presenter = ListUserPresenter(with: self)
-     lazy var presenterCell = ListCellPresenter()
+    private var presenter: ListUserPresenter!
+    lazy var presenterCell = ListCellPresenter()
     @IBOutlet private var userTableView: UITableView!
     @IBOutlet private weak var searchUser: UITextField!
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
     }
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        navigationController?.setToolbarHidden(true, animated: animated)
-    }
     private func setupUI() {
         setupUITable()
         setupSearchUser()
         UIView.animate(withDuration: 0, delay: 0) {
-            self.presenter.getUser {
-                self.presenter.getMessageForUser {
+            self.presenter.fetchUser {
+                self.presenter.fetchMessageForUser {
                     self.userTableView.reloadData()
                 }
             }
@@ -59,8 +55,10 @@ extension ListUserViewController: UITableViewDelegate, UITableViewDataSource {
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell  = userTableView.dequeueReusableCell(withIdentifier: "userCell", for: indexPath) as! ListUserTableViewCell
-        cell.updateUI(presenter.cellForUsers(at: indexPath.row), message: presenter.showMessageForUser(presenter.users[indexPath.row].id))
-//        cell.lbNameUser.attributedText = presenterCell.setHigligh(searchUser.text!, index.name)
+        cell.updateUI(presenter.cellForUsers(at: indexPath.row), message: presenter.showMessageForUserId(presenter.usersId(indexPath.row)!.id))
+        if let index = presenter.cellForUsers(at: indexPath.row) {
+            cell.lbNameUser.attributedText = presenterCell.setHigligh(searchUser.text!, index.name)
+        }
         return cell
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -89,12 +87,8 @@ extension ListUserViewController: ListUserPresenterDelegate {
     func showSearchUser() {
         self.userTableView.reloadData()
     }
-    
-    func showUsersList() {
-        self.userTableView.reloadData()
-    }
     func deleteUser(at index: Int) {
-//        self.userTableView.deleteRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
+        self.userTableView.deleteRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
         self.userTableView.reloadData()
     }
     
