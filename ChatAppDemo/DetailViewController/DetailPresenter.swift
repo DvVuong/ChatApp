@@ -19,9 +19,8 @@ class DetailPresenter {
     private var receiverUser: User?
     var message:[Message] = []
     private var db = Firestore.firestore()
-    
-    private var messageKey = [Message]()
-    init(with view: DetailPresenterViewDelegate, data: User, currentUser: User, messageKey: [Message]) {
+    private var messageKey: Message?
+    init(with view: DetailPresenterViewDelegate, data: User, currentUser: User, messageKey: Message) {
         self.view = view
         self.receiverUser = data
         self.currentUser = currentUser
@@ -73,10 +72,22 @@ class DetailPresenter {
     }
     
     func changeStateReadMessage() {
-        messageKey.forEach { messKey in
-            
-            
+        guard let messageKey = messageKey else {
+            return
         }
+        print(messageKey.messageKey)
+        self.db.collection("message")
+            .whereField("read", isEqualTo: false)
+            .getDocuments { querydata, error in
+                if error != nil { return }
+                guard let doc = querydata?.documents else { return }
+                doc.forEach { doc in
+                    let value = Message(dict: doc.data())
+                    if messageKey.messageKey == value.messageKey {
+                        self.db.collection("message").document(messageKey.messageKey).updateData(["read" : true])
+                    }
+                }
+            }
     }
     func currentUserID() -> String? {
         guard let id = currentUser?.id else { return nil }
@@ -87,18 +98,19 @@ class DetailPresenter {
         self.message.removeAll()
         guard let reciverUser = receiverUser else {return}
         guard let senderUser = self.currentUser else { return }
-        self.db.collection("message").getDocuments { querySnapshot, error in
+        self.db.collection("message").addSnapshotListener { querySnapshot, error in
             if error != nil { return}
-            guard let document = querySnapshot?.documents else { return }
-            for item in document {
-                let value = Message(dict: item.data())
-                if ( value.receiverID == reciverUser.id && value.sendId == senderUser.id)
-                    || (value.receiverID == senderUser.id && value.sendId == reciverUser.id) {
-                    self.message.append(value)
-                    self.sortMessage()
-                    self.view?.showMessage()
+            querySnapshot?.documentChanges.forEach({ docChange in
+                if docChange.type == .added {
+                    let data = Message(dict: docChange.document.data())
+                    if ( data.receiverID == reciverUser.id && data.sendId == senderUser.id)
+                        || (data.receiverID == senderUser.id && data.sendId == reciverUser.id) {
+                        self.message.append(data)
+                        self.sortMessage()
+                        self.view?.showMessage()
+                    }
                 }
-            }
+            })
         }
     }
     func sortMessage() {

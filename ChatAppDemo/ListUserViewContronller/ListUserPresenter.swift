@@ -21,7 +21,7 @@ class ListUserPresenter {
     private var message = [String: Message]()
     private var lastMessage = [Message]()
     private var temparr = [Message]()
-    private var messageKey = [Message]()
+    private var messageKey = [String: Message]()
     init(with view: ListUserPresenterDelegate, data: User) {
         self.view = view
         self.currentUser = data
@@ -49,12 +49,13 @@ class ListUserPresenter {
         guard let senderID = currentUser?.id else  { return }
         db.collection("message").addSnapshotListener { querySnapshot, error in
             if error != nil { return }
-            guard let document = querySnapshot?.documents else { return }
+            guard let document = querySnapshot?.documentChanges else { return }
             
             for doc in document {
-                let message = Message(dict: doc.data())
-                self.allMessages.append(message)
-                self.messageKey.append(message)
+                if doc.type == .added {
+                    let message = Message(dict: doc.document.data())
+                    self.allMessages.append(message)
+                }
             }
             
             self.users.forEach { user in
@@ -69,13 +70,12 @@ class ListUserPresenter {
                     }
                 }
                 self.message[user.id] = self.temparr.last
+                self.messageKey["messageKey"] = self.temparr.last
             }
             completed()
         }
     }
-    func showMessageForUserId(_ id: String) -> Message? {
-        return message[id]
-    }
+    
     func searchUser(_ text: String) {
         let lowcaseText = text.lowercased()
         if text.isEmpty {
@@ -92,8 +92,12 @@ class ListUserPresenter {
     func usersId(_ index: Int) -> User? {
         return users[index]
     }
-    func messageKeyForState(_ index: Int) -> [Message]? {
-    return messageKey
+    func showMessageForUserId(_ id: String) -> Message? {
+        return message[id]
+    }
+    func messageKeyForState() -> Message? {
+        print(self.messageKey["messageKey"])
+    return messageKey["messageKey"]
     }
     func currentUserId() -> User?{
         return currentUser

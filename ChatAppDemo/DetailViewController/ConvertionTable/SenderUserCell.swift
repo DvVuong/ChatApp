@@ -65,7 +65,9 @@ class SenderUserCell: UITableViewCell {
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
 
-        // Configure the view for the selected state
+        imgMessage.isUserInteractionEnabled = true
+        let tapGes = UITapGestureRecognizer(target: self, action: #selector(handelZoomeImage))
+        imgMessage.addGestureRecognizer(tapGes)
         
     }
     func updateUI(with message: Message) {
@@ -75,12 +77,22 @@ class SenderUserCell: UITableViewCell {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "hh:mm:ss a"
         lbTime.text = dateFormatter.string(from: time)
-        imgMessage.sd_setImage(with: URL(string: message.image), placeholderImage: UIImage(systemName: "photo"))
+        ImageService.share.fetchImage(with: message.image) { image in
+            DispatchQueue.main.async {
+                self.imgMessage.image = image
+            }
+        }
         if message.text.isEmpty {
             self.imgMessage.isHidden = false
+            self.lbMessage.isHidden = true
         }else {
             self.imgMessage.isHidden = true
+            self.lbMessage.isHidden = false
         }
     }
+    @objc private func handelZoomeImage() {
+        ImageService.share.zoomImage(imgMessage)
+    }
+    
 
 }

@@ -8,7 +8,7 @@
 import UIKit
 
 class DetailViewViewController: UIViewController {
-    static func instance(_ data: User, currentUser: User, messageKey: [Message]) -> DetailViewViewController {
+    static func instance(_ data: User, currentUser: User, messageKey: Message) -> DetailViewViewController {
         let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "DetailScreen") as! DetailViewViewController
         vc.presenter = DetailPresenter(with: vc, data: data, currentUser: currentUser, messageKey: messageKey )
         return vc
@@ -66,10 +66,6 @@ class DetailViewViewController: UIViewController {
             return
         }
         presenter.sendMessage(with: tfMessage.text!)
-        DispatchQueue.main.async {
-            self.presenter.fetchMessage()
-        }
-        
         tfMessage.text = ""
     }
     
@@ -103,7 +99,8 @@ extension DetailViewViewController: UIImagePickerControllerDelegate, UINavigatio
 extension DetailViewViewController: DetailPresenterViewDelegate {
     func showMessage() {
         self.convertiontable.reloadData()
-        scrollToBottom()
+        self.scrollToBottom()
+        
     }
 }
 extension DetailViewViewController: UITableViewDelegate, UITableViewDataSource {

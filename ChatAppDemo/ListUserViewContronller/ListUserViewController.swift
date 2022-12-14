@@ -67,10 +67,11 @@ extension ListUserViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let data = presenter.cellForUsers(at: indexPath.row) else { return}
         guard let currentUser = presenter.currentUserId() else { return }
-        let messageKey = presenter.messageKeyForState(indexPath.row)
-        let vc = DetailViewViewController.instance(data, currentUser: currentUser, messageKey: messageKey!)
-        vc.title = data.name
-        navigationController?.pushViewController(vc, animated: true)
+        let messageKey = presenter.messageKeyForState()
+        print(messageKey?.messageKey)
+        //let vc = DetailViewViewController.instance(data, currentUser: currentUser, messageKey: messageKey!)
+//        vc.title = data.name
+//        navigationController?.pushViewController(vc, animated: true)
     }
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let delete = UIContextualAction(style: .normal, title: "Delete") { action, _, _ in
