@@ -15,8 +15,8 @@ open class DataManager: NSObject {
     private var context: NSManagedObjectContext {
         return persistentContainer.viewContext
     }
-    func getUser() -> [UserRespone] {
-        var users: [UserRespone] = []
+    func getUser() -> [User] {
+        var users: [User] = []
         let userFetch: NSFetchRequest<UserEntity> = UserEntity.fetchRequest()
         do {
             let result = try context.fetch(userFetch)
@@ -35,7 +35,7 @@ open class DataManager: NSObject {
         }
         return []
     }
-    func saveUser(_ user: UserRespone) {
+    func saveUser(_ user: User) {
         let userdata = UserEntity(context: context)
         userdata.email = user.email
         userdata.password = user.password

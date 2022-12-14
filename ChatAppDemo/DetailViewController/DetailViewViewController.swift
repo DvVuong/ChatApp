@@ -8,21 +8,27 @@
 import UIKit
 
 class DetailViewViewController: UIViewController {
-    static func instance(_ data: UserRespone, currentUser: UserRespone) -> DetailViewViewController {
+    static func instance(_ data: User, currentUser: User, messageKey: [Message]) -> DetailViewViewController {
         let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "DetailScreen") as! DetailViewViewController
-        vc.presenter = DetailPresenter(with: vc, data: data, currentUser: currentUser)
+        vc.presenter = DetailPresenter(with: vc, data: data, currentUser: currentUser, messageKey: messageKey )
         return vc
     }
     @IBOutlet private weak var image: UIImageView!
     @IBOutlet private weak var tfMessage: UITextField!
     @IBOutlet private weak var btSendMessage: UIButton!
     @IBOutlet private weak var convertiontable: UITableView!
+    
+    
     private var imgPicker = UIImagePickerController()
     private var presenter: DetailPresenter!
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
-        presenter.fetchMessage()
+        self.presenter.changeStateReadMessage()
+        self.presenter.fetchMessage()
+    }
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
     }
     private func setupUI() {
         setupMessageTextField()
@@ -59,11 +65,12 @@ class DetailViewViewController: UIViewController {
         if tfMessage.text == "" {
             return
         }
-        else {
-            presenter.sendMessage(with: tfMessage.text!)
-            tfMessage.text = ""
-            presenter.fetchMessage()
+        presenter.sendMessage(with: tfMessage.text!)
+        DispatchQueue.main.async {
+            self.presenter.fetchMessage()
         }
+        
+        tfMessage.text = ""
     }
     
     @objc private func chooseImage(_ tapGes: UITapGestureRecognizer) {
@@ -83,8 +90,8 @@ extension DetailViewViewController: UIImagePickerControllerDelegate, UINavigatio
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         let image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage
         guard let image = image else { return }
-        presenter.sendImageMessage(with: image) {
-            self.convertiontable.reloadData()
+        DispatchQueue.main.async {
+            self.presenter.sendImageMessage(with: image)
         }
         self.imgPicker.dismiss(animated: true)
     }

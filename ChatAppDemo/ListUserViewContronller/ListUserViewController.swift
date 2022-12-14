@@ -8,7 +8,7 @@
 import UIKit
 
 class ListUserViewController: UIViewController {
-    static func instance(_ currentUser: UserRespone) -> ListUserViewController {
+    static func instance(_ currentUser: User) -> ListUserViewController {
         let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "listUserScreen") as! ListUserViewController
         vc.presenter = ListUserPresenter(with: vc, data: currentUser)
         return vc
@@ -20,17 +20,17 @@ class ListUserViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
+        self.presenter.fetchUser {
+            self.presenter.fetchMessageForUser {
+                self.userTableView.reloadData()
+                
+            }
+        }
     }
     private func setupUI() {
         setupUITable()
         setupSearchUser()
-        UIView.animate(withDuration: 0, delay: 0) {
-            self.presenter.fetchUser {
-                self.presenter.fetchMessageForUser {
-                    self.userTableView.reloadData()
-                }
-            }
-        }
+        
     }
     private func setupUITable() {
         userTableView.delegate = self
@@ -55,7 +55,7 @@ extension ListUserViewController: UITableViewDelegate, UITableViewDataSource {
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell  = userTableView.dequeueReusableCell(withIdentifier: "userCell", for: indexPath) as! ListUserTableViewCell
-        cell.updateUI(presenter.cellForUsers(at: indexPath.row), message: presenter.showMessageForUserId(presenter.usersId(indexPath.row)!.id))
+        cell.updateUI(presenter.cellForUsers(at: indexPath.row), message: presenter.showMessageForUserId(presenter.users[indexPath.row].id))
         if let index = presenter.cellForUsers(at: indexPath.row) {
             cell.lbNameUser.attributedText = presenterCell.setHigligh(searchUser.text!, index.name)
         }
@@ -67,7 +67,8 @@ extension ListUserViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let data = presenter.cellForUsers(at: indexPath.row) else { return}
         guard let currentUser = presenter.currentUserId() else { return }
-        let vc = DetailViewViewController.instance(data, currentUser: currentUser)
+        let messageKey = presenter.messageKeyForState(indexPath.row)
+        let vc = DetailViewViewController.instance(data, currentUser: currentUser, messageKey: messageKey!)
         vc.title = data.name
         navigationController?.pushViewController(vc, animated: true)
     }

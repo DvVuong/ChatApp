@@ -47,10 +47,17 @@ class SiginViewController: UIViewController {
     }
     private func setupView() {
         viewEmail.layer.cornerRadius = 8
+        viewEmail.layer.borderColor = UIColor.white.cgColor
+        viewEmail.layer.borderWidth = 1
+        // Setupview Password
         viewPassword.layer.cornerRadius = 8
+        viewPassword.layer.borderColor = UIColor.white.cgColor
+        viewPassword.layer.borderWidth = 1
+        // SetupView Signup
         viewSignUp.layer.cornerRadius = 8
-        tfEmail.text = "long@gmail.com"
-        tfPassword.text = "123456"
+        viewSignUp.layer.borderColor = UIColor.white.cgColor
+        viewSignUp.layer.borderWidth = 1
+        
     }
     
     private func setupLable() {
@@ -58,22 +65,19 @@ class SiginViewController: UIViewController {
         lbTitle.textAlignment = .center
     }
     private func setupUITextField() {
-        // Email
-         let email = presenter.showUserInfo().email
-            if email.isEmpty {
-                tfEmail.attributedPlaceholder = NSAttributedString(string: "Enter Your Email", attributes: [.foregroundColor: UIColor.blue])
-            } else {
-                tfEmail.text = email
-            }
-        // Password
-       let password = presenter.showUserInfo().password
-           if password.isEmpty {
-               tfPassword.attributedPlaceholder = NSAttributedString(string: "Enter Your Password", attributes: [.foregroundColor: UIColor.brown])
-               tfPassword.isSecureTextEntry = true
-           } else {
-               tfPassword.text = password
-               tfPassword.isSecureTextEntry = true
-           }
+        //
+        tfEmail.textColor = .white
+        
+        tfEmail.text = "long@gmail.com"
+        tfPassword.text = "123456"
+        // TextField Email
+        tfEmail.attributedPlaceholder = NSAttributedString(string: "Enter Your Email", attributes: [.foregroundColor: UIColor.white])
+        
+        // TextField Password
+        tfPassword.textColor = .white
+        tfPassword.attributedPlaceholder = NSAttributedString(string: "Enter Your Password", attributes: [.foregroundColor: UIColor.white])
+        tfPassword.isSecureTextEntry = true
+        
 }
     private func setupBtSigin() {
         btSigin.layer.cornerRadius = 8

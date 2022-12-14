@@ -11,7 +11,7 @@ protocol RegisterViewcontrollerDelegate {
 }
 
 class RegisterViewcontroller: UIViewController {
-    static func instance(_ data: [UserRespone]) -> RegisterViewcontroller {
+    static func instance(_ data: [User]) -> RegisterViewcontroller {
         let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "SignUpScreen") as! RegisterViewcontroller
         vc.presenter = ResgiterPresenterView(view: vc, user: data)
         return vc

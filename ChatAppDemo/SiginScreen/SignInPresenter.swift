@@ -14,30 +14,25 @@ protocol SignInPresenterDelegate: NSObject {
 }
 class SignInPresenter {
     private weak var view: SignInPresenterDelegate?
-    private var users = [UserRespone]()
-    private var currentUser: UserRespone?
+    private var users = [User]()
+    private var currentUser: User?
     private let db = Firestore.firestore()
     init(with view: SignInPresenterDelegate) {
         self.view = view
     }
 
     func fetchUser() {
-        db.collection("user").getDocuments() { (querySnapshot, error) in
-            if error != nil {
-                print("vuongdv",error!.localizedDescription)
-            }
-            else {
-                guard let querySnapshot = querySnapshot else { return }
-                for doc in querySnapshot.documents {
-                let value = UserRespone(dict: doc.data())
+        db.collection("user").getDocuments{ (querySnapshot, error) in
+            if error != nil {return}
+            guard let querySnapshot = querySnapshot else { return }
+            for doc in querySnapshot.documents {
+                let value = User(dict: doc.data())
                 self.users.append(value)
-                }
             }
         }
     }
-    
-    func validateEmailPassword(_ email: String, _ password: String, completion: (_ currentUser: UserRespone?, Bool) -> Void) {
-        var currentUser: UserRespone?
+    func validateEmailPassword(_ email: String, _ password: String, completion: (_ currentUser: User?, Bool) -> Void) {
+        var currentUser: User?
         var isvalid: Bool = false
         users.forEach { user in
             if user.email == email && user.password == password {
@@ -48,7 +43,7 @@ class SignInPresenter {
         completion(currentUser, isvalid)
     }
     
-    func userData() -> [UserRespone] {
+    func userData() -> [User] {
         return users
     }
     
@@ -64,7 +59,5 @@ class SignInPresenter {
     }
     func showUserResgiter(_ email: String, password: String) {
         view?.showUserRegiter(email, password: password)
-    } 
-    
-    
+    }
 }

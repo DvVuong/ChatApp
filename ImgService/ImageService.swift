@@ -21,20 +21,12 @@ open class ImageService: NSObject {
             return
         }
         let task = URLSession.shared.dataTask(with: url) { data, _, error in
-            if error != nil {
-                completion(nil)
-                print("vuongdv", error!.localizedDescription)
-            }else {
-                DispatchQueue.main.async {
-                    guard let data = data else { return }
-                    guard let image = UIImage(data: data) else {
-                        completion(nil)
-                        return
-                    }
-                    self.cache.setObject(image, forKey: keyCache)
-                    completion(image)
-                }
-            }
+            if error != nil { return}
+            guard let data = data else { return }
+            guard let image = UIImage(data: data) else {return}
+            self.cache.setObject(image, forKey: keyCache)
+            completion(image)
+            
         }
         task.resume()
     }

@@ -15,30 +15,38 @@ protocol DetailPresenterViewDelegate: NSObject {
 class DetailPresenter {
     private weak var view: DetailPresenterViewDelegate?
     private var imgUrl:String = ""
-    private var currentUser: UserRespone?
-    private var receiverUser: UserRespone?
-    var message:[MessageRespone] = []
+    private var currentUser: User?
+    private var receiverUser: User?
+    var message:[Message] = []
     private var db = Firestore.firestore()
-    init(with view: DetailPresenterViewDelegate, data: UserRespone, currentUser: UserRespone) {
+    
+    private var messageKey = [Message]()
+    init(with view: DetailPresenterViewDelegate, data: User, currentUser: User, messageKey: [Message]) {
         self.view = view
         self.receiverUser = data
         self.currentUser = currentUser
+        self.messageKey = messageKey
     }
     func sendMessage(with message: String) {
-        guard let receiverUser = receiverUser else { return }
         let autoKey = self.db.collection("message").document().documentID
+        guard let receiverUser = receiverUser else { return }
+        guard let senderUser = currentUser else  {  return }
         db.collection("message").document(autoKey).setData([
-            "nameSender": self.currentUser!.name,
+            "nameSender": senderUser.name,
             "receivername": receiverUser.name,
             "text": message,
             "image": imgUrl,
-            "sendId": self.currentUser!.id,
+            "sendId": senderUser.id,
             "receiverID": receiverUser.id,
-            "time": Date().timeIntervalSince1970
+            "time": Date().timeIntervalSince1970,
+            "read": false,
+            "messageKey": autoKey
         ])
     }
-    func sendImageMessage(with image: UIImage, completion: @escaping () -> Void) {
+    func sendImageMessage(with image: UIImage) {
+        let autoKey = self.db.collection("message").document().documentID
         guard let receiverUser = receiverUser else { return }
+        guard let senderUser = currentUser else  {  return }
         let storeRef = Storage.storage().reference()
         let imageKey = NSUUID().uuidString
         let image = image.jpegData(compressionQuality: 0.5)!
@@ -49,19 +57,26 @@ class DetailPresenter {
                 if error != nil {return}
                 guard let url = url else {return}
                 self.imgUrl = "\(url)"
-                let autoKey = self.db.collection("message").document().documentID
                 self.db.collection("message").document(autoKey).setData([
-                    "nameSender": self.currentUser!.name,
-                    "sendId": self.currentUser!.id,
+                    "nameSender": senderUser.name,
+                    "sendId": senderUser.id,
                     "text": "",
                     "image": self.imgUrl,
                     "receivername": receiverUser.name,
                     "receiverID": receiverUser.id,
-                    "time": Date().timeIntervalSince1970
+                    "time": Date().timeIntervalSince1970,
+                    "read": false,
+                    "messageKey": autoKey
                 ])
             }
         }
-        completion()
+    }
+    
+    func changeStateReadMessage() {
+        messageKey.forEach { messKey in
+            
+            
+        }
     }
     func currentUserID() -> String? {
         guard let id = currentUser?.id else { return nil }
@@ -72,12 +87,11 @@ class DetailPresenter {
         self.message.removeAll()
         guard let reciverUser = receiverUser else {return}
         guard let senderUser = self.currentUser else { return }
-        message.removeAll()
-        self.db.collection("message").getDocuments{ querySnapshot, error in
+        self.db.collection("message").getDocuments { querySnapshot, error in
             if error != nil { return}
             guard let document = querySnapshot?.documents else { return }
             for item in document {
-                let value = MessageRespone(dict: item.data())
+                let value = Message(dict: item.data())
                 if ( value.receiverID == reciverUser.id && value.sendId == senderUser.id)
                     || (value.receiverID == senderUser.id && value.sendId == reciverUser.id) {
                     self.message.append(value)
@@ -89,7 +103,7 @@ class DetailPresenter {
     }
     func sortMessage() {
         var timer: [Double] = []
-        var messageBytime = [MessageRespone]()
+        var messageBytime = [Message]()
         self.message.forEach { message in
             timer.append(message.time)
         }
@@ -108,7 +122,7 @@ class DetailPresenter {
     func numberOfMessage() -> Int {
         return message.count
     }
-    func cellForMessage(at index: Int) -> MessageRespone {
+    func cellForMessage(at index: Int) -> Message {
         return message[index]
     }
 }

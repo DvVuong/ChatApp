@@ -24,7 +24,7 @@
 		9D7AD6BD294342F300162976 /* CustomLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D7AD6BC294342F300162976 /* CustomLabel.swift */; };
 		9D9134A4294177810065578D /* ImageService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D9134A3294177810065578D /* ImageService.swift */; };
 		9D9134A7294186B20065578D /* DetailPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D9134A6294186B20065578D /* DetailPresenter.swift */; };
-		9D9134A92941E11D0065578D /* MessageRespone.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D9134A82941E11D0065578D /* MessageRespone.swift */; };
+		9D9134A92941E11D0065578D /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D9134A82941E11D0065578D /* Message.swift */; };
 		9D9134AC2941E8610065578D /* SenderUserCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D9134AB2941E8610065578D /* SenderUserCell.swift */; };
 		9D9134AE2941E9460065578D /* ReceiverUserCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D9134AD2941E9460065578D /* ReceiverUserCell.swift */; };
 		E20577142940EE0900654B8A /* ListUserPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E20577132940EE0900654B8A /* ListUserPresenter.swift */; };
@@ -56,7 +56,7 @@
 		9D7AD6BC294342F300162976 /* CustomLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomLabel.swift; sourceTree = "<group>"; };
 		9D9134A3294177810065578D /* ImageService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageService.swift; sourceTree = "<group>"; };
 		9D9134A6294186B20065578D /* DetailPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailPresenter.swift; sourceTree = "<group>"; };
-		9D9134A82941E11D0065578D /* MessageRespone.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageRespone.swift; sourceTree = "<group>"; };
+		9D9134A82941E11D0065578D /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		9D9134AB2941E8610065578D /* SenderUserCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SenderUserCell.swift; sourceTree = "<group>"; };
 		9D9134AD2941E9460065578D /* ReceiverUserCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiverUserCell.swift; sourceTree = "<group>"; };
 		E20577132940EE0900654B8A /* ListUserPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListUserPresenter.swift; sourceTree = "<group>"; };
@@ -175,7 +175,7 @@
 			isa = PBXGroup;
 			children = (
 				9D0BE3512940912200AFC3F7 /* User.swift */,
-				9D9134A82941E11D0065578D /* MessageRespone.swift */,
+				9D9134A82941E11D0065578D /* Message.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -352,7 +352,7 @@
 				9D0BE3522940912200AFC3F7 /* User.swift in Sources */,
 				E2C8114629461BC200E40FBC /* DataManager.swift in Sources */,
 				9D7AD6BA2942CAFE00162976 /* ListCellPresenter.swift in Sources */,
-				9D9134A92941E11D0065578D /* MessageRespone.swift in Sources */,
+				9D9134A92941E11D0065578D /* Message.swift in Sources */,
 				9D0BE3562940A1FA00AFC3F7 /* ListUserTableViewCell.swift in Sources */,
 				9D155BBB29407093003C802E /* RegisterViewcontroller.swift in Sources */,
 				9D155BA72940538D003C802E /* SceneDelegate.swift in Sources */,
@@ -508,7 +508,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = P4XWF3FX86;
+				DEVELOPMENT_TEAM = 4QZ97XH7T7;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ChatAppDemo/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -538,7 +538,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = P4XWF3FX86;
+				DEVELOPMENT_TEAM = 4QZ97XH7T7;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ChatAppDemo/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;

@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SDWebImage
 
 class SenderUserCell: UITableViewCell {
     private  var lbMessage: CustomLabel = {
@@ -67,19 +68,14 @@ class SenderUserCell: UITableViewCell {
         // Configure the view for the selected state
         
     }
-    func updateUI(with message: MessageRespone) {
+    func updateUI(with message: Message) {
         lbMessage.text = message.text
         // Setup Time
         let time = Date(timeIntervalSince1970: TimeInterval(message.time))
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "hh:mm:ss a"
         lbTime.text = dateFormatter.string(from: time)
-        
-        ImageService.share.fetchImage(with: message.image) { image in
-            DispatchQueue.main.async {
-                self.imgMessage.image = image
-            }
-        }
+        imgMessage.sd_setImage(with: URL(string: message.image), placeholderImage: UIImage(systemName: "photo"))
         if message.text.isEmpty {
             self.imgMessage.isHidden = false
         }else {

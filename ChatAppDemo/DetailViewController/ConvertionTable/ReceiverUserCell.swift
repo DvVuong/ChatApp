@@ -69,7 +69,7 @@ class ReceiverUserCell: UITableViewCell {
         // Configure the view for the selected state
         
     }
-    func updateUI(with message: MessageRespone) {
+    func updateUI(with message: Message) {
         lbMessage.text = message.text
         // Setup Time
         let time = Date(timeIntervalSince1970: TimeInterval(message.time))

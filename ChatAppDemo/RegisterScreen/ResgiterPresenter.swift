@@ -15,11 +15,11 @@ class ResgiterPresenterView {
     private weak var view: ResgiterPresenterDelegate?
     private var imgUrl: String = ""
     private  var db = Firestore.firestore()
-    private var user = [UserRespone]()
+    private var user = [User]()
     init(with view: ResgiterPresenterDelegate) {
         self.view = view
     }
-    convenience init(view: ResgiterPresenterDelegate, user: [UserRespone]) {
+    convenience init(view: ResgiterPresenterDelegate, user: [User]) {
         self.init(with: view)
         self.user = user
     }
