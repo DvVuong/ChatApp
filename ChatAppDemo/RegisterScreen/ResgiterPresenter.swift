@@ -5,17 +5,18 @@
 //  Created by BeeTech on 12/12/2022.
 //
 
-import Foundation
-import FirebaseStorage
-import FirebaseFirestore
+import Firebase
+
 protocol ResgiterPresenterDelegate: NSObject {
+    func validateAccountResgiter(_ result: String)
    
 }
 class ResgiterPresenterView {
     private weak var view: ResgiterPresenterDelegate?
     private var imgUrl: String = ""
-    private  var db = Firestore.firestore()
+    private var db = Firestore.firestore()
     private var user = [User]()
+    
     init(with view: ResgiterPresenterDelegate) {
         self.view = view
     }
@@ -23,6 +24,7 @@ class ResgiterPresenterView {
         self.init(with: view)
         self.user = user
     }
+     
     func sendImage(_ image: UIImage) {
         let fireBaseStorage = Storage.storage().reference()
         let img = image.jpegData(compressionQuality: 0.5)!
@@ -44,24 +46,44 @@ class ResgiterPresenterView {
             "password": password,
             "avatar": self.imgUrl,
             "id": autoKey,
-            "name": name
+            "name": name,
+            "isActive": false
         ])
     }
-    func validateEmaiPassoword(_ email: String, password: String, completion:(Bool) -> Void)  {
+    func validateEmaiPassoword(_ email: String, password: String, confirmPassword: String, name: String, avatar: String, completion:(Bool) -> Void)  {
         var isvalid: Bool = true
-        if email.isEmpty {
+        if name.isEmpty {
             isvalid = false
-            return
-        } else if password.isEmpty {
+            self.view?.validateAccountResgiter(State.emptyName.rawValue)
+        }
+        else if avatar.isEmpty {
             isvalid = false
+            self.view?.validateAccountResgiter(State.emptyAvatarUrl.rawValue)
+        }
+       else if email.isEmpty {
+            isvalid = false
+            self.view?.validateAccountResgiter(State.emptyEmail.rawValue)
             return
+        }
+        else if password.isEmpty {
+            isvalid = false
+            self.view?.validateAccountResgiter(State.emptPassword.rawValue)
+            return
+        }
+        else if password != confirmPassword {
+            isvalid = false
+            self.view?.validateAccountResgiter(State.passwordNotincorrect.rawValue)
         }
         self.user.forEach { user in
             if email == user.email {
+                self.view?.validateAccountResgiter(State.emailAlreadyExist.rawValue)
                 isvalid = false
             }
         }
         completion(isvalid)
+    }
+    func avatarUrl() -> String {
+        return imgUrl
     }
     
 }

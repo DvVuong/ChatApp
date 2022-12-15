@@ -2,12 +2,6 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "group:UserEntity+CoreDataClass.swift">
-   </FileRef>
-   <FileRef
-      location = "group:UserEntity+CoreDataProperties.swift">
-   </FileRef>
-   <FileRef
       location = "group:ChatAppDemo.xcodeproj">
    </FileRef>
    <FileRef

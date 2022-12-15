@@ -5,12 +5,10 @@
 //  Created by BeeTech on 07/12/2022.
 //
 
-import Foundation
 import Firebase
-import FirebaseFirestore
+
 protocol SignInPresenterDelegate: NSObject {
     func showUserRegiter(_ email: String, password: String)
-    
 }
 class SignInPresenter {
     private weak var view: SignInPresenterDelegate?
@@ -22,15 +20,18 @@ class SignInPresenter {
     }
 
     func fetchUser() {
-        db.collection("user").getDocuments{ (querySnapshot, error) in
+        db.collection("user").addSnapshotListener { (querySnapshot, error) in
             if error != nil {return}
-            guard let querySnapshot = querySnapshot else { return }
-            for doc in querySnapshot.documents {
-                let value = User(dict: doc.data())
-                self.users.append(value)
+            guard let querySnapshot = querySnapshot?.documentChanges else { return }
+            querySnapshot.forEach { doc in
+                if doc.type == .added {
+                    let value = User(dict: doc.document.data())
+                    self.users.append(value)
+                }
             }
         }
     }
+    
     func validateEmailPassword(_ email: String, _ password: String, completion: (_ currentUser: User?, Bool) -> Void) {
         var currentUser: User?
         var isvalid: Bool = false

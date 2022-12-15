@@ -6,7 +6,7 @@
 //
 
 import Foundation
-struct Message: Codable {
+struct Message {
     let image: String
     let nameSender: String
     let receiverID: String

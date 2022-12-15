@@ -8,9 +8,9 @@
 import UIKit
 
 class DetailViewViewController: UIViewController {
-    static func instance(_ data: User, currentUser: User, messageKey: Message) -> DetailViewViewController {
+    static func instance(_ data: User, currentUser: User, messageKey: Message?) -> DetailViewViewController {
         let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "DetailScreen") as! DetailViewViewController
-        vc.presenter = DetailPresenter(with: vc, data: data, currentUser: currentUser, messageKey: messageKey )
+        vc.presenter = DetailPresenter(with: vc, data: data, currentUser: currentUser, messageKey: messageKey)
         return vc
     }
     @IBOutlet private weak var image: UIImageView!
@@ -24,11 +24,12 @@ class DetailViewViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
-        self.presenter.changeStateReadMessage()
+        
         self.presenter.fetchMessage()
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        self.presenter.changeStateReadMessage()
     }
     private func setupUI() {
         setupMessageTextField()
@@ -41,6 +42,7 @@ class DetailViewViewController: UIViewController {
         convertiontable.dataSource = self
         convertiontable.separatorStyle = .none
         convertiontable.tableFooterView = UIView()
+        convertiontable.contentInset = UIEdgeInsets(top: 5, left: 0, bottom: 5, right: 0)
     }
     private func setupMessageTextField() {
         tfMessage.attributedPlaceholder = NSAttributedString(string: "Aa", attributes: [.foregroundColor:UIColor.white])

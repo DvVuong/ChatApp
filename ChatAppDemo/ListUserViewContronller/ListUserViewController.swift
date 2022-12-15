@@ -17,20 +17,34 @@ class ListUserViewController: UIViewController {
     lazy var presenterCell = ListCellPresenter()
     @IBOutlet private var userTableView: UITableView!
     @IBOutlet private weak var searchUser: UITextField!
+    @IBOutlet private var avatar: UIImageView!
+    @IBOutlet private var btSetting: UIButton!
+    @IBOutlet private var lbNameUser: UILabel!
+    @IBOutlet private var imgState: UIImageView!
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
-        self.presenter.fetchUser {
-            self.presenter.fetchMessageForUser {
-                self.userTableView.reloadData()
-                
-            }
-        }
+    }
+    override func viewWillAppear(_ animated: Bool) {
+        navigationController?.setNavigationBarHidden(true, animated: animated)
+    }
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        navigationController?.setNavigationBarHidden(false, animated: animated)
     }
     private func setupUI() {
         setupUITable()
         setupSearchUser()
-        
+        setupImageForCurrentUser()
+        setupBtSetting()
+        setupLbNameUser()
+        UIView.animate(withDuration: 0.1, delay: 0) {
+            self.presenter.fetchUser {
+                self.presenter.fetchMessageForUser {
+                    self.userTableView.reloadData()
+                }
+            }
+        }
     }
     private func setupUITable() {
         userTableView.delegate = self
@@ -45,9 +59,37 @@ class ListUserViewController: UIViewController {
         searchUser.addTarget(self, action: #selector(handelTextField(_:)), for: .editingChanged)
         
     }
+    private func setupImageForCurrentUser() {
+        guard let currentuser = presenter.getcurrentUser() else { return }
+        avatar.layer.cornerRadius = avatar.frame.height / 2
+        avatar.layer.masksToBounds = true
+        avatar.layer.borderWidth = 1
+        avatar.layer.borderColor = UIColor.black.cgColor
+        avatar.contentMode = .scaleToFill
+        ImageService.share.fetchImage(with: currentuser.avatar) { image in
+            DispatchQueue.main.async {
+                self.avatar.image = image
+            }
+        }
+    }
+    private func setupLbNameUser() {
+        guard let currentuser = presenter.getcurrentUser() else { return }
+        lbNameUser.text = currentuser.name
+    }
+    private func setupBtSetting() {
+        btSetting.setTitle("", for: .normal)
+        btSetting.addTarget(self, action: #selector(didTapSetting(_:)), for: .touchUpInside)
+    }
+   
     @objc func handelTextField(_ textfield: UITextField)  {
         presenter.searchUser(textfield.text!)
     }
+    
+    @objc func didTapSetting(_ sender: Any) {
+        let vc = SettingViewController.instance()
+        navigationController?.pushViewController(vc, animated: true)
+    }
+    
 }
 extension ListUserViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -56,9 +98,6 @@ extension ListUserViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell  = userTableView.dequeueReusableCell(withIdentifier: "userCell", for: indexPath) as! ListUserTableViewCell
         cell.updateUI(presenter.cellForUsers(at: indexPath.row), message: presenter.showMessageForUserId(presenter.users[indexPath.row].id))
-        if let index = presenter.cellForUsers(at: indexPath.row) {
-            cell.lbNameUser.attributedText = presenterCell.setHigligh(searchUser.text!, index.name)
-        }
         return cell
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -66,12 +105,11 @@ extension ListUserViewController: UITableViewDelegate, UITableViewDataSource {
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let data = presenter.cellForUsers(at: indexPath.row) else { return}
-        guard let currentUser = presenter.currentUserId() else { return }
-        let messageKey = presenter.messageKeyForState()
-        print(messageKey?.messageKey)
-        //let vc = DetailViewViewController.instance(data, currentUser: currentUser, messageKey: messageKey!)
-//        vc.title = data.name
-//        navigationController?.pushViewController(vc, animated: true)
+        guard let currentUser = presenter.getcurrentUser() else { return }
+        let messageKey = presenter.messageKeyForState(presenter.users[indexPath.row].id)
+        let vc = DetailViewViewController.instance(data, currentUser: currentUser, messageKey: messageKey)
+        vc.title = data.name
+        navigationController?.pushViewController(vc, animated: true)
     }
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let delete = UIContextualAction(style: .normal, title: "Delete") { action, _, _ in

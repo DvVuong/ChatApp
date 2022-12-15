@@ -28,7 +28,7 @@ class ListUserPresenter {
     }
     func fetchUser(_ completed: @escaping() -> Void) {
         guard let currentID = currentUser?.id else { return }
-        db.collection("user").getDocuments{ querySnapshot, error in
+        db.collection("user").addSnapshotListener { querySnapshot, error in
             if error != nil {return}
             guard let querySnapshot = querySnapshot else {return}
             self.users.removeAll()
@@ -52,12 +52,11 @@ class ListUserPresenter {
             guard let document = querySnapshot?.documentChanges else { return }
             
             for doc in document {
-                if doc.type == .added {
+                if doc.type == .added || doc.type == .modified || doc.type == .removed {
                     let message = Message(dict: doc.document.data())
                     self.allMessages.append(message)
                 }
             }
-            
             self.users.forEach { user in
                 self.temparr.removeAll()
                 self.allMessages.forEach { message in
@@ -70,7 +69,6 @@ class ListUserPresenter {
                     }
                 }
                 self.message[user.id] = self.temparr.last
-                self.messageKey["messageKey"] = self.temparr.last
             }
             completed()
         }
@@ -95,11 +93,10 @@ class ListUserPresenter {
     func showMessageForUserId(_ id: String) -> Message? {
         return message[id]
     }
-    func messageKeyForState() -> Message? {
-        print(self.messageKey["messageKey"])
-    return messageKey["messageKey"]
+    func messageKeyForState(_ id: String) -> Message? {
+    return message[id]
     }
-    func currentUserId() -> User?{
+    func getcurrentUser() -> User?{
         return currentUser
     }
     func numberOfUser() -> Int {

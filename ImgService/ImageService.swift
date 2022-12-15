@@ -5,34 +5,32 @@
 //  Created by BeeTech on 08/12/2022.
 //
 
-import Foundation
 import UIKit
+
 open class ImageService: NSObject {
     static var share = ImageService()
     private  var cache = NSCache<NSString, UIImage>()
-    func fetchImage(with url: String, completion: @escaping (UIImage?) -> Void) {
+    
+    func fetchImage(with url: String, completion: @escaping (UIImage) -> Void) {
         let keyCache = NSString(string: url)
         if let image = cache.object(forKey: keyCache)  {
             completion(image)
             return
         }
-        guard let url = URL(string: url) else {
-            completion(nil)
-            return
-        }
+        guard let url = URL(string: url) else { return }
         let task = URLSession.shared.dataTask(with: url) { data, _, error in
             if error != nil { return}
-            guard let data = data else { return }
-            guard let image = UIImage(data: data) else {return}
+            guard let data = data, let image = UIImage(data: data) else { return }
             self.cache.setObject(image, forKey: keyCache)
             completion(image)
-            
         }
         task.resume()
     }
+    
     // MARK: ZoomImage
     var startingFrame: CGRect?
     var blackBackgroundView: UIView?
+    
     //MARK: Zom Image
     func zoomImage(_ image: UIImageView) {
         startingFrame = image.convert(image.frame, to: nil)
@@ -55,7 +53,8 @@ open class ImageService: NSObject {
             zoomingImageView.center = window!.center
         }, completion: nil)
     }
-    @objc func handlelEscapeZoomImage(_ tapGesture: UITapGestureRecognizer) {
+    
+    @objc private func handlelEscapeZoomImage(_ tapGesture: UITapGestureRecognizer) {
         if let zoomOutImage = tapGesture.view {
             UIView.animate(withDuration: 0.5, delay: 0.2, options: .curveEaseOut) {
                 zoomOutImage.frame = self.startingFrame!
@@ -66,13 +65,13 @@ open class ImageService: NSObject {
             
         }
     }
-    @objc func handleScaleImage(_ pinch: UIPinchGestureRecognizer) {
+    
+    @objc private func handleScaleImage(_ pinch: UIPinchGestureRecognizer) {
         if let view = pinch.view {
             let x = pinch.scale
             let y = pinch.scale
             view.transform = view.transform.scaledBy(x: x, y: y)
             pinch.scale = 1
-            
         }
     }
     

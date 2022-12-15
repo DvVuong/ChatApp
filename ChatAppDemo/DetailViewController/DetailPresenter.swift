@@ -20,7 +20,7 @@ class DetailPresenter {
     var message:[Message] = []
     private var db = Firestore.firestore()
     private var messageKey: Message?
-    init(with view: DetailPresenterViewDelegate, data: User, currentUser: User, messageKey: Message) {
+    init(with view: DetailPresenterViewDelegate, data: User, currentUser: User, messageKey: Message?) {
         self.view = view
         self.receiverUser = data
         self.currentUser = currentUser
@@ -72,10 +72,7 @@ class DetailPresenter {
     }
     
     func changeStateReadMessage() {
-        guard let messageKey = messageKey else {
-            return
-        }
-        print(messageKey.messageKey)
+        guard let messageKey = messageKey else {return}
         self.db.collection("message")
             .whereField("read", isEqualTo: false)
             .getDocuments { querydata, error in
@@ -85,6 +82,7 @@ class DetailPresenter {
                     let value = Message(dict: doc.data())
                     if messageKey.messageKey == value.messageKey {
                         self.db.collection("message").document(messageKey.messageKey).updateData(["read" : true])
+                        self.view?.showMessage()
                     }
                 }
             }

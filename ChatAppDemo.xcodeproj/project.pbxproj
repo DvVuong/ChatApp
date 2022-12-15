@@ -11,6 +11,8 @@
 		9D0BE3522940912200AFC3F7 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D0BE3512940912200AFC3F7 /* User.swift */; };
 		9D0BE35429409A8300AFC3F7 /* ListUserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D0BE35329409A8300AFC3F7 /* ListUserViewController.swift */; };
 		9D0BE3562940A1FA00AFC3F7 /* ListUserTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D0BE3552940A1FA00AFC3F7 /* ListUserTableViewCell.swift */; };
+		9D13C18E294ADDEF00FCC40A /* SettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D13C18D294ADDEF00FCC40A /* SettingViewController.swift */; };
+		9D13C199294AFF9500FCC40A /* Enum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D13C198294AFF9500FCC40A /* Enum.swift */; };
 		9D155BA52940538D003C802E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D155BA42940538D003C802E /* AppDelegate.swift */; };
 		9D155BA72940538D003C802E /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D155BA62940538D003C802E /* SceneDelegate.swift */; };
 		9D155BA92940538D003C802E /* SiginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D155BA82940538D003C802E /* SiginViewController.swift */; };
@@ -41,6 +43,8 @@
 		9D0BE3512940912200AFC3F7 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		9D0BE35329409A8300AFC3F7 /* ListUserViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListUserViewController.swift; sourceTree = "<group>"; };
 		9D0BE3552940A1FA00AFC3F7 /* ListUserTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListUserTableViewCell.swift; sourceTree = "<group>"; };
+		9D13C18D294ADDEF00FCC40A /* SettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingViewController.swift; sourceTree = "<group>"; };
+		9D13C198294AFF9500FCC40A /* Enum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Enum.swift; sourceTree = "<group>"; };
 		9D155BA12940538D003C802E /* ChatAppDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ChatAppDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9D155BA42940538D003C802E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		9D155BA62940538D003C802E /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -95,6 +99,14 @@
 			path = Pods;
 			sourceTree = "<group>";
 		};
+		9D13C18C294ADDCE00FCC40A /* SettingViewContronller */ = {
+			isa = PBXGroup;
+			children = (
+				9D13C18D294ADDEF00FCC40A /* SettingViewController.swift */,
+			);
+			path = SettingViewContronller;
+			sourceTree = "<group>";
+		};
 		9D155B982940538D003C802E = {
 			isa = PBXGroup;
 			children = (
@@ -119,9 +131,9 @@
 		9D155BA32940538D003C802E /* ChatAppDemo */ = {
 			isa = PBXGroup;
 			children = (
+				9D13C18C294ADDCE00FCC40A /* SettingViewContronller */,
 				9D41EF102947087E00768CBA /* RegisterScreen */,
 				9D91349F294176C90065578D /* SiginScreen */,
-				9D91349E294176AB0065578D /* ListUserTable */,
 				9D9134A12941772F0065578D /* ListUserViewContronller */,
 				9D9134A5294186810065578D /* DetailViewController */,
 				9D155BAD2940538F003C802E /* Assets.xcassets */,
@@ -174,6 +186,7 @@
 		9D9134A02941770F0065578D /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				9D13C198294AFF9500FCC40A /* Enum.swift */,
 				9D0BE3512940912200AFC3F7 /* User.swift */,
 				9D9134A82941E11D0065578D /* Message.swift */,
 			);
@@ -183,6 +196,7 @@
 		9D9134A12941772F0065578D /* ListUserViewContronller */ = {
 			isa = PBXGroup;
 			children = (
+				9D91349E294176AB0065578D /* ListUserTable */,
 				E20577132940EE0900654B8A /* ListUserPresenter.swift */,
 				9D0BE35329409A8300AFC3F7 /* ListUserViewController.swift */,
 			);
@@ -343,9 +357,11 @@
 			files = (
 				9D41EF142947120D00768CBA /* ResgiterPresenter.swift in Sources */,
 				9D9134AC2941E8610065578D /* SenderUserCell.swift in Sources */,
+				9D13C199294AFF9500FCC40A /* Enum.swift in Sources */,
 				9D155BA92940538D003C802E /* SiginViewController.swift in Sources */,
 				9D0BE35429409A8300AFC3F7 /* ListUserViewController.swift in Sources */,
 				9D155BA52940538D003C802E /* AppDelegate.swift in Sources */,
+				9D13C18E294ADDEF00FCC40A /* SettingViewController.swift in Sources */,
 				E20577142940EE0900654B8A /* ListUserPresenter.swift in Sources */,
 				E2C8115329463AC100E40FBC /* UserDataBase.xcdatamodeld in Sources */,
 				9D7AD6BD294342F300162976 /* CustomLabel.swift in Sources */,

@@ -23,11 +23,12 @@ class SiginViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
+        presenter.fetchUser()
         
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        presenter.fetchUser()
+        
         navigationController?.setNavigationBarHidden(true, animated: animated)
     }
     override func viewWillDisappear(_ animated: Bool) {
@@ -131,7 +132,7 @@ extension SiginViewController: SignInPresenterDelegate {
 }
 extension SiginViewController: RegisterViewcontrollerDelegate {
     func callBackAccountResgiter(_ vc: RegisterViewcontroller, email: String, password: String) {
-        presenter.showUserResgiter(email, password: password)
-        navigationController?.popViewController(animated: true)
+        self.presenter.showUserResgiter(email, password: password)
+        self.navigationController?.popViewController(animated: true)
     }
 }

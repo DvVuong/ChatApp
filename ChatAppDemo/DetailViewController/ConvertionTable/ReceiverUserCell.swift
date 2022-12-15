@@ -58,15 +58,14 @@ class ReceiverUserCell: UITableViewCell {
         lbTime.widthAnchor.constraint(equalToConstant: 80).isActive = true
         lbTime.heightAnchor.constraint(equalToConstant: 10).isActive = true
         lbTime.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -1).isActive = true
-        
-        
-        
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
 
-        // Configure the view for the selected state
+        imgMessage.isUserInteractionEnabled = true
+        let tapGes = UITapGestureRecognizer(target: self, action: #selector(handelZoomeImage))
+        imgMessage.addGestureRecognizer(tapGes)
         
     }
     func updateUI(with message: Message) {
@@ -83,9 +82,14 @@ class ReceiverUserCell: UITableViewCell {
         }
         if message.text.isEmpty {
             self.imgMessage.isHidden = false
+            self.lbMessage.isHidden = true
         }else{
             self.imgMessage.isHidden = true
         }
     }
+    @objc private func handelZoomeImage() {
+        ImageService.share.zoomImage(imgMessage)
+    }
+    
 
 }
