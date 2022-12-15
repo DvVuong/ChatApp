@@ -19,6 +19,7 @@ class ReceiverUserCell: UITableViewCell {
         lbMessage.translatesAutoresizingMaskIntoConstraints = false
         return lbMessage
     }()
+    
     private var imgMessage: UIImageView = {
        let imgMessage = UIImageView()
         imgMessage.contentMode = .scaleToFill

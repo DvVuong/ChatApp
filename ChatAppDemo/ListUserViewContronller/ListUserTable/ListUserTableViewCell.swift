@@ -14,6 +14,7 @@ class ListUserTableViewCell: UITableViewCell {
     @IBOutlet private weak var imgAvt: UIImageView!
     @IBOutlet private weak var bubbleView: UIView!
     @IBOutlet private weak var imgState: UIImageView!
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code

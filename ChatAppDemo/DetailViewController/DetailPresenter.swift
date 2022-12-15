@@ -5,9 +5,8 @@
 //  Created by BeeTech on 08/12/2022.
 //
 
-import Foundation
-import FirebaseFirestore
-import FirebaseStorage
+import Firebase
+
 protocol DetailPresenterViewDelegate: NSObject {
     func showMessage()
 }
@@ -17,9 +16,10 @@ class DetailPresenter {
     private var imgUrl:String = ""
     private var currentUser: User?
     private var receiverUser: User?
-    var message:[Message] = []
+     var message:[Message] = []
     private var db = Firestore.firestore()
     private var messageKey: Message?
+    
     init(with view: DetailPresenterViewDelegate, data: User, currentUser: User, messageKey: Message?) {
         self.view = view
         self.receiverUser = data
@@ -87,7 +87,8 @@ class DetailPresenter {
                 }
             }
     }
-    func currentUserID() -> String? {
+    
+    func getCurrentUserID() -> String? {
         guard let id = currentUser?.id else { return nil }
         return id
     }
@@ -111,7 +112,8 @@ class DetailPresenter {
             })
         }
     }
-    func sortMessage() {
+    
+    private func sortMessage() {
         var timer: [Double] = []
         var messageBytime = [Message]()
         self.message.forEach { message in
@@ -129,10 +131,10 @@ class DetailPresenter {
         }
         self.message = messageBytime
     }
-    func numberOfMessage() -> Int {
+    func getNumberOfMessage() -> Int {
         return message.count
     }
-    func cellForMessage(at index: Int) -> Message {
+    func getCellForMessage(at index: Int) -> Message {
         return message[index]
     }
 }

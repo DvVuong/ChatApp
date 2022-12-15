@@ -8,15 +8,11 @@
 import UIKit
 
 class SiginViewController: UIViewController {
-    @IBOutlet private weak var lbTitle: UILabel!
-    @IBOutlet private weak var tfEmail: UITextField!
-    @IBOutlet private weak var tfPassword: UITextField!
-    @IBOutlet private weak var btSigin: UIButton!
-    @IBOutlet private weak var viewEmail: UIView!
-    @IBOutlet private weak var viewPassword: UIView!
-    @IBOutlet private weak var viewSignUp: UIView!
-    @IBOutlet private weak var btSignUp: UIButton!
-    @IBOutlet private weak var btCheckForSaveData: UIButton!
+    @IBOutlet private weak var tfEmail: CustomTextField!
+    @IBOutlet private weak var tfPassword: CustomTextField!
+    @IBOutlet private weak var btSaveData: CustomButton!
+    @IBOutlet private weak var btSigin: CustomButton!
+    @IBOutlet weak var btSignup: CustomButton!
     
     private var selected: Bool = false
     lazy var presenter = SignInPresenter(with: self)
@@ -39,31 +35,10 @@ class SiginViewController: UIViewController {
         view.endEditing(true)
     }
     private func setupUI() {
-        setupLable()
-        setupView()
         setupUITextField()
         setupBtSigin()
         setupBtSaveData()
         setupBtSignUp()
-    }
-    private func setupView() {
-        viewEmail.layer.cornerRadius = 8
-        viewEmail.layer.borderColor = UIColor.white.cgColor
-        viewEmail.layer.borderWidth = 1
-        // Setupview Password
-        viewPassword.layer.cornerRadius = 8
-        viewPassword.layer.borderColor = UIColor.white.cgColor
-        viewPassword.layer.borderWidth = 1
-        // SetupView Signup
-        viewSignUp.layer.cornerRadius = 8
-        viewSignUp.layer.borderColor = UIColor.white.cgColor
-        viewSignUp.layer.borderWidth = 1
-        
-    }
-    
-    private func setupLable() {
-        lbTitle.text = "Message"
-        lbTitle.textAlignment = .center
     }
     private func setupUITextField() {
         //
@@ -77,26 +52,27 @@ class SiginViewController: UIViewController {
         // TextField Password
         tfPassword.textColor = .white
         tfPassword.attributedPlaceholder = NSAttributedString(string: "Enter Your Password", attributes: [.foregroundColor: UIColor.white])
-        tfPassword.isSecureTextEntry = true
         
 }
+    
+    // dung file story board keo tha, setup giao dien
     private func setupBtSigin() {
         btSigin.layer.cornerRadius = 8
         btSigin.addTarget(self, action: #selector(didTapSigin(_:)), for: .touchUpInside)
     }
     private func setupBtSaveData() {
-        btCheckForSaveData.setTitle("", for: .normal)
-        btCheckForSaveData.addTarget(self, action: #selector(didTapSaveData(_:)), for: .touchUpInside)
-        
+        btSaveData.setTitle("", for: .normal)
+        btSaveData.addTarget(self, action: #selector(didTapSaveData(_:)), for: .touchUpInside)
     }
+    
     @objc func didTapSaveData(_ sender: UIButton) {
-        if sender === btCheckForSaveData {
+        if sender === btSaveData {
             selected = !selected
             if selected  {
-                btCheckForSaveData.setImage(UIImage(systemName: "checkmark.square"), for: .normal)
+                btSaveData.setImage(UIImage(systemName: "checkmark.square"), for: .normal)
                 
             }else {
-                btCheckForSaveData.setImage(UIImage(systemName: "square"), for: .normal)
+                btSaveData.setImage(UIImage(systemName: "square"), for: .normal)
             }
     }
 }
@@ -115,10 +91,10 @@ class SiginViewController: UIViewController {
 
     }
     private func setupBtSignUp() {
-        btSignUp.addTarget(self, action: #selector(didTapSigup(_:)), for: .touchUpInside)
+        btSigin.addTarget(self, action: #selector(didTapSigup(_:)), for: .touchUpInside)
     }
     @objc func didTapSigup(_ sender: UIButton) {
-        let vc  = RegisterViewcontroller.instance(presenter.userData())
+        let vc  = RegisterViewcontroller.instance(presenter.getUserData())
         vc.delegate = self
         navigationController?.pushViewController(vc, animated: true)
     }

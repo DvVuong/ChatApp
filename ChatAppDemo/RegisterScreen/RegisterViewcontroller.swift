@@ -19,12 +19,12 @@ class RegisterViewcontroller: UIViewController {
         return vc
     }
     
-    @IBOutlet private weak var tfEmail: UITextField!
-    @IBOutlet private weak var tfPassword: UITextField!
-    @IBOutlet private weak var tfConfirmPassword: UITextField!
-    @IBOutlet private weak var imgAvtar: UIImageView!
-    @IBOutlet private weak var btSignUp: UIButton!
-    @IBOutlet private weak var tfName: UITextField!
+    @IBOutlet private weak var tfEmail: CustomTextField!
+    @IBOutlet private weak var tfPassword: CustomTextField!
+    @IBOutlet private weak var tfConfirmPassword: CustomTextField!
+    @IBOutlet private weak var imgAvtar: CustomImage!
+    @IBOutlet private weak var btSignUp: CustomButton!
+    @IBOutlet private weak var tfName: CustomTextField!
     var delegate: RegisterViewcontrollerDelegate?
     private var imgPicker = UIImagePickerController()
     lazy private var presenter = ResgiterPresenterView(with: self)
@@ -34,34 +34,18 @@ class RegisterViewcontroller: UIViewController {
         setupUI()
     }
     
-    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.setNavigationBarHidden(true, animated: animated)
     }
     
     private func setupUI() {
-        setupView()
         setupImgAvatar()
         setupBtSigup()
     }
     
-    private func setupView() {
-        // TextField
-        self.tfName.attributedPlaceholder = NSAttributedString(string: "Enter your name", attributes: [.foregroundColor: UIColor.brown])
-        tfEmail.attributedPlaceholder = NSAttributedString(string: "Enter your email", attributes: [NSAttributedString.Key.foregroundColor:UIColor.brown ])
-        tfPassword.attributedPlaceholder = NSAttributedString(string: "Enter your password", attributes: [.foregroundColor: UIColor.brown])
-        tfConfirmPassword.attributedPlaceholder = NSAttributedString(string: "ConfirmPassword", attributes: [.foregroundColor: UIColor.brown])
-        
-    }
-    
     private func setupImgAvatar() {
-        imgAvtar.layer.cornerRadius = imgAvtar.frame.height / 2
-        imgAvtar.layer.masksToBounds = true
         imgAvtar.isUserInteractionEnabled = true
-        imgAvtar.contentMode = .scaleToFill
-        imgAvtar.layer.borderWidth = 1
-        imgAvtar.layer.borderColor = UIColor.black.cgColor
         let tapGes = UITapGestureRecognizer(target: self, action: #selector(handelImage(_:)))
         imgAvtar.addGestureRecognizer(tapGes)
     }
@@ -87,19 +71,11 @@ class RegisterViewcontroller: UIViewController {
     }
     
     private func setupBtSigup() {
-        btSignUp.layer.cornerRadius = 6
-        btSignUp.layer.masksToBounds = true
         btSignUp.addTarget(self, action: #selector(didTapSignUp(_:)), for: .touchUpInside)
     }
     
     @objc private func didTapSignUp(_ sender: UIButton) {
-        presenter.validateEmaiPassoword(tfEmail.text!, password: tfPassword.text!, confirmPassword: tfConfirmPassword.text!, name: tfName.text!, avatar: self.presenter.avatarUrl()) { bool in
-            if bool {
-               showAlertSuccess("Thanh cong")
-            } else {
-                return
-            }
-        }
+        presenter.validateEmaiPassoword(tfEmail.text!, password: tfPassword.text!, confirmPassword: tfConfirmPassword.text!, name: tfName.text!, avatar: self.presenter.avatarUrl())
     }
     
     func showAlertSuccess(_ title: String)  {
@@ -133,8 +109,12 @@ extension RegisterViewcontroller: UIImagePickerControllerDelegate, UINavigationC
     }
 }
 extension RegisterViewcontroller: ResgiterPresenterDelegate {
-    func validateAccountResgiter(_ result: String) {
-        showAlertFailure(result)
+    func validateAccountResgiter(_ result: String?) {
+        if let result = result {
+            showAlertFailure(result)
+        } else {
+            showAlertSuccess(" Register success")
+        }
     }
 }
 

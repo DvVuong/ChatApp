@@ -13,6 +13,7 @@ class DetailViewViewController: UIViewController {
         vc.presenter = DetailPresenter(with: vc, data: data, currentUser: currentUser, messageKey: messageKey)
         return vc
     }
+    
     @IBOutlet private weak var image: UIImageView!
     @IBOutlet private weak var tfMessage: UITextField!
     @IBOutlet private weak var btSendMessage: UIButton!
@@ -41,7 +42,6 @@ class DetailViewViewController: UIViewController {
         convertiontable.delegate = self
         convertiontable.dataSource = self
         convertiontable.separatorStyle = .none
-        convertiontable.tableFooterView = UIView()
         convertiontable.contentInset = UIEdgeInsets(top: 5, left: 0, bottom: 5, right: 0)
     }
     private func setupMessageTextField() {
@@ -78,7 +78,7 @@ class DetailViewViewController: UIViewController {
     }
     private func scrollToBottom() {
         DispatchQueue.main.async {
-            let indexPath = IndexPath(row: self.presenter.numberOfMessage() - 1, section: 0)
+            let indexPath = IndexPath(row: self.presenter.getNumberOfMessage() - 1, section: 0)
             self.convertiontable.scrollToRow(at: indexPath, at: .bottom, animated: true)
         }
         
@@ -107,26 +107,26 @@ extension DetailViewViewController: DetailPresenterViewDelegate {
 }
 extension DetailViewViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return presenter.numberOfMessage()
+        return presenter.getNumberOfMessage()
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let currentId = presenter.currentUserID()
+        let currentId = presenter.getCurrentUserID()
         let sendId = presenter.message[indexPath.item].sendId
         if currentId == sendId {
             guard let cell = convertiontable.dequeueReusableCell(withIdentifier: "senderCell", for: indexPath) as? SenderUserCell else { return UITableViewCell() }
-            let message = presenter.cellForMessage(at: indexPath.row)
+            let message = presenter.getCellForMessage(at: indexPath.row)
             cell.updateUI(with: message)
             return cell
             
         } else {
             guard let cell = convertiontable.dequeueReusableCell(withIdentifier: "receiverCell", for: indexPath) as? ReceiverUserCell else { return UITableViewCell() }
-            let message = presenter.cellForMessage(at: indexPath.item)
+            let message = presenter.getCellForMessage(at: indexPath.item)
             cell.updateUI(with: message)
             return cell
         }
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        let message = presenter.cellForMessage(at: indexPath.row)
+        let message = presenter.getCellForMessage(at: indexPath.row)
         if message.text.isEmpty {
             return 180
         }

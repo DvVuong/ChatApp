@@ -5,13 +5,15 @@
 //  Created by mr.root on 12/7/22.
 //
 
-import Foundation
-import FirebaseFirestore
+import Firebase
+
 protocol ListUserPresenterDelegate: NSObject {
     func showSearchUser()
     func deleteUser(at index: Int)
 }
+
 class ListUserPresenter {
+    // properties phai set private 
     private weak var view: ListUserPresenterDelegate?
     private var db = Firestore.firestore()
     var users = [User]()
@@ -22,10 +24,12 @@ class ListUserPresenter {
     private var lastMessage = [Message]()
     private var temparr = [Message]()
     private var messageKey = [String: Message]()
+    
     init(with view: ListUserPresenterDelegate, data: User) {
         self.view = view
         self.currentUser = data
     }
+    
     func fetchUser(_ completed: @escaping() -> Void) {
         guard let currentID = currentUser?.id else { return }
         db.collection("user").addSnapshotListener { querySnapshot, error in
@@ -87,23 +91,23 @@ class ListUserPresenter {
         }
         view?.showSearchUser()
     }
-    func usersId(_ index: Int) -> User? {
+    func getUsersId(_ index: Int) -> User? {
         return users[index]
     }
-    func showMessageForUserId(_ id: String) -> Message? {
+    func getMessageForUserId(_ id: String) -> Message? {
         return message[id]
     }
-    func messageKeyForState(_ id: String) -> Message? {
+    func getMessageKeyForState(_ id: String) -> Message? {
     return message[id]
     }
     func getcurrentUser() -> User?{
         return currentUser
     }
-    func numberOfUser() -> Int {
+    func getNumberOfUser() -> Int {
         return finalUser.count
     }
-    func cellForUsers(at index: Int) -> User? {
-        if index <= 0 && index > numberOfUser() {
+    func getCellForUsers(at index: Int) -> User? {
+        if index <= 0 && index > getNumberOfUser() {
             return nil
         }
         return finalUser[index]

@@ -8,7 +8,7 @@
 import Firebase
 
 protocol ResgiterPresenterDelegate: NSObject {
-    func validateAccountResgiter(_ result: String)
+    func validateAccountResgiter(_ result: String?)
    
 }
 class ResgiterPresenterView {
@@ -50,38 +50,27 @@ class ResgiterPresenterView {
             "isActive": false
         ])
     }
-    func validateEmaiPassoword(_ email: String, password: String, confirmPassword: String, name: String, avatar: String, completion:(Bool) -> Void)  {
-        var isvalid: Bool = true
+    func validateEmaiPassoword(_ email: String, password: String, confirmPassword: String, name: String, avatar: String)  {
         if name.isEmpty {
-            isvalid = false
             self.view?.validateAccountResgiter(State.emptyName.rawValue)
-        }
-        else if avatar.isEmpty {
-            isvalid = false
+        } else if avatar.isEmpty {
             self.view?.validateAccountResgiter(State.emptyAvatarUrl.rawValue)
-        }
-       else if email.isEmpty {
-            isvalid = false
+        } else if email.isEmpty {
             self.view?.validateAccountResgiter(State.emptyEmail.rawValue)
-            return
-        }
-        else if password.isEmpty {
-            isvalid = false
+        } else if password.isEmpty {
             self.view?.validateAccountResgiter(State.emptPassword.rawValue)
             return
-        }
-        else if password != confirmPassword {
-            isvalid = false
+        } else if password != confirmPassword {
             self.view?.validateAccountResgiter(State.passwordNotincorrect.rawValue)
+        } else if user.contains(where: { user in
+            user.email == email
+        }) {
+            self.view?.validateAccountResgiter(State.emailAlreadyExist.rawValue)
+        } else {
+            self.view?.validateAccountResgiter(nil)
         }
-        self.user.forEach { user in
-            if email == user.email {
-                self.view?.validateAccountResgiter(State.emailAlreadyExist.rawValue)
-                isvalid = false
-            }
-        }
-        completion(isvalid)
     }
+    
     func avatarUrl() -> String {
         return imgUrl
     }

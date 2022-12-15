@@ -24,6 +24,8 @@ class SignInPresenter {
             if error != nil {return}
             guard let querySnapshot = querySnapshot?.documentChanges else { return }
             querySnapshot.forEach { doc in
+                
+                // bug not fetch user when remove user
                 if doc.type == .added {
                     let value = User(dict: doc.document.data())
                     self.users.append(value)
@@ -44,7 +46,7 @@ class SignInPresenter {
         completion(currentUser, isvalid)
     }
     
-    func userData() -> [User] {
+    func getUserData() -> [User] {
         return users
     }
     
@@ -58,6 +60,7 @@ class SignInPresenter {
         }
         return (email, password)
     }
+    
     func showUserResgiter(_ email: String, password: String) {
         view?.showUserRegiter(email, password: password)
     }
