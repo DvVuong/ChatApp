@@ -27,6 +27,8 @@
 		9D41EF142947120D00768CBA /* ResgiterPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D41EF132947120D00768CBA /* ResgiterPresenter.swift */; };
 		9D7AD6BA2942CAFE00162976 /* ListCellPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D7AD6B92942CAFD00162976 /* ListCellPresenter.swift */; };
 		9D7AD6BD294342F300162976 /* CustomLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D7AD6BC294342F300162976 /* CustomLabel.swift */; };
+		9D8C67E3294C032B00224FF5 /* CustomStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D8C67E2294C032B00224FF5 /* CustomStackView.swift */; };
+		9D8C67E7294C531000224FF5 /* FirebaseService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D8C67E6294C531000224FF5 /* FirebaseService.swift */; };
 		9D9134A4294177810065578D /* ImageService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D9134A3294177810065578D /* ImageService.swift */; };
 		9D9134A7294186B20065578D /* DetailPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D9134A6294186B20065578D /* DetailPresenter.swift */; };
 		9D9134A92941E11D0065578D /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D9134A82941E11D0065578D /* Message.swift */; };
@@ -64,6 +66,8 @@
 		9D41EF132947120D00768CBA /* ResgiterPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResgiterPresenter.swift; sourceTree = "<group>"; };
 		9D7AD6B92942CAFD00162976 /* ListCellPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListCellPresenter.swift; sourceTree = "<group>"; };
 		9D7AD6BC294342F300162976 /* CustomLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomLabel.swift; sourceTree = "<group>"; };
+		9D8C67E2294C032B00224FF5 /* CustomStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomStackView.swift; sourceTree = "<group>"; };
+		9D8C67E6294C531000224FF5 /* FirebaseService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseService.swift; sourceTree = "<group>"; };
 		9D9134A3294177810065578D /* ImageService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageService.swift; sourceTree = "<group>"; };
 		9D9134A6294186B20065578D /* DetailPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailPresenter.swift; sourceTree = "<group>"; };
 		9D9134A82941E11D0065578D /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
@@ -132,6 +136,7 @@
 		9D13C1A1294B1F8B00FCC40A /* CustomImage */ = {
 			isa = PBXGroup;
 			children = (
+				9D13C19E294B1EE200FCC40A /* CustomButton */,
 				9D13C1A2294B1FA700FCC40A /* CustomImage.swift */,
 			);
 			path = CustomImage;
@@ -140,6 +145,7 @@
 		9D155B982940538D003C802E = {
 			isa = PBXGroup;
 			children = (
+				9D8C67E5294C52E000224FF5 /* FireBaseService */,
 				9D9134A02941770F0065578D /* Models */,
 				9D9134A2294177590065578D /* ImgService */,
 				E2C8114A294622B500E40FBC /* DataService */,
@@ -166,14 +172,11 @@
 				9D91349F294176C90065578D /* SiginScreen */,
 				9D9134A12941772F0065578D /* ListUserViewContronller */,
 				9D9134A5294186810065578D /* DetailViewController */,
-				9D7AD6BB294342CE00162976 /* CustomLable */,
-				9D155BAF2940538F003C802E /* LaunchScreen.storyboard */,
-				9D155BAA2940538D003C802E /* Main.storyboard */,
-				9D13C1A1294B1F8B00FCC40A /* CustomImage */,
-				9D13C19E294B1EE200FCC40A /* CustomButton */,
-				9D13C19B294B198400FCC40A /* CustomTextField */,
+				9D8C67E4294C060F00224FF5 /* CustonView */,
 				9D155BB22940538F003C802E /* Info.plist */,
 				9D155BAD2940538F003C802E /* Assets.xcassets */,
+				9D155BAA2940538D003C802E /* Main.storyboard */,
+				9D155BAF2940538F003C802E /* LaunchScreen.storyboard */,
 				9D155BA62940538D003C802E /* SceneDelegate.swift */,
 				9D155BA42940538D003C802E /* AppDelegate.swift */,
 				E240D4922941064F0090066D /* GoogleService-Info.plist */,
@@ -196,6 +199,33 @@
 				9D7AD6BC294342F300162976 /* CustomLabel.swift */,
 			);
 			path = CustomLable;
+			sourceTree = "<group>";
+		};
+		9D8C67E1294C030A00224FF5 /* CustomStackView */ = {
+			isa = PBXGroup;
+			children = (
+				9D8C67E2294C032B00224FF5 /* CustomStackView.swift */,
+			);
+			path = CustomStackView;
+			sourceTree = "<group>";
+		};
+		9D8C67E4294C060F00224FF5 /* CustonView */ = {
+			isa = PBXGroup;
+			children = (
+				9D8C67E1294C030A00224FF5 /* CustomStackView */,
+				9D13C1A1294B1F8B00FCC40A /* CustomImage */,
+				9D13C19B294B198400FCC40A /* CustomTextField */,
+				9D7AD6BB294342CE00162976 /* CustomLable */,
+			);
+			path = CustonView;
+			sourceTree = "<group>";
+		};
+		9D8C67E5294C52E000224FF5 /* FireBaseService */ = {
+			isa = PBXGroup;
+			children = (
+				9D8C67E6294C531000224FF5 /* FirebaseService.swift */,
+			);
+			path = FireBaseService;
 			sourceTree = "<group>";
 		};
 		9D91349E294176AB0065578D /* ListUserTable */ = {
@@ -398,8 +428,10 @@
 				9D155BA52940538D003C802E /* AppDelegate.swift in Sources */,
 				9D13C18E294ADDEF00FCC40A /* SettingViewController.swift in Sources */,
 				E20577142940EE0900654B8A /* ListUserPresenter.swift in Sources */,
+				9D8C67E3294C032B00224FF5 /* CustomStackView.swift in Sources */,
 				E2C8115329463AC100E40FBC /* UserDataBase.xcdatamodeld in Sources */,
 				9D7AD6BD294342F300162976 /* CustomLabel.swift in Sources */,
+				9D8C67E7294C531000224FF5 /* FirebaseService.swift in Sources */,
 				9D0BE3522940912200AFC3F7 /* User.swift in Sources */,
 				E2C8114629461BC200E40FBC /* DataManager.swift in Sources */,
 				9D7AD6BA2942CAFE00162976 /* ListCellPresenter.swift in Sources */,

@@ -20,17 +20,8 @@ class SignInPresenter {
     }
 
     func fetchUser() {
-        db.collection("user").addSnapshotListener { (querySnapshot, error) in
-            if error != nil {return}
-            guard let querySnapshot = querySnapshot?.documentChanges else { return }
-            querySnapshot.forEach { doc in
-                
-                // bug not fetch user when remove user
-                if doc.type == .added {
-                    let value = User(dict: doc.document.data())
-                    self.users.append(value)
-                }
-            }
+        FirebaseService.share.fetchUser { user in
+            self.users.append(contentsOf: user)
         }
     }
     

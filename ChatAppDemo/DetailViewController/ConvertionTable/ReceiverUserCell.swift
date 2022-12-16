@@ -77,8 +77,8 @@ class ReceiverUserCell: UITableViewCell {
         dateFormatter.dateFormat = "hh:mm:ss a"
         lbTime.text = dateFormatter.string(from: time)
         ImageService.share.fetchImage(with: message.image) { image in
-            DispatchQueue.main.async {
-                self.imgMessage.image = image
+            DispatchQueue.main.async { [weak self] in
+                self?.imgMessage.image = image
             }
         }
         if message.text.isEmpty {

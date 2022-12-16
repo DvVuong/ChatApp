@@ -13,7 +13,6 @@ class SiginViewController: UIViewController {
     @IBOutlet private weak var btSaveData: CustomButton!
     @IBOutlet private weak var btSigin: CustomButton!
     @IBOutlet weak var btSignup: CustomButton!
-    
     private var selected: Bool = false
     lazy var presenter = SignInPresenter(with: self)
     override func viewDidLoad() {
@@ -77,7 +76,7 @@ class SiginViewController: UIViewController {
     }
 }
     @objc func didTapSigin(_ sender: UIButton) {
-        presenter.fetchUser()
+//        presenter.fetchUser()
         presenter.validateEmailPassword(tfEmail.text!, tfPassword.text!) { currentUser, bool in
             if bool {
                 guard let currentUser = currentUser else { return }
@@ -91,7 +90,7 @@ class SiginViewController: UIViewController {
 
     }
     private func setupBtSignUp() {
-        btSigin.addTarget(self, action: #selector(didTapSigup(_:)), for: .touchUpInside)
+        btSignup.addTarget(self, action: #selector(didTapSigup(_:)), for: .touchUpInside)
     }
     @objc func didTapSigup(_ sender: UIButton) {
         let vc  = RegisterViewcontroller.instance(presenter.getUserData())

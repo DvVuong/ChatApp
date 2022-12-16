@@ -25,7 +25,6 @@ class DetailViewViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
-        
         self.presenter.fetchMessage()
     }
     override func viewWillAppear(_ animated: Bool) {
@@ -78,10 +77,10 @@ class DetailViewViewController: UIViewController {
     }
     private func scrollToBottom() {
         DispatchQueue.main.async {
+            if self.presenter.getNumberOfMessage() < 1 { return }
             let indexPath = IndexPath(row: self.presenter.getNumberOfMessage() - 1, section: 0)
             self.convertiontable.scrollToRow(at: indexPath, at: .bottom, animated: true)
         }
-        
     }
 }
 extension DetailViewViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
@@ -102,7 +101,6 @@ extension DetailViewViewController: DetailPresenterViewDelegate {
     func showMessage() {
         self.convertiontable.reloadData()
         self.scrollToBottom()
-        
     }
 }
 extension DetailViewViewController: UITableViewDelegate, UITableViewDataSource {
@@ -111,7 +109,7 @@ extension DetailViewViewController: UITableViewDelegate, UITableViewDataSource {
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let currentId = presenter.getCurrentUserID()
-        let sendId = presenter.message[indexPath.item].sendId
+        let sendId = presenter.messages[indexPath.item].sendId
         if currentId == sendId {
             guard let cell = convertiontable.dequeueReusableCell(withIdentifier: "senderCell", for: indexPath) as? SenderUserCell else { return UITableViewCell() }
             let message = presenter.getCellForMessage(at: indexPath.row)

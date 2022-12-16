@@ -13,7 +13,7 @@ protocol ListUserPresenterDelegate: NSObject {
 }
 
 class ListUserPresenter {
-    // properties phai set private 
+    // properties phai set private
     private weak var view: ListUserPresenterDelegate?
     private var db = Firestore.firestore()
     var users = [User]()
@@ -32,14 +32,10 @@ class ListUserPresenter {
     
     func fetchUser(_ completed: @escaping() -> Void) {
         guard let currentID = currentUser?.id else { return }
-        db.collection("user").addSnapshotListener { querySnapshot, error in
-            if error != nil {return}
-            guard let querySnapshot = querySnapshot else {return}
-            self.users.removeAll()
-            for doc in querySnapshot.documents {
-                let value = User(dict: doc.data())
-                if currentID != value.id {
-                    self.users.append(value)
+        FirebaseService.share.fetchUser { user in
+            user.forEach { user in
+                if currentID != user.id {
+                    self.users.append(user)
                 }
                 self.finalUser = self.users
             }
@@ -51,16 +47,9 @@ class ListUserPresenter {
         self.message.removeAll()
         self.allMessages.removeAll()
         guard let senderID = currentUser?.id else  { return }
-        db.collection("message").addSnapshotListener { querySnapshot, error in
-            if error != nil { return }
-            guard let document = querySnapshot?.documentChanges else { return }
+        FirebaseService.share.fetchMessage { mess in
+            self.allMessages.append(contentsOf: mess)
             
-            for doc in document {
-                if doc.type == .added || doc.type == .modified || doc.type == .removed {
-                    let message = Message(dict: doc.document.data())
-                    self.allMessages.append(message)
-                }
-            }
             self.users.forEach { user in
                 self.temparr.removeAll()
                 self.allMessages.forEach { message in
@@ -84,9 +73,9 @@ class ListUserPresenter {
             self.finalUser = self.users
         } else {
             self.finalUser = self.users.filter{$0.name
-                                                .folding(options: .diacriticInsensitive, locale: nil)
-                                                .lowercased()
-                                                .contains(lowcaseText)
+                    .folding(options: .diacriticInsensitive, locale: nil)
+                    .lowercased()
+                    .contains(lowcaseText)
             }
         }
         view?.showSearchUser()
@@ -98,7 +87,7 @@ class ListUserPresenter {
         return message[id]
     }
     func getMessageKeyForState(_ id: String) -> Message? {
-    return message[id]
+        return message[id]
     }
     func getcurrentUser() -> User?{
         return currentUser
@@ -112,8 +101,9 @@ class ListUserPresenter {
         }
         return finalUser[index]
     }
-    func deleteUser(_ index: Int, completion: @escaping () -> Void) {
+    func deleteUser(_ index: Int, completion:() -> Void) {
         self.finalUser.remove(at: index)
         completion()
     }
+    
 }

@@ -12,7 +12,7 @@ class CustomTextField: UITextField {
     override func awakeFromNib() {
         self.layer.cornerRadius = 6
         self.layer.masksToBounds = true
-        self.attributedPlaceholder = NSAttributedString(string: self.placeholder ?? "", attributes: [.foregroundColor: UIColor.brown])
+        self.attributedPlaceholder = NSAttributedString(string: self.placeholder ?? "", attributes: [.foregroundColor: UIColor.white])
         
     }
    

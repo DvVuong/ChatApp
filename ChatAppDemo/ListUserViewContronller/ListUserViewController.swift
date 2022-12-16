@@ -71,9 +71,9 @@ class ListUserViewController: UIViewController {
         avatar.layer.borderWidth = 1
         avatar.layer.borderColor = UIColor.black.cgColor
         avatar.contentMode = .scaleToFill
-        ImageService.share.fetchImage(with: currentuser.avatar) { image in
+        ImageService.share.fetchImage(with: currentuser.avatar) { [weak self] image in
             DispatchQueue.main.async {
-                self.avatar.image = image
+                self?.avatar.image = image
             }
         }
     }
@@ -120,8 +120,8 @@ extension ListUserViewController: UITableViewDelegate, UITableViewDataSource {
     }
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let delete = UIContextualAction(style: .normal, title: "Delete") { action, _, _ in
-            self.presenter.deleteUser(indexPath.row) {
-                self.userTableView.reloadData()
+            self.presenter.deleteUser(indexPath.row) { [weak self] in
+                self?.userTableView.reloadData()
             }
         }
         delete.image = UIImage(systemName: "trash.fill")
@@ -134,7 +134,7 @@ extension ListUserViewController: ListUserPresenterDelegate {
     func showSearchUser() {
         self.userTableView.reloadData()
     }
-    func deleteUser(at index: Int) {
+    func deleteUser(at index: Int) { 
         self.userTableView.deleteRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
         self.userTableView.reloadData()
     }
