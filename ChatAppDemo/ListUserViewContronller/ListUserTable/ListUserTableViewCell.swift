@@ -21,6 +21,7 @@ class ListUserTableViewCell: UITableViewCell {
         imgAvt.contentMode = .scaleToFill
         imgAvt.layer.cornerRadius = imgAvt.frame.height / 2
         imgAvt.layer.masksToBounds = true
+        imgState.isHidden = true
         // Setup BubbleView
         bubbleView.layer.borderWidth = 1
         bubbleView.layer.borderColor = UIColor.black.cgColor
@@ -54,17 +55,15 @@ class ListUserTableViewCell: UITableViewCell {
                     lbMessage.text = "\(user.name) sent a photo:"
                 }
             }
+            
+            self.imgState.isHidden = (message.sendId == user.id) ? false : true
             if message.read == true {
                 self.imgState.isHidden = true
             }
-            else {
-                self.imgState.isHidden = false
-            }
-            
-        }else {
-            lbMessage.text = "Tap to chat"
-            self.imgState.isHidden = true
+        } else {
+            lbMessage.text = "No new messages"
         }
+        
         ImageService.share.fetchImage(with: user.avatar) { image in
             DispatchQueue.main.async {
                 self.imgAvt.image = image

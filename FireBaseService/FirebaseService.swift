@@ -17,14 +17,17 @@ class FirebaseService {
     private let _user = "user"
     private let _message = "message"
     private let _imageMessage = "ImageMessage"
+    private let _avatar = "Avatar"
     
     func fetchUser(_ completed: @escaping ([User]) -> Void) {
         self.users.removeAll()
         db.collection(_user).addSnapshotListener { (querySnapshot, error) in
             if error != nil {return}
             guard let querySnapshot = querySnapshot?.documentChanges else { return }
+            self.users.removeAll()
+            
             querySnapshot.forEach { doc in
-                if doc.type == .added || doc.type == .removed {
+                if doc.type == .added || doc.type == .modified  {
                     let value = User(dict: doc.document.data())
                     self.users.append(value)
                 }
@@ -38,7 +41,7 @@ class FirebaseService {
         db.collection(_message).addSnapshotListener { querySnapshot, error in
             if error != nil { return }
             querySnapshot?.documentChanges.forEach({ doc in
-                if doc.type == .added {
+                if doc.type == .added || doc.type == .modified {
                     let message = Message(dict: doc.document.data())
                     self.messages.append(message)
                     self.messages = self.messages.sorted {
@@ -92,21 +95,66 @@ class FirebaseService {
         ])
     }
     
-    func changeStateReadMessage(with messageKey: Message, completed: @escaping () -> Void) {
+    func changeStateReadMessage(_ senderUser: User, revicerUser: User) {
         self.db.collection(_message)
             .whereField("read", isEqualTo: false)
             .getDocuments { querydata, error in
                 if error != nil { return }
                 guard let doc = querydata?.documents else { return }
-                
                 doc.forEach { [weak self] doc in
                     let value = Message(dict: doc.data())
-                    if messageKey.messageKey == value.messageKey {
-                        self?.db.collection(self!._message).document(messageKey.messageKey).updateData(["read" : true])
+                    if value.sendId == revicerUser.id && value.receiverID == senderUser.id {
+                        self?.db.collection(self!._message).document(value.messageKey).updateData(["read" : true])
                     }
                 }
-                completed()
             }
+    }
+    
+    func createAccount(email: String,  password: String, name: String) {
+        let autoKey = self.db.collection(_user).document().documentID
+        var imgUrl = ""
+        if self.imgUrl.isEmpty {
+            imgUrl = "https://firebasestorage.googleapis.com/v0/b/chatapp-9c3f7.appspot.com/o/Avatar%2FplaceholderAvatar.jpeg?alt=media&token=7d7eab97-abae-4bc9-8ed7-35569c485423"
+            self.db.collection("user").document(autoKey).setData([
+                "email": email,
+                "password": password,
+                "avatar": imgUrl,
+                "id": autoKey,
+                "name": name,
+                "isActive": false
+            ])
+            return
+        }
+        
+        imgUrl = self.imgUrl
+        self.db.collection(_user).document(autoKey).setData([
+            "email": email,
+            "password": password,
+            "avatar": imgUrl,
+            "id": autoKey,
+            "name": name,
+            "isActive": false
+        ])
+    }
+    
+    func sendAndGetUrlAvatar(_ image: UIImage) {
+        let fireBaseStorage = Storage.storage().reference()
+        let img = image.jpegData(compressionQuality: 0.5)!
+        let imgKey = NSUUID().uuidString
+        let imgFloder = Storage.storage().reference().child(_avatar).child(imgKey)
+        fireBaseStorage.child(_avatar).child(imgKey).putData(img) {[weak self] (metadata, error) in
+            if error != nil  {return}
+            imgFloder.downloadURL {  url, error in
+                if error != nil  {return}
+                guard let url = url else  { return }
+                self?.imgUrl = url.absoluteString
+            }
+        }
+    }
+    
+    func changeStateUser(_ currentUser: User) {
+        self.db.collection(_user)
+        self.db.collection(self._user).document(currentUser.id).updateData(["isActive" : true])
     }
     
 }

@@ -34,6 +34,7 @@
 		9D9134A92941E11D0065578D /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D9134A82941E11D0065578D /* Message.swift */; };
 		9D9134AC2941E8610065578D /* SenderUserCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D9134AB2941E8610065578D /* SenderUserCell.swift */; };
 		9D9134AE2941E9460065578D /* ReceiverUserCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D9134AD2941E9460065578D /* ReceiverUserCell.swift */; };
+		9DA56DA6294FFBE800162077 /* CustomView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DA56DA5294FFBE800162077 /* CustomView.swift */; };
 		E20577142940EE0900654B8A /* ListUserPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E20577132940EE0900654B8A /* ListUserPresenter.swift */; };
 		E240D4932941064F0090066D /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = E240D4922941064F0090066D /* GoogleService-Info.plist */; };
 		E240D495294126CF0090066D /* DetailViewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E240D494294126CE0090066D /* DetailViewViewController.swift */; };
@@ -73,6 +74,7 @@
 		9D9134A82941E11D0065578D /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		9D9134AB2941E8610065578D /* SenderUserCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SenderUserCell.swift; sourceTree = "<group>"; };
 		9D9134AD2941E9460065578D /* ReceiverUserCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiverUserCell.swift; sourceTree = "<group>"; };
+		9DA56DA5294FFBE800162077 /* CustomView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomView.swift; sourceTree = "<group>"; };
 		E20577132940EE0900654B8A /* ListUserPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListUserPresenter.swift; sourceTree = "<group>"; };
 		E240D4922941064F0090066D /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		E240D494294126CE0090066D /* DetailViewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewViewController.swift; sourceTree = "<group>"; };
@@ -136,7 +138,6 @@
 		9D13C1A1294B1F8B00FCC40A /* CustomImage */ = {
 			isa = PBXGroup;
 			children = (
-				9D13C19E294B1EE200FCC40A /* CustomButton */,
 				9D13C1A2294B1FA700FCC40A /* CustomImage.swift */,
 			);
 			path = CustomImage;
@@ -212,7 +213,9 @@
 		9D8C67E4294C060F00224FF5 /* CustonView */ = {
 			isa = PBXGroup;
 			children = (
+				9DA56DA4294FFBD700162077 /* CustomView */,
 				9D8C67E1294C030A00224FF5 /* CustomStackView */,
+				9D13C19E294B1EE200FCC40A /* CustomButton */,
 				9D13C1A1294B1F8B00FCC40A /* CustomImage */,
 				9D13C19B294B198400FCC40A /* CustomTextField */,
 				9D7AD6BB294342CE00162976 /* CustomLable */,
@@ -291,6 +294,14 @@
 				9D9134AD2941E9460065578D /* ReceiverUserCell.swift */,
 			);
 			path = ConvertionTable;
+			sourceTree = "<group>";
+		};
+		9DA56DA4294FFBD700162077 /* CustomView */ = {
+			isa = PBXGroup;
+			children = (
+				9DA56DA5294FFBE800162077 /* CustomView.swift */,
+			);
+			path = CustomView;
 			sourceTree = "<group>";
 		};
 		E2C8114A294622B500E40FBC /* DataService */ = {
@@ -435,6 +446,7 @@
 				9D0BE3522940912200AFC3F7 /* User.swift in Sources */,
 				E2C8114629461BC200E40FBC /* DataManager.swift in Sources */,
 				9D7AD6BA2942CAFE00162976 /* ListCellPresenter.swift in Sources */,
+				9DA56DA6294FFBE800162077 /* CustomView.swift in Sources */,
 				9D9134A92941E11D0065578D /* Message.swift in Sources */,
 				9D0BE3562940A1FA00AFC3F7 /* ListUserTableViewCell.swift in Sources */,
 				9D155BBB29407093003C802E /* RegisterViewcontroller.swift in Sources */,

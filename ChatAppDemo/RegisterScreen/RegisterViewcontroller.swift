@@ -120,6 +120,12 @@ class RegisterViewcontroller: UIViewController {
         alert.addAction(actionCancel)
         present(alert, animated: true)
     }
+    
+    
+    @IBAction func didTapbackLogin(_ sender: Any) {
+        navigationController?.popViewController(animated: true)
+    }
+    
 }
 
 extension RegisterViewcontroller: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
@@ -127,7 +133,7 @@ extension RegisterViewcontroller: UIImagePickerControllerDelegate, UINavigationC
         let img = info[UIImagePickerController.InfoKey.originalImage] as? UIImage
         self.imgAvtar.image = img
         guard let img = img else { return }
-        presenter.sendImage(img)
+        presenter.getUrlAvatar(img)
         self.imgPicker.dismiss(animated: true)
     }
     
@@ -145,6 +151,7 @@ extension RegisterViewcontroller: ResgiterPresenterDelegate {
         if let result = result {
             lbNameError.text = result
             lbNameError.isHidden = false
+            
         } else {
             lbNameError.text = ""
             presenter.setNameError(lbNameError.text!)
@@ -166,6 +173,7 @@ extension RegisterViewcontroller: ResgiterPresenterDelegate {
         if let result = result {
             lbConfirmPasswordError.text = result
             lbConfirmPasswordError.isHidden = false
+            
         } else {
             lbConfirmPasswordError.text = ""
             presenter.setConfirmPassword(lbConfirmPasswordError.text!)
@@ -176,6 +184,7 @@ extension RegisterViewcontroller: ResgiterPresenterDelegate {
         if let result = result {
             lbErrorEmail.text = result
             lbErrorEmail.isHidden = false
+            
         } else {
             lbErrorEmail.text = ""
             presenter.setEmaiError(lbNameError.text!) 

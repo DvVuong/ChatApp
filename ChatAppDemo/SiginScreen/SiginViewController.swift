@@ -18,8 +18,7 @@ class SiginViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
-        presenter.fetchUser()
-        
+        presenter.fetchUser()        
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -76,11 +75,11 @@ class SiginViewController: UIViewController {
     }
 }
     @objc func didTapSigin(_ sender: UIButton) {
-//        presenter.fetchUser()
         presenter.validateEmailPassword(tfEmail.text!, tfPassword.text!) { currentUser, bool in
             if bool {
                 guard let currentUser = currentUser else { return }
                 let vc = ListUserViewController.instance(currentUser)
+                presenter.changeStateUser(currentUser)
                 navigationController?.pushViewController(vc, animated: true)
             }
             else {

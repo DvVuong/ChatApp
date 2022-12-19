@@ -104,7 +104,7 @@ extension ListUserViewController: UITableViewDelegate, UITableViewDataSource {
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell  = userTableView.dequeueReusableCell(withIdentifier: "userCell", for: indexPath) as! ListUserTableViewCell
-        cell.updateUI(presenter.getCellForUsers(at: indexPath.row), message: presenter.getMessageForUserId(presenter.users[indexPath.row].id))
+        cell.updateUI(presenter.getCellForUsers(at: indexPath.row), message: presenter.getMessageForUserId(presenter.getUsers(indexPath.row)?.id))
         return cell
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -112,10 +112,18 @@ extension ListUserViewController: UITableViewDelegate, UITableViewDataSource {
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let data = presenter.getCellForUsers(at: indexPath.row) else { return}
+        
         guard let currentUser = presenter.getcurrentUser() else { return }
-        let messageKey = presenter.getMessageKeyForState(presenter.users[indexPath.row].id)
-        let vc = DetailViewViewController.instance(data, currentUser: currentUser, messageKey: messageKey)
+        guard let reciverUser = presenter.getUsers(indexPath.row) else { return }
+        
+        let message = presenter.getMessageKeyForState(presenter.getUsers(indexPath.row)?.id)
+        if message?.receiverID == currentUser.id {
+            presenter.setState(currentUser, reciverUser: reciverUser)
+        }
+        
+        let vc = DetailViewViewController.instance(data, currentUser: currentUser, messageKey: message)
         vc.title = data.name
+        
         navigationController?.pushViewController(vc, animated: true)
     }
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
@@ -136,6 +144,9 @@ extension ListUserViewController: ListUserPresenterDelegate {
     }
     func deleteUser(at index: Int) { 
         self.userTableView.deleteRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
+        self.userTableView.reloadData()
+    }
+    func showStateMassage() {
         self.userTableView.reloadData()
     }
     

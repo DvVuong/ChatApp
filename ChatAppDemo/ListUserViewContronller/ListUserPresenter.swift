@@ -9,6 +9,7 @@ import Firebase
 
 protocol ListUserPresenterDelegate: NSObject {
     func showSearchUser()
+    func showStateMassage()
     func deleteUser(at index: Int)
 }
 
@@ -16,7 +17,7 @@ class ListUserPresenter {
     // properties phai set private
     private weak var view: ListUserPresenterDelegate?
     private var db = Firestore.firestore()
-    var users = [User]()
+    private var reciverUser = [User]()
     private var finalUser = [User]()
     private var currentUser: User?
     private var allMessages = [Message]()
@@ -32,12 +33,13 @@ class ListUserPresenter {
     
     func fetchUser(_ completed: @escaping() -> Void) {
         guard let currentID = currentUser?.id else { return }
+        self.reciverUser.removeAll()
         FirebaseService.share.fetchUser { user in
             user.forEach { user in
                 if currentID != user.id {
-                    self.users.append(user)
+                    self.reciverUser.append(user)
                 }
-                self.finalUser = self.users
+                self.finalUser = self.reciverUser
             }
             completed()
         }
@@ -50,7 +52,7 @@ class ListUserPresenter {
         FirebaseService.share.fetchMessage { mess in
             self.allMessages.append(contentsOf: mess)
             
-            self.users.forEach { user in
+            self.reciverUser.forEach { user in
                 self.temparr.removeAll()
                 self.allMessages.forEach { message in
                     if (message.sendId == user.id && message.receiverID == senderID)
@@ -67,12 +69,17 @@ class ListUserPresenter {
         }
     }
     
+    func setState(_ sender: User, reciverUser: User) {
+        FirebaseService.share.changeStateReadMessage(sender, revicerUser: reciverUser)
+        self.view?.showStateMassage()
+    }
+    
     func searchUser(_ text: String) {
         let lowcaseText = text.lowercased()
         if text.isEmpty {
-            self.finalUser = self.users
+            self.finalUser = self.reciverUser
         } else {
-            self.finalUser = self.users.filter{$0.name
+            self.finalUser = self.reciverUser.filter{$0.name
                     .folding(options: .diacriticInsensitive, locale: nil)
                     .lowercased()
                     .contains(lowcaseText)
@@ -80,13 +87,15 @@ class ListUserPresenter {
         }
         view?.showSearchUser()
     }
-    func getUsersId(_ index: Int) -> User? {
-        return users[index]
+    func getUsers(_ index: Int) -> User? {
+        return reciverUser[index]
     }
-    func getMessageForUserId(_ id: String) -> Message? {
+    func getMessageForUserId(_ id: String?) -> Message? {
+        guard let id = id else {return nil}
         return message[id]
     }
-    func getMessageKeyForState(_ id: String) -> Message? {
+    func getMessageKeyForState(_ id: String?) -> Message? {
+        guard let id = id else {return nil}
         return message[id]
     }
     func getcurrentUser() -> User?{

@@ -16,9 +16,11 @@ class DetailPresenter {
     private var imgUrl:String = ""
     private var currentUser: User?
     private var receiverUser: User?
-     var messages :[Message] = []
+    private var messages :[Message] = []
     private var db = Firestore.firestore()
     private var messageKey: Message?
+    private var stateUser = [User]()
+    private let _message = "message"
     
     init(with view: DetailPresenterViewDelegate, data: User, currentUser: User, messageKey: Message?) {
         self.view = view
@@ -26,6 +28,7 @@ class DetailPresenter {
         self.currentUser = currentUser
         self.messageKey = messageKey
     }
+
     func sendMessage(with message: String) {
         guard let receiverUser = receiverUser else { return }
         guard let senderUser = currentUser else  {  return }
@@ -39,13 +42,20 @@ class DetailPresenter {
         
     }
     
-    func changeStateReadMessage() {
-        guard let messageKey = messageKey else {return}
-        FirebaseService.share.changeStateReadMessage(with: messageKey) {
-            self.view?.showMessage()
+    func changeStateUser(_ completed:@escaping ([User]?) -> Void) {
+        self.stateUser.removeAll()
+        guard let reciverUser = receiverUser else  {return}
+        FirebaseService.share.fetchUser { [weak self] user in
+            self?.stateUser.removeAll()
+            user.forEach { user in
+                if user.id == reciverUser.id {
+                    self?.stateUser.append(user)
+                }
+            }
+            completed(self?.stateUser)
         }
     }
-    
+
     func getCurrentUserID() -> String? {
         guard let id = currentUser?.id else { return nil }
         return id
@@ -55,7 +65,7 @@ class DetailPresenter {
         guard let reciverUser = receiverUser else {return}
         guard let senderUser = self.currentUser else { return }
         self.messages.removeAll()
-        self.db.collection("message").addSnapshotListener { [weak self] querySnapshot, error in
+        self.db.collection(_message).addSnapshotListener { [weak self] querySnapshot, error in
             if error != nil {return}
             querySnapshot?.documentChanges.forEach({ [weak self] docChange in
                 if docChange.type == .added {
@@ -63,7 +73,10 @@ class DetailPresenter {
                     if ( data.receiverID == reciverUser.id && data.sendId == senderUser.id)
                         || (data.receiverID == senderUser.id && data.sendId == reciverUser.id) {
                         self?.messages.append(data)
-                        self?.sortMessage()
+                        guard var message = self?.messages else {return}
+                        message = message.sorted {
+                            $0.time < $1.time
+                        }
                     }
                 }
                 self?.view?.showMessage()
@@ -71,28 +84,17 @@ class DetailPresenter {
         }
     }
     
-    private func sortMessage() {
-        var timer: [Double] = []
-        var messageBytime = [Message]()
-        self.messages.forEach { message in
-            timer.append(message.time)
-        }
-        timer.sort{
-            $0 < $1
-        }
-        timer.forEach { time in
-            messages.forEach { message in
-                if message.time == time {
-                    messageBytime.append(message)
-                }
-            }
-        }
-        self.messages = messageBytime
-    }
     func getNumberOfMessage() -> Int {
         return messages.count
     }
     func getCellForMessage(at index: Int) -> Message {
         return messages[index]
+    }
+    func getMessage(_ index: Int) -> Message {
+        return messages[index]
+    }
+    
+    func getReciverUser() -> [User] {
+        return stateUser
     }
 }

@@ -20,6 +20,7 @@ class SignInPresenter {
     }
 
     func fetchUser() {
+        self.users.removeAll()
         FirebaseService.share.fetchUser { user in
             self.users.append(contentsOf: user)
         }
@@ -36,6 +37,12 @@ class SignInPresenter {
         }
         completion(currentUser, isvalid)
     }
+    
+    func changeStateUser(_ currentUser: User) {
+       
+        FirebaseService.share.changeStateUser(currentUser)
+    }
+    
     
     func getUserData() -> [User] {
         return users

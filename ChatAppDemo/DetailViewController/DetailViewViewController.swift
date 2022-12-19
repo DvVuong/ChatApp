@@ -18,6 +18,10 @@ class DetailViewViewController: UIViewController {
     @IBOutlet private weak var tfMessage: UITextField!
     @IBOutlet private weak var btSendMessage: UIButton!
     @IBOutlet private weak var convertiontable: UITableView!
+    @IBOutlet private weak var goBack: UIButton!
+    @IBOutlet private weak var imgUser: UIImageView!
+    @IBOutlet private weak var lbState: UILabel!
+    @IBOutlet private weak var lbNameUser: UILabel!
     
     
     private var imgPicker = UIImagePickerController()
@@ -26,40 +30,70 @@ class DetailViewViewController: UIViewController {
         super.viewDidLoad()
         setupUI()
         self.presenter.fetchMessage()
+        
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        self.presenter.changeStateReadMessage()
+        navigationController?.setNavigationBarHidden(true, animated: animated)
     }
+   
     private func setupUI() {
         setupMessageTextField()
         setupImage()
         setupBtSend()
         setupConvertionTable()
+        setupGoBackButton()
+       showStateReciverUser()
+       
     }
+    
+    private func showStateReciverUser() {
+        presenter.changeStateUser {[weak self] user in
+            guard let user = user else {return}
+            user.forEach { user in
+                self?.lbNameUser.text = user.name
+                ImageService.share.fetchImage(with: user.avatar) { image in
+                    DispatchQueue.main.async {
+                        self?.imgUser.image = image
+                    }
+                }
+                if user.isActive == true {
+                    self?.lbState.text = "Active now"
+                }else {
+                    self?.lbState.text = "Not active"
+                }
+            }
+        }
+    }
+   
+    private func setupGoBackButton() {
+        goBack.setTitle("", for: .normal)
+        goBack.addTarget(self, action: #selector(didTapBackListScreen(_:)), for: .touchUpInside)
+    }
+    
     private func setupConvertionTable() {
         convertiontable.delegate = self
         convertiontable.dataSource = self
         convertiontable.separatorStyle = .none
         convertiontable.contentInset = UIEdgeInsets(top: 5, left: 0, bottom: 5, right: 0)
     }
+    
     private func setupMessageTextField() {
         tfMessage.attributedPlaceholder = NSAttributedString(string: "Aa", attributes: [.foregroundColor:UIColor.white])
         tfMessage.layer.cornerRadius = 8
         tfMessage.delegate = self
         tfMessage.layer.masksToBounds = true
     }
+    
     private func setupImage() {
         image.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(chooseImage(_:))))
         image.isUserInteractionEnabled = true
     }
+    
     private func setupBtSend() {
         btSendMessage.setTitle(" ", for: .normal)
         btSendMessage.setImage(UIImage(named: "paperplane.fill"), for: .normal)
         btSendMessage.addTarget(self, action: #selector(didTapSend(_:)), for: .touchUpInside)
-    }
-    @objc private func didTapSend(_ sender: UIButton) {
-        self.sendMessage()
     }
     
     private func sendMessage() {
@@ -70,11 +104,6 @@ class DetailViewViewController: UIViewController {
         tfMessage.text = ""
     }
     
-    @objc private func chooseImage(_ tapGes: UITapGestureRecognizer) {
-        self.imgPicker.delegate = self
-        self.imgPicker.sourceType = .photoLibrary
-        present(self.imgPicker, animated: true)
-    }
     private func scrollToBottom() {
         DispatchQueue.main.async {
             if self.presenter.getNumberOfMessage() < 1 { return }
@@ -82,14 +111,30 @@ class DetailViewViewController: UIViewController {
             self.convertiontable.scrollToRow(at: indexPath, at: .bottom, animated: true)
         }
     }
+    //MARK: Acction
+    
+    @objc private func didTapSend(_ sender: UIButton) {
+        self.sendMessage()
+    }
+    
+    @objc private func chooseImage(_ tapGes: UITapGestureRecognizer) {
+        self.imgPicker.delegate = self
+        self.imgPicker.sourceType = .photoLibrary
+        present(self.imgPicker, animated: true)
+    }
+    
+    @objc private func didTapBackListScreen(_ sender: Any) {
+        navigationController?.popViewController(animated: true)
+    }
+    
 }
 extension DetailViewViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         let image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage
         guard let image = image else { return }
-        DispatchQueue.main.async {
-            self.presenter.sendImageMessage(with: image)
-        }
+        
+        self.presenter.sendImageMessage(with: image)
+        
         self.imgPicker.dismiss(animated: true)
     }
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
@@ -97,19 +142,21 @@ extension DetailViewViewController: UIImagePickerControllerDelegate, UINavigatio
     }
     
 }
+
 extension DetailViewViewController: DetailPresenterViewDelegate {
     func showMessage() {
         self.convertiontable.reloadData()
         self.scrollToBottom()
     }
 }
+
 extension DetailViewViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return presenter.getNumberOfMessage()
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let currentId = presenter.getCurrentUserID()
-        let sendId = presenter.messages[indexPath.item].sendId
+        let sendId = presenter.getMessage(indexPath.row).sendId
         if currentId == sendId {
             guard let cell = convertiontable.dequeueReusableCell(withIdentifier: "senderCell", for: indexPath) as? SenderUserCell else { return UITableViewCell() }
             let message = presenter.getCellForMessage(at: indexPath.row)
