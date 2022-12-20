@@ -47,8 +47,8 @@ class ListUserViewController: UIViewController {
         setupLbNameUser()
         self.presenter.fetchUser {
             self.presenter.fetchMessageForUser {
-                self.messageTable.reloadData()
                 self.listUser.reloadData()
+                self.messageTable.reloadData()
             }
         }
         
@@ -109,12 +109,12 @@ class ListUserViewController: UIViewController {
 }
 extension ListUserViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-       
-        return presenter.getNumberOfUser()
+       print(presenter.getNumberOfMessage())
+        return presenter.getNumberOfMessage()
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell  = messageTable.dequeueReusableCell(withIdentifier: "userCell", for: indexPath) as! ListUserTableViewCell
-        cell.updateUI(presenter.getCellForUsers(at: indexPath.row), message: presenter.getMessageForUserId(presenter.getUsers(indexPath.row)?.id))
+        cell.updateUI(presenter.getcurrentUser(), message: presenter.cellForMessage(indexPath.item))
         return cell
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -131,7 +131,7 @@ extension ListUserViewController: UITableViewDelegate, UITableViewDataSource {
             presenter.setState(currentUser, reciverUser: reciverUser)
         }
         
-        let vc = DetailViewViewController.instance(data, currentUser: currentUser, messageKey: message)
+        let vc = DetailViewViewController.instance(data, currentUser: currentUser)
         vc.title = data.name
         
         navigationController?.pushViewController(vc, animated: true)
@@ -148,23 +148,10 @@ extension ListUserViewController: UITableViewDelegate, UITableViewDataSource {
         return swipe
     }
 }
-extension ListUserViewController: ListUserPresenterDelegate {
-    func showSearchUser() {
-        self.messageTable.reloadData()
-    }
-    func deleteUser(at index: Int) { 
-        self.messageTable.deleteRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
-        self.messageTable.reloadData()
-    }
-    func showStateMassage() {
-        self.messageTable.reloadData()
-    }
-    
-}
+// MARK: CollectionView
 
 extension ListUserViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        print(presenter.getNumberOfUser())
         return presenter.getNumberOfUser()
     }
     
@@ -174,10 +161,37 @@ extension ListUserViewController: UICollectionViewDelegate, UICollectionViewData
         return cell
     }
     
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: 200, height: 200)
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        guard let user = presenter.getCellForUsers(at: indexPath.item) else {return}
+        guard let currentUser = presenter.getcurrentUser() else {return}
+        let vc = DetailViewViewController.instance(user, currentUser: currentUser)
+        navigationController?.pushViewController(vc, animated: true)
     }
     
-    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: 80, height: 80)
+    }
     
 }
+
+
+
+
+
+extension ListUserViewController: ListUserPresenterDelegate {
+    func showSearchUser() {
+        self.messageTable.reloadData()
+        self.listUser.reloadData()
+    }
+    func deleteUser(at index: Int) { 
+        self.messageTable.deleteRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
+        self.messageTable.reloadData()
+    }
+    func showStateMassage() {
+        self.messageTable.reloadData()
+        self.listUser.reloadData()
+    }
+    
+}
+
+

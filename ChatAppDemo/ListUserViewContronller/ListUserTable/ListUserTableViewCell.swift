@@ -32,24 +32,25 @@ class ListUserTableViewCell: UITableViewCell {
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
     }
-    func updateUI(_ user: User?, message: Message?) {
-        guard let user = user else { return }
+    func updateUI(_ currentUser: User?, message: Message?) {
         guard let message = message else {return}
+        guard let currentUser = currentUser else {return}
+
         // Show Avatar
-        ImageService.share.fetchImage(with: user.avatar) { image in
+        ImageService.share.fetchImage(with: message.avatarReciverUser) { image in
             DispatchQueue.main.async {
                 self.imgAvt.image = image
             }
         }
         // Show Message and State message
-        lbNameUser.text = user.name
+        lbNameUser.text = message.receivername
         if message.text.isEmpty {
             lbMessage.text = "No new message"
         } else {
             lbMessage.text = message.text
         }
         
-        if message.receiverID == user.id {
+        if message.receiverID == currentUser.id {
             lbMessage.text = "you: \(message.text)"
         }
         

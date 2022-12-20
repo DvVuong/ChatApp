@@ -16,6 +16,8 @@ struct Message {
     let time: Double
     let read: Bool
     let messageKey: String
+    let avateSender: String
+    let avatarReciverUser: String
     init(dict: [String: Any]) {
         self.image = dict["image"] as? String ?? ""
         self.nameSender = dict["nameSender"] as? String ?? ""
@@ -26,5 +28,7 @@ struct Message {
         self.time = dict["time"] as? Double ?? 0
         self.read = dict["read"] as? Bool ?? false
         self.messageKey = dict["messageKey"] as? String ?? ""
+        self.avateSender = dict["avateSender"] as? String ?? ""
+        self.avatarReciverUser = dict["avatarReciverUser"] as? String ?? ""
     }
 }

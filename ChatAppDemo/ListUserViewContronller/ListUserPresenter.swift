@@ -33,7 +33,7 @@ class ListUserPresenter {
     
     func fetchUser(_ completed: @escaping() -> Void) {
         guard let currentID = currentUser?.id else { return }
-        db.collection("user").getDocuments { (querySnapshot, error) in
+        db.collection("user").addSnapshotListener { (querySnapshot, error) in
             if error != nil {return}
             guard let snapshot = querySnapshot else { return }
             self.reciverUser.removeAll()
@@ -113,6 +113,18 @@ class ListUserPresenter {
     func getNumberOfUser() -> Int {
         return finalUser.count
     }
+    
+    func getNumberOfMessage() -> Int {
+        return temparr.count
+    } 
+    
+    func cellForMessage(_ index: Int) -> Message? {
+        guard index < 0 && index > getNumberOfMessage() else {
+            return nil
+        } 
+        return temparr[index]
+    } 
+    
     
     func getCellForUsers(at index: Int) -> User? {
         if index < 0 && index > getNumberOfUser() {

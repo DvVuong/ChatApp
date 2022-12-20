@@ -67,11 +67,13 @@ class FirebaseService {
                 self?.imgUrl = "\(url)"
                 self?.db.collection(self?._message ?? "").document(autoKey).setData([
                     "nameSender": senderUser.name,
+                    "avateSender": senderUser.avatar,
                     "sendId": senderUser.id,
                     "text": "",
                     "image": self?.imgUrl as Any,
                     "receivername": receiverUser.name,
                     "receiverID": receiverUser.id,
+                    "avatarReciverUser": receiverUser.avatar,
                     "time": Date().timeIntervalSince1970,
                     "read": false,
                     "messageKey": autoKey

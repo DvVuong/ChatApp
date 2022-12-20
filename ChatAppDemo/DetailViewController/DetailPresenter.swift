@@ -25,11 +25,10 @@ class DetailPresenter {
     
     
     
-    init(with view: DetailPresenterViewDelegate, data: User, currentUser: User, messageKey: Message?) {
+    init(with view: DetailPresenterViewDelegate, data: User, currentUser: User) {
         self.view = view
         self.receiverUser = data
         self.currentUser = currentUser
-        self.messageKey = messageKey
     }
 
     func sendMessage(with message: String) {

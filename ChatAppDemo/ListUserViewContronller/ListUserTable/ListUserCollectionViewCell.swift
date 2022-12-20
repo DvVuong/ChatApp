@@ -9,7 +9,8 @@ import UIKit
 
 class ListUserCollectionViewCell: UICollectionViewCell {
     @IBOutlet private weak var img: CustomImage!
-    @IBOutlet weak var lbName: UILabel!
+    @IBOutlet private weak var lbName: UILabel!
+    @IBOutlet private weak var imgState: UIImageView!
     
     func updateUI(_ user: User?) {
         guard let user = user else {return}
@@ -18,6 +19,11 @@ class ListUserCollectionViewCell: UICollectionViewCell {
             DispatchQueue.main.async {
                 self.img.image = image
             }
+        }
+        if user.isActive == true {
+            self.imgState.tintColor = .green
+        } else {
+            self.imgState.tintColor = .systemGray
         }
     }
 }

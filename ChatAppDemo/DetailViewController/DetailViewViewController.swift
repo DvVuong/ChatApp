@@ -8,9 +8,9 @@
 import UIKit
 
 class DetailViewViewController: UIViewController {
-    static func instance(_ data: User, currentUser: User, messageKey: Message?) -> DetailViewViewController {
+    static func instance(_ data: User, currentUser: User) -> DetailViewViewController {
         let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "DetailScreen") as! DetailViewViewController
-        vc.presenter = DetailPresenter(with: vc, data: data, currentUser: currentUser, messageKey: messageKey)
+        vc.presenter = DetailPresenter(with: vc, data: data, currentUser: currentUser)
         return vc
     }
     
