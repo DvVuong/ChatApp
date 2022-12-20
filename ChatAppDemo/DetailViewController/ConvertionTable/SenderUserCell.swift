@@ -75,21 +75,30 @@ class SenderUserCell: UITableViewCell {
         // Setup Time
         let time = Date(timeIntervalSince1970: TimeInterval(message.time))
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "hh:mm:ss a"
+        dateFormatter.dateFormat = "hh:mm"
         lbTime.text = dateFormatter.string(from: time)
         ImageService.share.fetchImage(with: message.image) { image in
             DispatchQueue.main.async { [weak self] in
                 self?.imgMessage.image = image
             }
         }
+        
         if message.text.isEmpty {
             self.imgMessage.isHidden = false
             self.lbMessage.isHidden = true
+            return
+        }
+        
+        self.imgMessage.isHidden = true
+        self.lbMessage.isHidden = false
+        
+        if message.text == "👍" {
+            self.lbMessage.backgroundColor = .clear
         }else {
-            self.imgMessage.isHidden = true
-            self.lbMessage.isHidden = false
+            lbMessage.backgroundColor = .systemBlue
         }
     }
+    
     @objc private func handelZoomeImage() {
         ImageService.share.zoomImage(imgMessage)
     }

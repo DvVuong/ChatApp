@@ -22,6 +22,7 @@ class DetailViewViewController: UIViewController {
     @IBOutlet private weak var imgUser: UIImageView!
     @IBOutlet private weak var lbState: UILabel!
     @IBOutlet private weak var lbNameUser: UILabel!
+    @IBOutlet private weak var imgStateUser: CustomImage!
     
     
     private var imgPicker = UIImagePickerController()
@@ -43,12 +44,13 @@ class DetailViewViewController: UIViewController {
         setupBtSend()
         setupConvertionTable()
         setupGoBackButton()
-       showStateReciverUser()
+        showStateReciverUser()
        
     }
     
     private func showStateReciverUser() {
         presenter.changeStateUser {[weak self] user in
+            self?.imgStateUser.tintColor = .systemGray
             guard let user = user else {return}
             user.forEach { user in
                 self?.lbNameUser.text = user.name
@@ -59,8 +61,11 @@ class DetailViewViewController: UIViewController {
                 }
                 if user.isActive == true {
                     self?.lbState.text = "Active now"
+                    self?.imgStateUser.tintColor = .green
+                    
                 }else {
                     self?.lbState.text = "Not active"
+                    self?.imgStateUser.tintColor = .systemGray
                 }
             }
         }
@@ -83,6 +88,7 @@ class DetailViewViewController: UIViewController {
         tfMessage.layer.cornerRadius = 8
         tfMessage.delegate = self
         tfMessage.layer.masksToBounds = true
+        tfMessage.addTarget(self, action: #selector(handleChangeButton(_:)), for: .editingChanged)
     }
     
     private func setupImage() {
@@ -92,15 +98,17 @@ class DetailViewViewController: UIViewController {
     
     private func setupBtSend() {
         btSendMessage.setTitle(" ", for: .normal)
-        btSendMessage.setImage(UIImage(named: "paperplane.fill"), for: .normal)
+        btSendMessage.setImage(UIImage(systemName: "hand.thumbsup.fill"), for: .normal)
         btSendMessage.addTarget(self, action: #selector(didTapSend(_:)), for: .touchUpInside)
     }
     
     private func sendMessage() {
-        if tfMessage.text == "" {
+        guard let message = tfMessage.text else {return}
+        if message.isEmpty {
+            presenter.sendLikeSymbols()
             return
         }
-        presenter.sendMessage(with: tfMessage.text!)
+        presenter.sendMessage(with: message)
         tfMessage.text = ""
     }
     
@@ -112,6 +120,19 @@ class DetailViewViewController: UIViewController {
         }
     }
     //MARK: Acction
+    
+    @objc private func handleChangeButton(_ textField: UITextField) {
+        if textField === tfMessage {
+            guard let message = tfMessage.text else {return}
+            if message.isEmpty {
+                btSendMessage.setImage(UIImage(systemName: "hand.thumbsup.fill"), for: .normal)
+                return
+            }
+            
+            btSendMessage.setImage(UIImage(systemName: "paperplane.fill"), for: .normal)
+        }
+        
+    }
     
     @objc private func didTapSend(_ sender: UIButton) {
         self.sendMessage()
@@ -184,5 +205,14 @@ extension DetailViewViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         self.sendMessage()
         return true
+    }
+    
+    func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
+       
+        return true
+    }
+    
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        btSendMessage.setImage(UIImage(systemName: "hand.thumbsup.fill"), for: .normal)
     }
 }

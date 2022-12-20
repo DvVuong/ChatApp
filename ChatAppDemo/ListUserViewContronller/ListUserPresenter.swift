@@ -33,13 +33,17 @@ class ListUserPresenter {
     
     func fetchUser(_ completed: @escaping() -> Void) {
         guard let currentID = currentUser?.id else { return }
-        self.reciverUser.removeAll()
-        FirebaseService.share.fetchUser { user in
-            user.forEach { user in
-                if currentID != user.id {
-                    self.reciverUser.append(user)
+        db.collection("user").getDocuments { (querySnapshot, error) in
+            if error != nil {return}
+            guard let snapshot = querySnapshot else { return }
+            self.reciverUser.removeAll()
+            snapshot.documents.forEach { doc in
+                let value = User(dict: doc.data())
+                if value.id != currentID {
+                    self.reciverUser.append(value)
+                    self.finalUser = self.reciverUser
                 }
-                self.finalUser = self.reciverUser
+                
             }
             completed()
         }
@@ -87,29 +91,36 @@ class ListUserPresenter {
         }
         view?.showSearchUser()
     }
+    
     func getUsers(_ index: Int) -> User? {
         return reciverUser[index]
     }
+    
     func getMessageForUserId(_ id: String?) -> Message? {
         guard let id = id else {return nil}
         return message[id]
     }
+    
     func getMessageKeyForState(_ id: String?) -> Message? {
         guard let id = id else {return nil}
         return message[id]
     }
+    
     func getcurrentUser() -> User?{
         return currentUser
     }
+    
     func getNumberOfUser() -> Int {
         return finalUser.count
     }
+    
     func getCellForUsers(at index: Int) -> User? {
-        if index <= 0 && index > getNumberOfUser() {
+        if index < 0 && index > getNumberOfUser() {
             return nil
         }
         return finalUser[index]
     }
+    
     func deleteUser(_ index: Int, completion:() -> Void) {
         self.finalUser.remove(at: index)
         completion()

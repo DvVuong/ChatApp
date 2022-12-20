@@ -35,7 +35,7 @@ class ResgiterPresenterView {
     }
      
     func getUrlAvatar(_ image: UIImage) {
-        FirebaseService.share.sendAndGetUrlAvatar(image)
+        FirebaseService.share.fetchAvatarUrl(image)
     }
     
     func createAccount( email: String,  password: String, name: String) {

@@ -21,6 +21,9 @@ class DetailPresenter {
     private var messageKey: Message?
     private var stateUser = [User]()
     private let _message = "message"
+    private let like = "👍"
+    
+    
     
     init(with view: DetailPresenterViewDelegate, data: User, currentUser: User, messageKey: Message?) {
         self.view = view
@@ -36,6 +39,7 @@ class DetailPresenter {
         
     }
     func sendImageMessage(with image: UIImage) {
+        print(like)
         guard let receiverUser = receiverUser else { return }
         guard let senderUser = currentUser else  {  return }
         FirebaseService.share.sendImageMessage(image, receiverUser: receiverUser, senderUser: senderUser)
@@ -82,6 +86,12 @@ class DetailPresenter {
                 self?.view?.showMessage()
             })
         }
+    }
+    
+    func sendLikeSymbols() {
+        guard let receiverUser = receiverUser else { return }
+        guard let senderUser = currentUser else  {  return }
+        FirebaseService.share.sendMessage(with: like, receiverUser: receiverUser, senderUser: senderUser)
     }
     
     func getNumberOfMessage() -> Int {

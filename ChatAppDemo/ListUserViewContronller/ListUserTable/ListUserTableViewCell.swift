@@ -31,47 +31,28 @@ class ListUserTableViewCell: UITableViewCell {
 
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
     }
     func updateUI(_ user: User?, message: Message?) {
         guard let user = user else { return }
-        self.lbNameUser.text = user.name
-        if let message = message {
-            self.lbMessage.text = message.text
-            if message.receiverID == user.id {
-                lbMessage.text = "you:\(message.text)"
-                
-            }
-            else {
-                lbMessage.text = "\(user.name): \(message.text)"
-            }
-            
-            if !message.image.isEmpty {
-                if message.receiverID == user.id {
-                    lbMessage.text = "you sent a photo"
-                }
-                else {
-                    lbMessage.text = "\(user.name) sent a photo:"
-                }
-            }
-            
-            self.imgState.isHidden = (message.sendId == user.id) ? false : true
-            if message.read == true {
-                self.imgState.isHidden = true
-            }
-        } else {
-            lbMessage.text = "No new messages"
-        }
-        
+        guard let message = message else {return}
+        // Show Avatar
         ImageService.share.fetchImage(with: user.avatar) { image in
             DispatchQueue.main.async {
                 self.imgAvt.image = image
             }
-            
+        }
+        // Show Message and State message
+        lbNameUser.text = user.name
+        if message.text.isEmpty {
+            lbMessage.text = "No new message"
+        } else {
+            lbMessage.text = message.text
         }
         
-         
+        if message.receiverID == user.id {
+            lbMessage.text = "you: \(message.text)"
+        }
+        
+       
     }
-
 }

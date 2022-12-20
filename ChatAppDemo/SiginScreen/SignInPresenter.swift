@@ -40,7 +40,7 @@ class SignInPresenter {
     
     func changeStateUser(_ currentUser: User) {
        
-        FirebaseService.share.changeStateUser(currentUser)
+        FirebaseService.share.changeStateActiveForUser(currentUser)
     }
     
     

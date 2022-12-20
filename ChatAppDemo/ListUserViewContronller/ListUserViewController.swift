@@ -16,16 +16,18 @@ class ListUserViewController: UIViewController {
     
     private var presenter: ListUserPresenter!
     lazy var presenterCell = ListCellPresenter()
-    @IBOutlet private var userTableView: UITableView!
+    @IBOutlet private var messageTable: UITableView!
     @IBOutlet private weak var searchUser: UITextField!
     @IBOutlet private var avatar: UIImageView!
     @IBOutlet private var btSetting: UIButton!
     @IBOutlet private var lbNameUser: UILabel!
     @IBOutlet private var imgState: UIImageView!
+    @IBOutlet private var listUser: UICollectionView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
+        setupListUserCollectionTable()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -38,23 +40,29 @@ class ListUserViewController: UIViewController {
     }
     
     private func setupUI() {
-        setupUITable()
+        setupMessagetable()
         setupSearchUser()
         setupImageForCurrentUser()
         setupBtSetting()
         setupLbNameUser()
-        UIView.animate(withDuration: 0.1, delay: 0) {
-            self.presenter.fetchUser {
-                self.presenter.fetchMessageForUser {
-                    self.userTableView.reloadData()
-                }
+        self.presenter.fetchUser {
+            self.presenter.fetchMessageForUser {
+                self.messageTable.reloadData()
+                self.listUser.reloadData()
             }
         }
+        
     }
-    private func setupUITable() {
-        userTableView.delegate = self
-        userTableView.dataSource = self
-        userTableView.separatorStyle = .none
+    private func setupMessagetable() {
+        messageTable.delegate = self
+        messageTable.dataSource = self
+        messageTable.separatorStyle = .none
+    }
+    
+    private func setupListUserCollectionTable() {
+        listUser.delegate = self
+        listUser.dataSource = self
+        
     }
     
     private func setupSearchUser() {
@@ -93,17 +101,19 @@ class ListUserViewController: UIViewController {
     }
     
     @objc func didTapSetting(_ sender: Any) {
-        let vc = SettingViewController.instance()
+       guard let user = presenter.getcurrentUser() else {return}
+        let vc = SettingViewController.instance(user)
         navigationController?.pushViewController(vc, animated: true)
     }
     
 }
 extension ListUserViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+       
         return presenter.getNumberOfUser()
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell  = userTableView.dequeueReusableCell(withIdentifier: "userCell", for: indexPath) as! ListUserTableViewCell
+        let cell  = messageTable.dequeueReusableCell(withIdentifier: "userCell", for: indexPath) as! ListUserTableViewCell
         cell.updateUI(presenter.getCellForUsers(at: indexPath.row), message: presenter.getMessageForUserId(presenter.getUsers(indexPath.row)?.id))
         return cell
     }
@@ -129,7 +139,7 @@ extension ListUserViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let delete = UIContextualAction(style: .normal, title: "Delete") { action, _, _ in
             self.presenter.deleteUser(indexPath.row) { [weak self] in
-                self?.userTableView.reloadData()
+                self?.messageTable.reloadData()
             }
         }
         delete.image = UIImage(systemName: "trash.fill")
@@ -140,15 +150,34 @@ extension ListUserViewController: UITableViewDelegate, UITableViewDataSource {
 }
 extension ListUserViewController: ListUserPresenterDelegate {
     func showSearchUser() {
-        self.userTableView.reloadData()
+        self.messageTable.reloadData()
     }
     func deleteUser(at index: Int) { 
-        self.userTableView.deleteRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
-        self.userTableView.reloadData()
+        self.messageTable.deleteRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
+        self.messageTable.reloadData()
     }
     func showStateMassage() {
-        self.userTableView.reloadData()
+        self.messageTable.reloadData()
     }
     
 }
 
+extension ListUserViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        print(presenter.getNumberOfUser())
+        return presenter.getNumberOfUser()
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = listUser.dequeueReusableCell(withReuseIdentifier: "listUserCell", for: indexPath) as! ListUserCollectionViewCell
+        cell.updateUI(presenter.getCellForUsers(at: indexPath.item))
+        return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: 200, height: 200)
+    }
+    
+    
+    
+}

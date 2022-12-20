@@ -18,9 +18,10 @@ class SiginViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
-        presenter.fetchUser()        
+               
     }
     override func viewWillAppear(_ animated: Bool) {
+        presenter.fetchUser() 
         super.viewWillAppear(animated)
         
         navigationController?.setNavigationBarHidden(true, animated: animated)

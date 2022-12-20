@@ -21,18 +21,17 @@ class FirebaseService {
     
     func fetchUser(_ completed: @escaping ([User]) -> Void) {
         self.users.removeAll()
-        db.collection(_user).addSnapshotListener { (querySnapshot, error) in
+        db.collection(_user).addSnapshotListener {[weak self] (querySnapshot, error) in
             if error != nil {return}
             guard let querySnapshot = querySnapshot?.documentChanges else { return }
-            self.users.removeAll()
-            
+            self?.users.removeAll()
             querySnapshot.forEach { doc in
                 if doc.type == .added || doc.type == .modified  {
                     let value = User(dict: doc.document.data())
-                    self.users.append(value)
+                    self?.users.append(value)
                 }
             }
-            completed(self.users)
+            completed(self?.users ?? [])
         }
     }
     
@@ -40,13 +39,13 @@ class FirebaseService {
         self.messages.removeAll()
         db.collection(_message).addSnapshotListener { querySnapshot, error in
             if error != nil { return }
-            querySnapshot?.documentChanges.forEach({ doc in
+            querySnapshot?.documentChanges.forEach({ [weak self] doc in
                 if doc.type == .added || doc.type == .modified {
                     let message = Message(dict: doc.document.data())
-                    self.messages.append(message)
-                    self.messages = self.messages.sorted {
+                    self?.messages.append(message)
+                    self?.messages = self?.messages.sorted {
                         $0.time < $1.time
-                    }
+                    } ?? []
                 }
             })
             completed(self.messages)
@@ -57,19 +56,20 @@ class FirebaseService {
         let autoKey = self.db.collection(_message).document().documentID
         let storeRef = Storage.storage().reference()
         let imageKey = NSUUID().uuidString
-        let image = image.jpegData(compressionQuality: 0.5)!
+    
+        guard  let image = image.jpegData(compressionQuality: 0.5) else {return}
         let imgFolder = storeRef.child(_imageMessage).child(imageKey)
-        storeRef.child(_imageMessage).child(imageKey).putData(image) { (metadat, error) in
+        storeRef.child(_imageMessage).child(imageKey).putData(image) { [weak self] (metadat, error) in
             if error != nil { return}
             imgFolder.downloadURL { url, error in
                 if error != nil {return}
                 guard let url = url else {return}
-                self.imgUrl = "\(url)"
-                self.db.collection(self._message).document(autoKey).setData([
+                self?.imgUrl = "\(url)"
+                self?.db.collection(self?._message ?? "").document(autoKey).setData([
                     "nameSender": senderUser.name,
                     "sendId": senderUser.id,
                     "text": "",
-                    "image": self.imgUrl,
+                    "image": self?.imgUrl as Any,
                     "receivername": receiverUser.name,
                     "receiverID": receiverUser.id,
                     "time": Date().timeIntervalSince1970,
@@ -137,9 +137,9 @@ class FirebaseService {
         ])
     }
     
-    func sendAndGetUrlAvatar(_ image: UIImage) {
+    func fetchAvatarUrl(_ image: UIImage) {
         let fireBaseStorage = Storage.storage().reference()
-        let img = image.jpegData(compressionQuality: 0.5)!
+        guard let img = image.jpegData(compressionQuality: 0.5) else {return}
         let imgKey = NSUUID().uuidString
         let imgFloder = Storage.storage().reference().child(_avatar).child(imgKey)
         fireBaseStorage.child(_avatar).child(imgKey).putData(img) {[weak self] (metadata, error) in
@@ -152,9 +152,33 @@ class FirebaseService {
         }
     }
     
-    func changeStateUser(_ currentUser: User) {
+    func changeStateActiveForUser(_ currentUser: User) {
         self.db.collection(_user)
         self.db.collection(self._user).document(currentUser.id).updateData(["isActive" : true])
     }
     
+    func changeStateInActiveForUser(_ currentUser: User) {
+        self.db.collection(_user)
+        self.db.collection(self._user).document(currentUser.id).updateData(["isActive" : false])
+    }
+    
+    func updateAvatar(_ currentUser: User) {
+        self.db.collection(_user)
+        self.db.collection(self._user).document(currentUser.id).updateData(["avatar" : self.imgUrl])
+    }
+    
+    func updateName(_ currentUser: User, name: String) {
+        self.db.collection(_user)
+        self.db.collection(self._user).document(currentUser.id).updateData(["name" : name])
+    }
+    
+    func updateEmail(_ currentUser: User, email: String) {
+        self.db.collection(_user)
+        self.db.collection(self._user).document(currentUser.id).updateData(["email" : email])
+    }
+    
+    func updatePassword(_ currentUser: User, password: String) {
+        self.db.collection(_user)
+        self.db.collection(self._user).document(currentUser.id).updateData(["password" : password])
+    }
 }

@@ -37,6 +37,8 @@ class ReceiverUserCell: UITableViewCell {
         lbTime.translatesAutoresizingMaskIntoConstraints = false
         return lbTime
     }()
+    
+   
     override func awakeFromNib() {
         super.awakeFromNib()
         // Setup contrains LbMessage
@@ -44,6 +46,9 @@ class ReceiverUserCell: UITableViewCell {
         lbMessage.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 5).isActive = true
         lbMessage.widthAnchor.constraint(lessThanOrEqualToConstant: 250).isActive = true
         lbMessage.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10).isActive = true
+        
+        
+        
         lbMessage.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -15).isActive = true
         
         //SetupContrain imgMessage
@@ -55,8 +60,7 @@ class ReceiverUserCell: UITableViewCell {
         
         //Setup Contrains lbTime
         contentView.addSubview(lbTime)
-        lbTime.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10).isActive = true
-        lbTime.widthAnchor.constraint(equalToConstant: 80).isActive = true
+        lbTime.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 1).isActive = true
         lbTime.heightAnchor.constraint(equalToConstant: 10).isActive = true
         lbTime.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -1).isActive = true
     }
@@ -74,7 +78,7 @@ class ReceiverUserCell: UITableViewCell {
         // Setup Time
         let time = Date(timeIntervalSince1970: TimeInterval(message.time))
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "hh:mm:ss a"
+        dateFormatter.dateFormat = "hh:mm"
         lbTime.text = dateFormatter.string(from: time)
         ImageService.share.fetchImage(with: message.image) { image in
             DispatchQueue.main.async { [weak self] in
@@ -84,8 +88,15 @@ class ReceiverUserCell: UITableViewCell {
         if message.text.isEmpty {
             self.imgMessage.isHidden = false
             self.lbMessage.isHidden = true
-        }else{
-            self.imgMessage.isHidden = true
+            return
+        }
+        self.imgMessage.isHidden = true
+        self.lbMessage.isHidden = false
+     
+        if message.text == "👍" {
+            self.lbMessage.backgroundColor = .clear
+        }else {
+            lbMessage.backgroundColor = .systemGray
         }
     }
     @objc private func handelZoomeImage() {
