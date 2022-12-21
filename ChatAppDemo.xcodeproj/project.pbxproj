@@ -33,10 +33,10 @@
 		9D9134A4294177810065578D /* ImageService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D9134A3294177810065578D /* ImageService.swift */; };
 		9D9134A7294186B20065578D /* DetailPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D9134A6294186B20065578D /* DetailPresenter.swift */; };
 		9D9134A92941E11D0065578D /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D9134A82941E11D0065578D /* Message.swift */; };
-		9D9134AC2941E8610065578D /* SenderUserCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D9134AB2941E8610065578D /* SenderUserCell.swift */; };
-		9D9134AE2941E9460065578D /* ReceiverUserCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D9134AD2941E9460065578D /* ReceiverUserCell.swift */; };
 		9DA56DA6294FFBE800162077 /* CustomView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DA56DA5294FFBE800162077 /* CustomView.swift */; };
 		9DA5714329514FB900DFFAE3 /* SettingPresenterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DA5714229514FB900DFFAE3 /* SettingPresenterView.swift */; };
+		9DA8A1BB2953192C00505104 /* ImgCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DA8A1B92953192C00505104 /* ImgCell.swift */; };
+		9DA8A1BC2953192C00505104 /* ImgCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9DA8A1BA2953192C00505104 /* ImgCell.xib */; };
 		E20577142940EE0900654B8A /* ListUserPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E20577132940EE0900654B8A /* ListUserPresenter.swift */; };
 		E240D4932941064F0090066D /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = E240D4922941064F0090066D /* GoogleService-Info.plist */; };
 		E240D495294126CF0090066D /* DetailViewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E240D494294126CE0090066D /* DetailViewViewController.swift */; };
@@ -75,10 +75,10 @@
 		9D9134A3294177810065578D /* ImageService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageService.swift; sourceTree = "<group>"; };
 		9D9134A6294186B20065578D /* DetailPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailPresenter.swift; sourceTree = "<group>"; };
 		9D9134A82941E11D0065578D /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
-		9D9134AB2941E8610065578D /* SenderUserCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SenderUserCell.swift; sourceTree = "<group>"; };
-		9D9134AD2941E9460065578D /* ReceiverUserCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiverUserCell.swift; sourceTree = "<group>"; };
 		9DA56DA5294FFBE800162077 /* CustomView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomView.swift; sourceTree = "<group>"; };
 		9DA5714229514FB900DFFAE3 /* SettingPresenterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingPresenterView.swift; sourceTree = "<group>"; };
+		9DA8A1B92953192C00505104 /* ImgCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImgCell.swift; sourceTree = "<group>"; };
+		9DA8A1BA2953192C00505104 /* ImgCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ImgCell.xib; sourceTree = "<group>"; };
 		E20577132940EE0900654B8A /* ListUserPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListUserPresenter.swift; sourceTree = "<group>"; };
 		E240D4922941064F0090066D /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		E240D494294126CE0090066D /* DetailViewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewViewController.swift; sourceTree = "<group>"; };
@@ -242,6 +242,8 @@
 				9D0BE3552940A1FA00AFC3F7 /* ListUserTableViewCell.swift */,
 				9D7AD6B92942CAFD00162976 /* ListCellPresenter.swift */,
 				9D4199532951BBF8008092BF /* ListUserCollectionViewCell.swift */,
+				9DA8A1B92953192C00505104 /* ImgCell.swift */,
+				9DA8A1BA2953192C00505104 /* ImgCell.xib */,
 			);
 			path = ListUserTable;
 			sourceTree = "<group>";
@@ -296,8 +298,6 @@
 		9D9134AA2941E8310065578D /* ConvertionTable */ = {
 			isa = PBXGroup;
 			children = (
-				9D9134AB2941E8610065578D /* SenderUserCell.swift */,
-				9D9134AD2941E9460065578D /* ReceiverUserCell.swift */,
 			);
 			path = ConvertionTable;
 			sourceTree = "<group>";
@@ -381,6 +381,7 @@
 			files = (
 				9D155BB12940538F003C802E /* LaunchScreen.storyboard in Resources */,
 				E240D4932941064F0090066D /* GoogleService-Info.plist in Resources */,
+				9DA8A1BC2953192C00505104 /* ImgCell.xib in Resources */,
 				9D155BAE2940538F003C802E /* Assets.xcassets in Resources */,
 				9D155BAC2940538D003C802E /* Main.storyboard in Resources */,
 			);
@@ -438,7 +439,6 @@
 				9DA5714329514FB900DFFAE3 /* SettingPresenterView.swift in Sources */,
 				9D41EF142947120D00768CBA /* ResgiterPresenter.swift in Sources */,
 				9D13C1A3294B1FA700FCC40A /* CustomImage.swift in Sources */,
-				9D9134AC2941E8610065578D /* SenderUserCell.swift in Sources */,
 				9D13C199294AFF9500FCC40A /* Enum.swift in Sources */,
 				9D155BA92940538D003C802E /* SiginViewController.swift in Sources */,
 				9D13C19D294B19A600FCC40A /* CustomTextField.swift in Sources */,
@@ -461,10 +461,10 @@
 				9D9134A4294177810065578D /* ImageService.swift in Sources */,
 				E240D495294126CF0090066D /* DetailViewViewController.swift in Sources */,
 				9D13C1A0294B1EFC00FCC40A /* CustomButton.swift in Sources */,
-				9D9134AE2941E9460065578D /* ReceiverUserCell.swift in Sources */,
 				9D9134A7294186B20065578D /* DetailPresenter.swift in Sources */,
 				9D4199542951BBF8008092BF /* ListUserCollectionViewCell.swift in Sources */,
 				9D155BBF294082CF003C802E /* SignInPresenter.swift in Sources */,
+				9DA8A1BB2953192C00505104 /* ImgCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

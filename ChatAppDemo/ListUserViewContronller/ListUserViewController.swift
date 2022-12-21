@@ -109,7 +109,6 @@ class ListUserViewController: UIViewController {
 }
 extension ListUserViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-       print(presenter.getNumberOfMessage())
         return presenter.getNumberOfMessage()
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {

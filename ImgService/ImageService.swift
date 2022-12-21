@@ -41,22 +41,23 @@ open class ImageService: NSObject {
         zoomingImageView.addGestureRecognizer(UIPinchGestureRecognizer(target: self, action: #selector(handleScaleImage(_:))))
         zoomingImageView.isUserInteractionEnabled = true
         zoomingImageView.image = image.image
-        let window = UIApplication.shared.windows.first { $0.isKeyWindow }
+        let window = UIApplication.shared.windows.first  { $0.isKeyWindow }
         blackBackgroundView = UIView(frame: window!.frame)
-        blackBackgroundView?.backgroundColor = .black
+        blackBackgroundView?.backgroundColor = .white
         blackBackgroundView?.alpha = 0
         window?.addSubview(blackBackgroundView!)
         window?.addSubview(zoomingImageView)
-        UIView.animate(withDuration: 0.5, delay: 0, options: .curveEaseOut, animations: {
+        UIView.animate(withDuration: 0, delay: 0, options: .curveEaseOut, animations: {
             self.blackBackgroundView?.alpha = 1
-            zoomingImageView.frame = CGRect(x: 0, y: 0, width: window!.frame.width, height: 250)
-            zoomingImageView.center = window!.center
+            zoomingImageView.frame = CGRect(x: 0, y: 0, width: window!.frame.width, height: window!.frame.height)
+            zoomingImageView.contentMode = .scaleAspectFit
+            
         }, completion: nil)
     }
     
     @objc private func handlelEscapeZoomImage(_ tapGesture: UITapGestureRecognizer) {
         if let zoomOutImage = tapGesture.view {
-            UIView.animate(withDuration: 0.5, delay: 0.2, options: .curveEaseOut) {
+            UIView.animate(withDuration: 0, delay: 0, options: .curveEaseOut) {
                 zoomOutImage.frame = self.startingFrame!
                 self.blackBackgroundView?.alpha = 0
             } completion: { (complete: Bool) in

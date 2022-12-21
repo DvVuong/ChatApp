@@ -50,27 +50,13 @@ class ListUserPresenter {
     }
     
     func fetchMessageForUser( completed: @escaping () -> Void) {
-        self.message.removeAll()
-        self.allMessages.removeAll()
-        guard let senderID = currentUser?.id else  { return }
-        FirebaseService.share.fetchMessage { mess in
-            self.allMessages.append(contentsOf: mess)
-            
-            self.reciverUser.forEach { user in
-                self.temparr.removeAll()
-                self.allMessages.forEach { message in
-                    if (message.sendId == user.id && message.receiverID == senderID)
-                        || (message.sendId == senderID && message.receiverID == user.id){
-                        self.temparr.append(message)
-                        self.temparr = self.temparr.sorted{
-                            $0.time < $1.time
-                        }
-                    }
-                }
-                self.message[user.id] = self.temparr.last
+        guard let currentUser = currentUser else {return}
+        reciverUser.forEach { user in
+            FirebaseService.share.fetchMessage(user, senderUser: currentUser) {[weak self] message in
+                self?.temparr.append(contentsOf: message)
             }
-            completed()
         }
+        completed()
     }
     
     func setState(_ sender: User, reciverUser: User) {

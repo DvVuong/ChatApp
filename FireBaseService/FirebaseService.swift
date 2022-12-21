@@ -35,56 +35,37 @@ class FirebaseService {
         }
     }
     
-    func fetchMessage(_ completed: @escaping ([Message]) -> Void) {
+    // MARK: fetchMessage
+    
+    func fetchMessage(_ receiverUser: User, senderUser: User, completed: @escaping ([Message]) -> Void) {
         self.messages.removeAll()
-        db.collection(_message).addSnapshotListener { querySnapshot, error in
-            if error != nil { return }
-            querySnapshot?.documentChanges.forEach({ [weak self] doc in
-                if doc.type == .added || doc.type == .modified {
-                    let message = Message(dict: doc.document.data())
-                    self?.messages.append(message)
-                    self?.messages = self?.messages.sorted {
-                        $0.time < $1.time
-                    } ?? []
+        db.collection(_message)
+            .document(senderUser.id)
+            .collection(receiverUser.id)
+            .addSnapshotListener {[weak self] querySnapshot, error in
+                if error != nil { return }
+                guard let snapshot = querySnapshot else {return}
+                self?.messages.removeAll()
+                snapshot.documentChanges.forEach { doc in
+                    if doc.type == .added || doc.type == .removed {
+                        let message = Message(dict: doc.document.data())
+                        self?.messages.append(message)
+                    }
                 }
-            })
-            completed(self.messages)
-        }
-    }
-    
-    func sendImageMessage(_ image: UIImage, receiverUser: User, senderUser: User) {
-        let autoKey = self.db.collection(_message).document().documentID
-        let storeRef = Storage.storage().reference()
-        let imageKey = NSUUID().uuidString
-    
-        guard  let image = image.jpegData(compressionQuality: 0.5) else {return}
-        let imgFolder = storeRef.child(_imageMessage).child(imageKey)
-        storeRef.child(_imageMessage).child(imageKey).putData(image) { [weak self] (metadat, error) in
-            if error != nil { return}
-            imgFolder.downloadURL { url, error in
-                if error != nil {return}
-                guard let url = url else {return}
-                self?.imgUrl = "\(url)"
-                self?.db.collection(self?._message ?? "").document(autoKey).setData([
-                    "nameSender": senderUser.name,
-                    "avateSender": senderUser.avatar,
-                    "sendId": senderUser.id,
-                    "text": "",
-                    "image": self?.imgUrl as Any,
-                    "receivername": receiverUser.name,
-                    "receiverID": receiverUser.id,
-                    "avatarReciverUser": receiverUser.avatar,
-                    "time": Date().timeIntervalSince1970,
-                    "read": false,
-                    "messageKey": autoKey
-                ])
+                completed(self?.messages ?? [])
             }
-        }
     }
     
+    
+    // MARK: SendMessage
     func sendMessage(with message: String, receiverUser: User, senderUser: User) {
         let autoKey = self.db.collection(_message).document().documentID
-        db.collection(_message).document(autoKey).setData([
+        let document = db.collection(_message)
+            .document(senderUser.id)
+            .collection(receiverUser.id)
+            .document()
+       
+        document.setData([
             "nameSender": senderUser.name,
             "receivername": receiverUser.name,
             "text": message,
@@ -95,7 +76,86 @@ class FirebaseService {
             "read": false,
             "messageKey": autoKey
         ])
+        
+        let reciverDocument = db.collection(_message)
+            .document(receiverUser.id)
+            .collection(senderUser.id)
+            .document()
+       
+        reciverDocument.setData([
+            "nameSender": senderUser.name,
+            "receivername": receiverUser.name,
+            "text": message,
+            "image": imgUrl,
+            "sendId": senderUser.id,
+            "receiverID": receiverUser.id,
+            "time": Date().timeIntervalSince1970,
+            "read": false,
+            "messageKey": autoKey
+        ])
+        
     }
+    
+   
+    func setImageMessage(_ image: UIImage, receiverUser: User, senderUser: User) {
+        
+        let autoKey = self.db.collection(_message).document().documentID
+        let storeRef = Storage.storage().reference()
+        let imageKey = NSUUID().uuidString
+        let ratioImage = image.size.width / image.size.height
+        guard  let image = image.jpegData(compressionQuality: 0.5) else {return}
+        let imgFolder = storeRef.child(_imageMessage).child(imageKey)
+        storeRef.child(_imageMessage).child(imageKey).putData(image) { [weak self] (metadat, error) in
+            if error != nil { return}
+            imgFolder.downloadURL { url, error in
+                if error != nil {return}
+                guard let url = url else {return}
+                self?.imgUrl = "\(url)"
+              let document =  self?.db.collection(self?._message ?? "")
+                    .document(senderUser.id)
+                    .collection(receiverUser.id)
+                    .document()
+                
+                document?.setData([
+                    "nameSender": senderUser.name,
+                    "avateSender": senderUser.avatar,
+                    "sendId": senderUser.id,
+                    "text": "",
+                    "image": self?.imgUrl as Any,
+                    "receivername": receiverUser.name,
+                    "receiverID": receiverUser.id,
+                    "avatarReciverUser": receiverUser.avatar,
+                    "time": Date().timeIntervalSince1970,
+                    "read": false,
+                    "ratioImage": ratioImage,
+                    "messageKey": autoKey
+                ])
+                
+               guard let reciverdocument = self?.db.collection(self?._message ?? "")
+                    .document(receiverUser.id)
+                    .collection(senderUser.id)
+                    .document() else {return}
+                
+                reciverdocument.setData([
+                    "nameSender": senderUser.name,
+                    "avateSender": senderUser.avatar,
+                    "sendId": senderUser.id,
+                    "text": "",
+                    "image": self?.imgUrl as Any,
+                    "receivername": receiverUser.name,
+                    "receiverID": receiverUser.id,
+                    "avatarReciverUser": receiverUser.avatar,
+                    "time": Date().timeIntervalSince1970,
+                    "read": false,
+                    "ratioImage": ratioImage,
+                    "messageKey": autoKey
+                ])
+            }
+        }
+        
+    }
+    
+    
     
     func changeStateReadMessage(_ senderUser: User, revicerUser: User) {
         self.db.collection(_message)
@@ -106,7 +166,7 @@ class FirebaseService {
                 doc.forEach { [weak self] doc in
                     let value = Message(dict: doc.data())
                     if value.sendId == revicerUser.id && value.receiverID == senderUser.id {
-                        self?.db.collection(self!._message).document(value.messageKey).updateData(["read" : true])
+                        self?.db.collection(self!._message).document(value.messageID).updateData(["read" : true])
                     }
                 }
             }
@@ -183,4 +243,5 @@ class FirebaseService {
         self.db.collection(_user)
         self.db.collection(self._user).document(currentUser.id).updateData(["password" : password])
     }
+    
 }

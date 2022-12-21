@@ -32,6 +32,7 @@ class DetailViewViewController: UIViewController {
         setupUI()
         self.presenter.fetchMessage()
         
+        
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -79,8 +80,14 @@ class DetailViewViewController: UIViewController {
     private func setupConvertionTable() {
         convertiontable.delegate = self
         convertiontable.dataSource = self
-        convertiontable.separatorStyle = .none
+        convertiontable.separatorStyle = .singleLine
         convertiontable.contentInset = UIEdgeInsets(top: 5, left: 0, bottom: 5, right: 0)
+        let nib = UINib(nibName: "ImgCell", bundle: nil)
+        
+        convertiontable.register(nib, forCellReuseIdentifier: "imgCell")
+        
+//        let reciverNib = UINib(nibName: "MessageCell", bundle: nil)
+//        convertiontable.register(reciverNib, forCellReuseIdentifier: "messageCell")
     }
     
     private func setupMessageTextField() {
@@ -110,6 +117,7 @@ class DetailViewViewController: UIViewController {
         }
         presenter.sendMessage(with: message)
         tfMessage.text = ""
+        btSendMessage.setImage(UIImage(systemName: "hand.thumbsup.fill"), for: .normal)
     }
     
     private func scrollToBottom() {
@@ -176,41 +184,47 @@ extension DetailViewViewController: UITableViewDelegate, UITableViewDataSource {
         return presenter.getNumberOfMessage()
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let currentId = presenter.getCurrentUserID()
+        
         let sendId = presenter.getMessage(indexPath.row).sendId
-        if currentId == sendId {
-            guard let cell = convertiontable.dequeueReusableCell(withIdentifier: "senderCell", for: indexPath) as? SenderUserCell else { return UITableViewCell() }
+        guard let currentId = presenter.getCurrentUser() else {return UITableViewCell()}
+        let message = presenter.getCellForMessage(at: indexPath.row)
+        
+        if message.text.isEmpty {
+            let cell = convertiontable.dequeueReusableCell(withIdentifier: "imgCell", for: indexPath) as! ImgCell
             let message = presenter.getCellForMessage(at: indexPath.row)
-            cell.updateUI(with: message)
-            return cell
+            cell.updateUI(message)
+            if message.sendId == currentId.id {
+                cell.setupForSender()
+            } else {
+                cell.setupForReciver()
+            }
             
-        } else {
-            guard let cell = convertiontable.dequeueReusableCell(withIdentifier: "receiverCell", for: indexPath) as? ReceiverUserCell else { return UITableViewCell() }
-            let message = presenter.getCellForMessage(at: indexPath.item)
-            cell.updateUI(with: message)
             return cell
         }
+        else {
+//            let cell = convertiontable.dequeueReusableCell(withIdentifier: "messageCell", for: indexPath) as! MessageCell
+//
+            
+            return UITableViewCell()
+        }
     }
+    
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         let message = presenter.getCellForMessage(at: indexPath.row)
         if message.text.isEmpty {
-            return 180
-        }
-        else {
+            return 280 / (message.ratioImage)
+        } else {
             return UITableView.automaticDimension
         }
     }
 }
+
 extension DetailViewViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         self.sendMessage()
         return true
     }
     
-    func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
-       
-        return true
-    }
     
     func textFieldDidEndEditing(_ textField: UITextField) {
         btSendMessage.setImage(UIImage(systemName: "hand.thumbsup.fill"), for: .normal)
