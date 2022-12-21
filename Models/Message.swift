@@ -6,6 +6,8 @@
 //
 
 import Foundation
+import UIKit
+
 struct Message {
     let image: String
     let nameSender: String

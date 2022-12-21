@@ -13,7 +13,9 @@ class ImgCell: UITableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        // Initialization code
+        img.contentMode = .scaleToFill
+        img.layer.cornerRadius = 6
+        img.layer.masksToBounds = true
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
@@ -21,20 +23,22 @@ class ImgCell: UITableViewCell {
 
         // Configure the view for the selected state
     }
-    func updateUI(_ message: Message?) {
+    func updateUI(_ message: Message?, currentUser: User?) {
         guard let message = message else {return}
+        guard let currentUser = currentUser else {return}
+
         ImageService.share.fetchImage(with: message.image) { image in
             DispatchQueue.main.async {
                 self.img.image = image
             }
         }
-    }
-    func setupForSender() {
-        stackView.alignment = .trailing
-    }
-    
-    func setupForReciver() {
-        stackView.alignment = .leading
+        
+        if message.sendId == currentUser.id {
+            stackView.alignment = .trailing
+        } else {
+            stackView.alignment = .leading
+            
+        }
     }
     
 }

@@ -38,6 +38,10 @@
 		9DA8A1BB2953192C00505104 /* ImgCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DA8A1B92953192C00505104 /* ImgCell.swift */; };
 		9DA8A1BC2953192C00505104 /* ImgCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9DA8A1BA2953192C00505104 /* ImgCell.xib */; };
 		E20577142940EE0900654B8A /* ListUserPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E20577132940EE0900654B8A /* ListUserPresenter.swift */; };
+		E239D0C42953467C001982E5 /* MessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E239D0C22953467C001982E5 /* MessageCell.swift */; };
+		E239D0C52953467C001982E5 /* MessageCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E239D0C32953467C001982E5 /* MessageCell.xib */; };
+		E239D0C829539101001982E5 /* ReciverUserCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E239D0C6295390FF001982E5 /* ReciverUserCell.swift */; };
+		E239D0C929539101001982E5 /* ReciverUserCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E239D0C729539100001982E5 /* ReciverUserCell.xib */; };
 		E240D4932941064F0090066D /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = E240D4922941064F0090066D /* GoogleService-Info.plist */; };
 		E240D495294126CF0090066D /* DetailViewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E240D494294126CE0090066D /* DetailViewViewController.swift */; };
 		E2C8114629461BC200E40FBC /* DataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2C8114529461BC200E40FBC /* DataManager.swift */; };
@@ -80,6 +84,10 @@
 		9DA8A1B92953192C00505104 /* ImgCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImgCell.swift; sourceTree = "<group>"; };
 		9DA8A1BA2953192C00505104 /* ImgCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ImgCell.xib; sourceTree = "<group>"; };
 		E20577132940EE0900654B8A /* ListUserPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListUserPresenter.swift; sourceTree = "<group>"; };
+		E239D0C22953467C001982E5 /* MessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageCell.swift; sourceTree = "<group>"; };
+		E239D0C32953467C001982E5 /* MessageCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MessageCell.xib; sourceTree = "<group>"; };
+		E239D0C6295390FF001982E5 /* ReciverUserCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReciverUserCell.swift; sourceTree = "<group>"; };
+		E239D0C729539100001982E5 /* ReciverUserCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ReciverUserCell.xib; sourceTree = "<group>"; };
 		E240D4922941064F0090066D /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		E240D494294126CE0090066D /* DetailViewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewViewController.swift; sourceTree = "<group>"; };
 		E2C8114529461BC200E40FBC /* DataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataManager.swift; sourceTree = "<group>"; };
@@ -242,6 +250,10 @@
 				9D0BE3552940A1FA00AFC3F7 /* ListUserTableViewCell.swift */,
 				9D7AD6B92942CAFD00162976 /* ListCellPresenter.swift */,
 				9D4199532951BBF8008092BF /* ListUserCollectionViewCell.swift */,
+				E239D0C22953467C001982E5 /* MessageCell.swift */,
+				E239D0C6295390FF001982E5 /* ReciverUserCell.swift */,
+				E239D0C729539100001982E5 /* ReciverUserCell.xib */,
+				E239D0C32953467C001982E5 /* MessageCell.xib */,
 				9DA8A1B92953192C00505104 /* ImgCell.swift */,
 				9DA8A1BA2953192C00505104 /* ImgCell.xib */,
 			);
@@ -288,18 +300,10 @@
 		9D9134A5294186810065578D /* DetailViewController */ = {
 			isa = PBXGroup;
 			children = (
-				9D9134AA2941E8310065578D /* ConvertionTable */,
 				E240D494294126CE0090066D /* DetailViewViewController.swift */,
 				9D9134A6294186B20065578D /* DetailPresenter.swift */,
 			);
 			path = DetailViewController;
-			sourceTree = "<group>";
-		};
-		9D9134AA2941E8310065578D /* ConvertionTable */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = ConvertionTable;
 			sourceTree = "<group>";
 		};
 		9DA56DA4294FFBD700162077 /* CustomView */ = {
@@ -380,6 +384,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				9D155BB12940538F003C802E /* LaunchScreen.storyboard in Resources */,
+				E239D0C52953467C001982E5 /* MessageCell.xib in Resources */,
+				E239D0C929539101001982E5 /* ReciverUserCell.xib in Resources */,
 				E240D4932941064F0090066D /* GoogleService-Info.plist in Resources */,
 				9DA8A1BC2953192C00505104 /* ImgCell.xib in Resources */,
 				9D155BAE2940538F003C802E /* Assets.xcassets in Resources */,
@@ -444,9 +450,11 @@
 				9D13C19D294B19A600FCC40A /* CustomTextField.swift in Sources */,
 				9D0BE35429409A8300AFC3F7 /* ListUserViewController.swift in Sources */,
 				9D155BA52940538D003C802E /* AppDelegate.swift in Sources */,
+				E239D0C829539101001982E5 /* ReciverUserCell.swift in Sources */,
 				9D13C18E294ADDEF00FCC40A /* SettingViewController.swift in Sources */,
 				E20577142940EE0900654B8A /* ListUserPresenter.swift in Sources */,
 				9D8C67E3294C032B00224FF5 /* CustomStackView.swift in Sources */,
+				E239D0C42953467C001982E5 /* MessageCell.swift in Sources */,
 				E2C8115329463AC100E40FBC /* UserDataBase.xcdatamodeld in Sources */,
 				9D7AD6BD294342F300162976 /* CustomLabel.swift in Sources */,
 				9D8C67E7294C531000224FF5 /* FirebaseService.swift in Sources */,
