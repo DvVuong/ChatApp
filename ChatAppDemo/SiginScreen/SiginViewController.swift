@@ -11,7 +11,7 @@ class SiginViewController: UIViewController {
     @IBOutlet private weak var tfEmail: CustomTextField!
     @IBOutlet private weak var tfPassword: CustomTextField!
     @IBOutlet private weak var btSaveData: CustomButton!
-    @IBOutlet private weak var btSigin: CustomButton!
+    @IBOutlet private weak var btSigin: UIButton!
     @IBOutlet weak var btSignup: CustomButton!
     private var selected: Bool = false
     lazy var presenter = SignInPresenter(with: self)
@@ -20,25 +20,30 @@ class SiginViewController: UIViewController {
         setupUI()
                
     }
+    
     override func viewWillAppear(_ animated: Bool) {
         presenter.fetchUser() 
         super.viewWillAppear(animated)
         
         navigationController?.setNavigationBarHidden(true, animated: animated)
     }
+    
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         navigationController?.setNavigationBarHidden(false, animated: animated)
     }
+    
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         view.endEditing(true)
     }
+    
     private func setupUI() {
         setupUITextField()
         setupBtSigin()
         setupBtSaveData()
         setupBtSignUp()
     }
+    
     private func setupUITextField() {
         //
         tfEmail.textColor = .white
@@ -54,16 +59,21 @@ class SiginViewController: UIViewController {
         
 }
     
-    // dung file story board keo tha, setup giao dien
     private func setupBtSigin() {
         btSigin.layer.cornerRadius = 8
         btSigin.addTarget(self, action: #selector(didTapSigin(_:)), for: .touchUpInside)
     }
+    
     private func setupBtSaveData() {
         btSaveData.setTitle("", for: .normal)
         btSaveData.addTarget(self, action: #selector(didTapSaveData(_:)), for: .touchUpInside)
     }
     
+    private func setupBtSignUp() {
+        btSignup.addTarget(self, action: #selector(didTapSigup(_:)), for: .touchUpInside)
+    }
+    
+    // MARK: Action
     @objc func didTapSaveData(_ sender: UIButton) {
         if sender === btSaveData {
             selected = !selected
@@ -89,15 +99,27 @@ class SiginViewController: UIViewController {
         }
 
     }
-    private func setupBtSignUp() {
-        btSignup.addTarget(self, action: #selector(didTapSigup(_:)), for: .touchUpInside)
-    }
+   
     @objc func didTapSigup(_ sender: UIButton) {
         let vc  = RegisterViewcontroller.instance(presenter.getUserData())
         vc.delegate = self
         navigationController?.pushViewController(vc, animated: true)
     }
+    
+    @IBAction private func loginWithFacebook(_ sender: Any) {
+        
+    }
+    
+    @IBAction private func loginWithInstargram(_ sender: Any) {
+        
+    }
+    
+    @IBAction private func loginWithZalo(_ sender: Any) {
+        
+    }
+    
 }
+
 extension SiginViewController: SignInPresenterDelegate {
     func showUserRegiter(_ email: String, password: String) {
         self.tfEmail.text = email
@@ -105,6 +127,8 @@ extension SiginViewController: SignInPresenterDelegate {
     }
 
 }
+
+
 extension SiginViewController: RegisterViewcontrollerDelegate {
     func callBackAccountResgiter(_ vc: RegisterViewcontroller, email: String, password: String) {
         self.presenter.showUserResgiter(email, password: password)

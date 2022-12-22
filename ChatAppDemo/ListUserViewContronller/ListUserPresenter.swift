@@ -20,11 +20,11 @@ class ListUserPresenter {
     private var reciverUser = [User]()
     private var finalUser = [User]()
     private var currentUser: User?
-    private var allMessages = [Message]()
-    private var message = [String: Message]()
+    private var message = [Message]()
+    private var allMessages = [String: Message]()
     private var lastMessage = [Message]()
     private var temparr = [Message]()
-    private var messageKey = [String: Message]()
+    private var messageByUser = [String: Message]()
     
     init(with view: ListUserPresenterDelegate, data: User) {
         self.view = view
@@ -52,13 +52,21 @@ class ListUserPresenter {
     func fetchMessageForUser( completed: @escaping () -> Void) {
         guard let currentUser = currentUser else {return}
         reciverUser.forEach { user in
+            
             FirebaseService.share.fetchMessage(user, senderUser: currentUser) {[weak self] message in
-                self?.temparr.append(contentsOf: message)
+                message.forEach { mess in
+                    if mess.receiverID == user.id || mess.receiverID == currentUser.id {
+                        self?.allMessages[user.id] = mess
+                        self?.message = Array((self?.allMessages.values)!)
+                        self?.message = self?.message.sorted {
+                            return $0.time < $1.time
+                        } ?? []
+                    }
+                    completed()
+                }
             }
         }
-        completed()
     }
-    
     func setState(_ sender: User, reciverUser: User) {
         FirebaseService.share.changeStateReadMessage(sender, revicerUser: reciverUser)
         self.view?.showStateMassage()
@@ -81,15 +89,9 @@ class ListUserPresenter {
     func getUsers(_ index: Int) -> User? {
         return reciverUser[index]
     }
-    
-    func getMessageForUserId(_ id: String?) -> Message? {
-        guard let id = id else {return nil}
-        return message[id]
-    }
-    
-    func getMessageKeyForState(_ id: String?) -> Message? {
-        guard let id = id else {return nil}
-        return message[id]
+
+    func getMessageKeyForState(_ index: Int) -> Message? {
+        return message[index]
     }
     
     func getcurrentUser() -> User?{
@@ -101,16 +103,17 @@ class ListUserPresenter {
     }
     
     func getNumberOfMessage() -> Int {
-        return temparr.count
+        
+        return message.count
     } 
     
     func cellForMessage(_ index: Int) -> Message? {
-        guard index < 0 && index > getNumberOfMessage() else {
-            return nil
-        } 
-        return temparr[index]
+        return message[index]
     } 
     
+    func getAllMessage(_ id: String) -> Message? {
+        return allMessages[id]
+    }
     
     func getCellForUsers(at index: Int) -> User? {
         if index < 0 && index > getNumberOfUser() {

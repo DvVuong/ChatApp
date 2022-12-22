@@ -21,7 +21,9 @@ class ImgCell: UITableViewCell {
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
 
-        // Configure the view for the selected state
+        img.isUserInteractionEnabled = true
+        let tapGes = UITapGestureRecognizer(target: self, action: #selector(handleZoomImage(_:)))
+        img.addGestureRecognizer(tapGes)
     }
     func updateUI(_ message: Message?, currentUser: User?) {
         guard let message = message else {return}
@@ -41,4 +43,7 @@ class ImgCell: UITableViewCell {
         }
     }
     
+    @objc func handleZoomImage(_ tapGes: UITapGestureRecognizer) {
+        ImageService.share.zoomImage(img)
+    }
 }

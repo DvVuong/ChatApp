@@ -184,17 +184,17 @@ extension DetailViewViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let currentId = presenter.getCurrentUser()
+        let currentUser = presenter.getCurrentUser()
         let message = presenter.getCellForMessage(at: indexPath.row)
         
         if message.text.isEmpty {
             let cell = convertiontable.dequeueReusableCell(withIdentifier: "imgCell", for: indexPath) as! ImgCell
             let message = presenter.getCellForMessage(at: indexPath.row)
-            cell.updateUI(message, currentUser: currentId)
+            cell.updateUI(message, currentUser: currentUser)
             return cell
         }
         
-        if message.sendId == currentId?.id {
+        if message.sendId == currentUser?.id {
             let cell = convertiontable.dequeueReusableCell(withIdentifier: "messageCell") as! MessageCell
             cell.updateUI(message)
             return cell

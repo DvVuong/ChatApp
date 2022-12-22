@@ -18,8 +18,9 @@ class DetailPresenter {
     private var receiverUser: User?
     private var messages: [Message] = []
     private var db = Firestore.firestore()
-    private var messageKey: Message?
+    private var messageID: Message?
     private var stateUser = [User]()
+    private var mess = [Message]()
     private let _message = "message"
     private let like = "👍"
     
@@ -27,6 +28,7 @@ class DetailPresenter {
         self.view = view
         self.receiverUser = data
         self.currentUser = currentUser
+
         
     }
 
@@ -104,4 +106,8 @@ class DetailPresenter {
     func getCurrentUser() -> User? {
         return currentUser
     }
+    
+//    func getMess() -> Message? {
+//        return mess
+//    }
 }

@@ -47,11 +47,12 @@ class ListUserViewController: UIViewController {
         setupLbNameUser()
         self.presenter.fetchUser {
             self.presenter.fetchMessageForUser {
-                self.listUser.reloadData()
                 self.messageTable.reloadData()
             }
+            self.listUser.reloadData()
         }
-        
+    
+       
     }
     private func setupMessagetable() {
         messageTable.delegate = self
@@ -107,32 +108,39 @@ class ListUserViewController: UIViewController {
     }
     
 }
+// MARK: TableView
 extension ListUserViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return presenter.getNumberOfMessage()
     }
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell  = messageTable.dequeueReusableCell(withIdentifier: "userCell", for: indexPath) as! ListUserTableViewCell
-        cell.updateUI(presenter.getcurrentUser(), message: presenter.cellForMessage(indexPath.item))
+        let currentUser = presenter.getcurrentUser()
+        let reciverUser = presenter.getUsers(indexPath.row)
+        let message = presenter.cellForMessage(indexPath.item)
+        cell.updateUI(currentUser, message: message, reciverUser: reciverUser )
         return cell
     }
+    
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 100
     }
+    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        guard let data = presenter.getCellForUsers(at: indexPath.row) else { return}
         
         guard let currentUser = presenter.getcurrentUser() else { return }
         guard let reciverUser = presenter.getUsers(indexPath.row) else { return }
         
-        let message = presenter.getMessageKeyForState(presenter.getUsers(indexPath.row)?.id)
+        let message = presenter.cellForMessage(indexPath.item)
+        
         if message?.receiverID == currentUser.id {
             presenter.setState(currentUser, reciverUser: reciverUser)
         }
-        
+        // Bug
+        guard let data = presenter.getCellForUsers(at: indexPath.row) else { return}
         let vc = DetailViewViewController.instance(data, currentUser: currentUser)
-        vc.title = data.name
-        
+//        vc.title = data.name
         navigationController?.pushViewController(vc, animated: true)
     }
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
