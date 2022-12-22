@@ -8,10 +8,12 @@ target 'ChatAppDemo' do
   # Pods for ChatAppDemo
 pod 'FirebaseCore'
 pod 'FirebaseFirestore'
-pod 'FirebaseAuth'
+pod 'Firebase/Auth'
 pod 'FirebaseStorage'
 pod 'Firebase/Firestore'
 pod 'IQKeyboardManagerSwift'
-pod 'SDWebImage'
+pod 'FacebookLogin'
+
+
 
 end

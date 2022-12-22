@@ -138,7 +138,6 @@
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="---Or---" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YVq-MI-MfL">
                                 <rect key="frame" x="175" y="572.5" width="64" height="20"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="150" id="IzN-by-1BH"/>
                                     <constraint firstAttribute="height" constant="20" id="vmN-Bf-OFg"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -237,7 +236,6 @@
                             <constraint firstItem="jex-4C-LGp" firstAttribute="top" secondItem="XRQ-DV-KAM" secondAttribute="bottom" constant="50" id="QAr-Bq-WfX"/>
                             <constraint firstItem="g40-Ef-piW" firstAttribute="top" secondItem="WJD-Le-i84" secondAttribute="bottom" constant="50" id="Qvb-72-Dh1"/>
                             <constraint firstItem="XRQ-DV-KAM" firstAttribute="top" secondItem="YVq-MI-MfL" secondAttribute="bottom" constant="10" id="VCr-Nt-lDV"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="YVq-MI-MfL" secondAttribute="trailing" constant="175" id="WcV-w1-m7q"/>
                             <constraint firstItem="wAq-Rb-DIY" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="10" id="Xoz-Xt-3eo"/>
                             <constraint firstItem="wAq-Rb-DIY" firstAttribute="top" secondItem="3q9-eX-EqQ" secondAttribute="bottom" constant="25" id="YIt-bD-u4P"/>
                             <constraint firstItem="XRQ-DV-KAM" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="ch7-A4-yK4"/>

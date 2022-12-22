@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import SDWebImage
 
 class ListUserTableViewCell: UITableViewCell {
     @IBOutlet weak var lbNameUser: UILabel!

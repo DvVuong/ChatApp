@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import FacebookLogin
 
 class SiginViewController: UIViewController {
     @IBOutlet private weak var tfEmail: CustomTextField!
@@ -18,7 +19,9 @@ class SiginViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
-               
+        let loginButton = FBLoginButton()
+               loginButton.center = view.center
+               view.addSubview(loginButton)
     }
     
     override func viewWillAppear(_ animated: Bool) {
