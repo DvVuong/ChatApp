@@ -38,7 +38,7 @@ class ListUserTableViewCell: UITableViewCell {
         guard let currentUser = currentUser else {return}
         guard let reciverUser = reciverUser else {return}
         // Show Avatar
-        ImageService.share.fetchImage(with: currentUser.avatar) { image in
+        ImageService.share.fetchImage(with: currentUser.picture) { image in
             DispatchQueue.main.async {
                 self.imgAvt.image = image
             }

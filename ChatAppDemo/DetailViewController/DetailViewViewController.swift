@@ -55,7 +55,7 @@ class DetailViewViewController: UIViewController {
             guard let user = user else {return}
             user.forEach { user in
                 self?.lbNameUser.text = user.name
-                ImageService.share.fetchImage(with: user.avatar) { image in
+                ImageService.share.fetchImage(with: user.picture) { image in
                     DispatchQueue.main.async {
                         self?.imgUser.image = image
                     }

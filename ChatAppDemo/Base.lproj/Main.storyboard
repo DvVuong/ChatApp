@@ -157,28 +157,25 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0bE-kf-Xgl" customClass="CustomButton" customModule="ChatAppDemo" customModuleProvider="target">
-                                        <rect key="frame" x="139" y="0.0" width="74" height="50"/>
+                                        <rect key="frame" x="140" y="0.0" width="74" height="50"/>
                                         <state key="normal" title="Button"/>
                                         <buttonConfiguration key="configuration" style="plain" image="icons8-instagram-50"/>
                                         <connections>
                                             <action selector="loginWithInstargram:" destination="BYZ-38-t0r" eventType="touchUpInside" id="1IL-g1-AZI"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="r1u-sf-h54" customClass="CustomButton" customModule="ChatAppDemo" customModuleProvider="target">
-                                        <rect key="frame" x="15" y="0.0" width="74" height="50"/>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="r1u-sf-h54" customClass="FBSDKLoginButton">
+                                        <rect key="frame" x="15" y="0.0" width="100" height="50"/>
                                         <constraints>
-                                            <constraint firstAttribute="width" constant="74" id="xtM-Ki-owr"/>
+                                            <constraint firstAttribute="width" constant="100" id="xtM-Ki-owr"/>
                                         </constraints>
                                         <state key="normal" title="Button"/>
                                         <buttonConfiguration key="configuration" style="plain" image="icons8-facebook-50"/>
-                                        <connections>
-                                            <action selector="loginWithFacebook:" destination="BYZ-38-t0r" eventType="touchUpInside" id="NOu-Vf-uzb"/>
-                                        </connections>
                                     </button>
                                 </subviews>
                                 <constraints>
                                     <constraint firstAttribute="bottom" secondItem="0bE-kf-Xgl" secondAttribute="bottom" id="4TZ-ov-Irc"/>
-                                    <constraint firstItem="0bE-kf-Xgl" firstAttribute="leading" secondItem="r1u-sf-h54" secondAttribute="trailing" constant="50" id="564-zN-SjW"/>
+                                    <constraint firstItem="0bE-kf-Xgl" firstAttribute="leading" secondItem="r1u-sf-h54" secondAttribute="trailing" constant="25" id="564-zN-SjW"/>
                                     <constraint firstItem="r1u-sf-h54" firstAttribute="top" secondItem="XRQ-DV-KAM" secondAttribute="top" id="6pR-rf-c5J"/>
                                     <constraint firstAttribute="trailing" secondItem="QZ5-XK-VpH" secondAttribute="trailing" constant="32" id="9zS-s8-VmE"/>
                                     <constraint firstItem="0bE-kf-Xgl" firstAttribute="top" secondItem="XRQ-DV-KAM" secondAttribute="top" id="TIu-wD-san"/>
@@ -252,6 +249,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="CVi-hh-KCW"/>
                     <connections>
+                        <outlet property="btLoginFaceBook" destination="r1u-sf-h54" id="29G-U2-Ozg"/>
                         <outlet property="btSaveData" destination="MTy-ob-TeG" id="8hF-kk-6ZO"/>
                         <outlet property="btSigin" destination="4iQ-cd-cyD" id="w19-ny-TCz"/>
                         <outlet property="btSignup" destination="aXE-yT-97O" id="HRz-kg-gYF"/>

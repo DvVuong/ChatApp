@@ -80,7 +80,8 @@ class ListUserViewController: UIViewController {
         avatar.layer.borderWidth = 1
         avatar.layer.borderColor = UIColor.black.cgColor
         avatar.contentMode = .scaleToFill
-        ImageService.share.fetchImage(with: currentuser.avatar) { [weak self] image in
+        ImageService.share.fetchImage(with: currentuser.picture) { [weak self] image in
+            print(currentuser.picture)
             DispatchQueue.main.async {
                 self?.avatar.image = image
             }

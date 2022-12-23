@@ -6,7 +6,8 @@
 //
 
 import UIKit
-
+import FBSDKLoginKit
+import ZaloSDK
 
 final class SettingViewController: UIViewController {
     static func instance(_ user: User) -> SettingViewController {
@@ -78,7 +79,7 @@ final class SettingViewController: UIViewController {
         tfName.text = user.name
         tfEmail.text = user.email
         tfPassword.text = user.password
-        ImageService.share.fetchImage(with: user.avatar) { image in
+        ImageService.share.fetchImage(with: user.picture) { image in
             DispatchQueue.main.async {
                 self.imgAvatar.image = image
             }
@@ -89,6 +90,9 @@ final class SettingViewController: UIViewController {
     
     @objc private func didTapLogOut(_ sender: UIButton) {
         presenter.setStateUserForLogOut()
+        FBSDKLoginKit.LoginManager().logOut()
+        presenter.logoutZalo()
+        ZaloSDK.sharedInstance().unauthenticate()
         navigationController?.popToRootViewController(animated: true)
     }
     

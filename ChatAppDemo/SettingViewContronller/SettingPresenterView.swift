@@ -48,7 +48,9 @@ class SettingPresenterView {
         FirebaseService.share.updatePassword(user, password: password)
     }
     
-    
+    func logoutZalo() {
+        ZaloService.shared.logoutZalo()
+    }
     func getUser() -> User? {
         return user
     }

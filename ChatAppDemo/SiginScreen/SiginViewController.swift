@@ -7,6 +7,8 @@
 
 import UIKit
 import FacebookLogin
+import FBSDKLoginKit
+import ZaloSDK
 
 class SiginViewController: UIViewController {
     @IBOutlet private weak var tfEmail: CustomTextField!
@@ -14,14 +16,14 @@ class SiginViewController: UIViewController {
     @IBOutlet private weak var btSaveData: CustomButton!
     @IBOutlet private weak var btSigin: UIButton!
     @IBOutlet weak var btSignup: CustomButton!
+    
+    @IBOutlet weak var btLoginFaceBook: FBLoginButton!
+    
     private var selected: Bool = false
     lazy var presenter = SignInPresenter(with: self)
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
-        let loginButton = FBLoginButton()
-               loginButton.center = view.center
-               view.addSubview(loginButton)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -45,6 +47,7 @@ class SiginViewController: UIViewController {
         setupBtSigin()
         setupBtSaveData()
         setupBtSignUp()
+        setupButtonLoginFaceBook()
     }
     
     private func setupUITextField() {
@@ -61,6 +64,10 @@ class SiginViewController: UIViewController {
         tfPassword.attributedPlaceholder = NSAttributedString(string: "Enter Your Password", attributes: [.foregroundColor: UIColor.white])
         
 }
+    private func setupButtonLoginFaceBook() {
+        btLoginFaceBook.setTitle("", for: .normal)
+        btLoginFaceBook.addTarget(self, action: #selector(loginWithFacebook(_:)), for: .touchUpInside)
+    }
     
     private func setupBtSigin() {
         btSigin.layer.cornerRadius = 8
@@ -109,8 +116,14 @@ class SiginViewController: UIViewController {
         navigationController?.pushViewController(vc, animated: true)
     }
     
-    @IBAction private func loginWithFacebook(_ sender: Any) {
-        
+    @objc private func loginWithFacebook(_ sender: Any) {
+        if let token = AccessToken.current,
+                !token.isExpired {
+                // User is logged in, do work such as go to next view controller.
+        } else {
+            btLoginFaceBook.delegate = self
+            btLoginFaceBook.permissions = ["public_profile", "email"]
+        }
     }
     
     @IBAction private func loginWithInstargram(_ sender: Any) {
@@ -118,7 +131,11 @@ class SiginViewController: UIViewController {
     }
     
     @IBAction private func loginWithZalo(_ sender: Any) {
-        
+        presenter.loginZalo(self) {[weak self] user in
+            guard let user = user else {return}
+            let vc = ListUserViewController.instance(user)
+            self?.navigationController?.pushViewController(vc, animated: true)
+        }
     }
     
 }
@@ -131,10 +148,35 @@ extension SiginViewController: SignInPresenterDelegate {
 
 }
 
-
 extension SiginViewController: RegisterViewcontrollerDelegate {
     func callBackAccountResgiter(_ vc: RegisterViewcontroller, email: String, password: String) {
         self.presenter.showUserResgiter(email, password: password)
         self.navigationController?.popViewController(animated: true)
     }
 }
+
+extension SiginViewController: LoginButtonDelegate {
+    func loginButton(_ loginButton: FBLoginButton, didCompleteWith result: LoginManagerLoginResult?, error: Error?) {
+        let token = result?.token?.tokenString
+        let requets = FBSDKLoginKit.GraphRequest.init(graphPath: "me", parameters: ["fields" : "id,email,name, picture.type(large)"], tokenString: token, version: nil, httpMethod: .get)
+
+        requets.start {[weak self ]( connection, result, error ) in
+            if error != nil {return}
+            self?.presenter.registerSocialMediaAccount(result as! [String: Any])
+            let currentUser = User(dict: result as! [String: Any])
+            self?.presenter.validateSocialMediaAccount(currentUser.email) {[weak self] facebookUser, bool in
+                if bool {
+                    guard let facebookUser = facebookUser else {return}
+                    let vc = ListUserViewController.instance(facebookUser)
+                    self?.navigationController?.pushViewController(vc, animated: true)
+                    return
+                }
+            }
+        }
+    }
+
+    func loginButtonDidLogOut(_ loginButton: FBLoginButton) {
+        print("LogOut")
+    }
+}
+

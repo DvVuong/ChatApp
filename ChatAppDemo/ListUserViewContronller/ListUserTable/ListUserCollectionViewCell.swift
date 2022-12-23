@@ -15,7 +15,7 @@ class ListUserCollectionViewCell: UICollectionViewCell {
     func updateUI(_ user: User?) {
         guard let user = user else {return}
         lbName.text = user.name
-        ImageService.share.fetchImage(with: user.avatar) { image in
+        ImageService.share.fetchImage(with: user.picture) { image in
             DispatchQueue.main.async {
                 self.img.image = image
             }
