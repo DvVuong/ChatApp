@@ -51,6 +51,15 @@ class SettingPresenterView {
     func logoutZalo() {
         ZaloService.shared.logoutZalo()
     }
+    
+    func logoutGoogle() {
+        GoogleService.shared.logout()
+    }
+    
+    func logoutFacebook() {
+        FaceBookService.shared.logout()
+    }
+    
     func getUser() -> User? {
         return user
     }

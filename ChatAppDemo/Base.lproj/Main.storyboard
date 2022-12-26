@@ -159,9 +159,9 @@
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0bE-kf-Xgl" customClass="CustomButton" customModule="ChatAppDemo" customModuleProvider="target">
                                         <rect key="frame" x="140" y="0.0" width="74" height="50"/>
                                         <state key="normal" title="Button"/>
-                                        <buttonConfiguration key="configuration" style="plain" image="icons8-instagram-50"/>
+                                        <buttonConfiguration key="configuration" style="plain" image="icons8-google-50"/>
                                         <connections>
-                                            <action selector="loginWithInstargram:" destination="BYZ-38-t0r" eventType="touchUpInside" id="1IL-g1-AZI"/>
+                                            <action selector="didTapLoginWithGoogle:" destination="BYZ-38-t0r" eventType="touchUpInside" id="MEW-5y-kdB"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="r1u-sf-h54" customClass="FBSDKLoginButton">
@@ -189,8 +189,8 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jex-4C-LGp" customClass="CustomView" customModule="ChatAppDemo" customModuleProvider="target">
                                 <rect key="frame" x="54" y="702.5" width="306" height="45"/>
                                 <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="749" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aXE-yT-97O" customClass="CustomButton" customModule="ChatAppDemo" customModuleProvider="target">
-                                        <rect key="frame" x="204.5" y="5" width="81.5" height="35"/>
+                                    <button opaque="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="749" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aXE-yT-97O">
+                                        <rect key="frame" x="176" y="5" width="110" height="35"/>
                                         <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <state key="normal" title="Button"/>
                                         <buttonConfiguration key="configuration" style="plain" title="Sign up"/>
@@ -207,7 +207,7 @@
                                     </label>
                                 </subviews>
                                 <constraints>
-                                    <constraint firstItem="aXE-yT-97O" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="enh-cF-hX8" secondAttribute="trailing" constant="8" symbolic="YES" id="0uy-5s-PXB"/>
+                                    <constraint firstItem="aXE-yT-97O" firstAttribute="leading" secondItem="enh-cF-hX8" secondAttribute="trailing" constant="8" symbolic="YES" id="0uy-5s-PXB"/>
                                     <constraint firstAttribute="trailing" secondItem="aXE-yT-97O" secondAttribute="trailing" constant="20" id="GJe-vE-DRP"/>
                                     <constraint firstItem="aXE-yT-97O" firstAttribute="top" secondItem="jex-4C-LGp" secondAttribute="top" constant="5" id="JtF-5E-Oia"/>
                                     <constraint firstAttribute="width" constant="306" id="Ty2-yX-uML"/>
@@ -427,7 +427,7 @@
                                     </stackView>
                                 </subviews>
                             </stackView>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2Jl-KC-V5D" customClass="CustomButton" customModule="ChatAppDemo" customModuleProvider="target">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2Jl-KC-V5D">
                                 <rect key="frame" x="20" y="677.5" width="374" height="50"/>
                                 <color key="backgroundColor" name="AccentColor"/>
                                 <constraints>
@@ -500,7 +500,7 @@
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="psM-nP-Hkw">
-                                <rect key="frame" x="0.0" y="326" width="414" height="536"/>
+                                <rect key="frame" x="0.0" y="326" width="414" height="436"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="userCell" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="userCell" rowHeight="92" id="ppe-kl-rA8" customClass="ListUserTableViewCell" customModule="ChatAppDemo" customModuleProvider="target">
@@ -521,10 +521,10 @@
                                                             </constraints>
                                                         </imageView>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="NameUser" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="T5D-Wj-XMR">
-                                                            <rect key="frame" x="70" y="5" width="250" height="20.5"/>
+                                                            <rect key="frame" x="70" y="5" width="200" height="20.5"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="height" constant="20.5" id="5IL-5q-OLH"/>
-                                                                <constraint firstAttribute="width" constant="250" id="DBW-g4-0oL"/>
+                                                                <constraint firstAttribute="width" constant="200" id="DBW-g4-0oL"/>
                                                             </constraints>
                                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                             <nil key="textColor"/>
@@ -543,13 +543,13 @@
                                                                 <constraint firstAttribute="width" constant="10" id="xlP-sM-GMs"/>
                                                             </constraints>
                                                         </imageView>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oS8-rx-dao">
-                                                            <rect key="frame" x="269" y="33" width="80" height="20"/>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oS8-rx-dao" userLabel="Time">
+                                                            <rect key="frame" x="319" y="25" width="50" height="20"/>
                                                             <constraints>
-                                                                <constraint firstAttribute="width" constant="80" id="T2i-PQ-DQJ"/>
+                                                                <constraint firstAttribute="width" constant="50" id="T2i-PQ-DQJ"/>
                                                                 <constraint firstAttribute="height" constant="20" id="zS0-e2-y59"/>
                                                             </constraints>
-                                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                            <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                                             <nil key="textColor"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
@@ -559,12 +559,12 @@
                                                         <constraint firstItem="T5D-Wj-XMR" firstAttribute="top" secondItem="JgP-kP-VcV" secondAttribute="top" constant="5" id="7TF-r1-Akc"/>
                                                         <constraint firstItem="j92-Zq-K9e" firstAttribute="leading" secondItem="HGl-bX-chw" secondAttribute="trailing" constant="10" id="7vd-67-2Na"/>
                                                         <constraint firstItem="T5D-Wj-XMR" firstAttribute="leading" secondItem="HGl-bX-chw" secondAttribute="trailing" constant="10" id="DAq-27-guc"/>
-                                                        <constraint firstAttribute="trailing" secondItem="oS8-rx-dao" secondAttribute="trailing" constant="25" id="HTa-cz-LMM"/>
+                                                        <constraint firstAttribute="trailing" secondItem="oS8-rx-dao" secondAttribute="trailing" constant="5" id="HTa-cz-LMM"/>
                                                         <constraint firstAttribute="bottom" secondItem="j92-Zq-K9e" secondAttribute="bottom" constant="1" id="OY1-jG-DZ1"/>
                                                         <constraint firstItem="HGl-bX-chw" firstAttribute="leading" secondItem="JgP-kP-VcV" secondAttribute="leading" constant="10" id="SSm-fc-1a7"/>
                                                         <constraint firstItem="7A0-dv-4Aa" firstAttribute="top" secondItem="JgP-kP-VcV" secondAttribute="top" constant="10" id="Wtp-jD-eF0"/>
                                                         <constraint firstAttribute="trailing" secondItem="7A0-dv-4Aa" secondAttribute="trailing" constant="10" id="bd9-R2-pyC"/>
-                                                        <constraint firstItem="oS8-rx-dao" firstAttribute="top" secondItem="T5D-Wj-XMR" secondAttribute="bottom" constant="7.5" id="hdW-3h-hCO"/>
+                                                        <constraint firstItem="oS8-rx-dao" firstAttribute="top" secondItem="7A0-dv-4Aa" secondAttribute="top" constant="15" id="c3L-9s-ymJ"/>
                                                         <constraint firstItem="j92-Zq-K9e" firstAttribute="top" secondItem="T5D-Wj-XMR" secondAttribute="bottom" constant="1" id="sNP-Bp-bGe"/>
                                                         <constraint firstAttribute="bottom" secondItem="HGl-bX-chw" secondAttribute="bottom" constant="7" id="vdr-fJ-bgC"/>
                                                     </constraints>
@@ -583,10 +583,21 @@
                                             <outlet property="imgState" destination="7A0-dv-4Aa" id="JUo-hz-p28"/>
                                             <outlet property="lbMessage" destination="j92-Zq-K9e" id="bkP-sQ-6Me"/>
                                             <outlet property="lbNameUser" destination="T5D-Wj-XMR" id="9gf-qV-ADW"/>
+                                            <outlet property="lbTime" destination="oS8-rx-dao" id="oBm-Fg-egZ"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
                             </tableView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="no new messages" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WnG-0r-MW0">
+                                <rect key="frame" x="132" y="548" width="150" height="25"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="150" id="HP1-lF-Omd"/>
+                                    <constraint firstAttribute="height" constant="25" id="mQE-Yo-PeR"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Nft-br-d1X">
                                 <rect key="frame" x="0.0" y="58" width="414" height="80"/>
                                 <subviews>
@@ -720,8 +731,10 @@
                         <constraints>
                             <constraint firstItem="Nft-br-d1X" firstAttribute="top" secondItem="1OU-up-0ur" secondAttribute="top" constant="10" id="1vK-qH-rKS"/>
                             <constraint firstItem="zPB-Qf-ENe" firstAttribute="top" secondItem="ZYB-HL-5rY" secondAttribute="bottom" constant="5" id="5U5-d9-TWs"/>
+                            <constraint firstItem="WnG-0r-MW0" firstAttribute="top" secondItem="1OU-up-0ur" secondAttribute="top" constant="500" id="7QV-u8-sPG"/>
                             <constraint firstItem="psM-nP-Hkw" firstAttribute="top" secondItem="zPB-Qf-ENe" secondAttribute="bottom" constant="10" id="9cU-pt-zmz"/>
-                            <constraint firstItem="1OU-up-0ur" firstAttribute="bottom" secondItem="psM-nP-Hkw" secondAttribute="bottom" id="Dt1-Ka-jKK"/>
+                            <constraint firstItem="1OU-up-0ur" firstAttribute="bottom" secondItem="psM-nP-Hkw" secondAttribute="bottom" constant="100" id="Dt1-Ka-jKK"/>
+                            <constraint firstItem="WnG-0r-MW0" firstAttribute="centerX" secondItem="1OU-up-0ur" secondAttribute="centerX" id="E80-EM-fkr"/>
                             <constraint firstItem="1OU-up-0ur" firstAttribute="trailing" secondItem="zPB-Qf-ENe" secondAttribute="trailing" id="HKj-bA-pNO"/>
                             <constraint firstItem="psM-nP-Hkw" firstAttribute="leading" secondItem="1OU-up-0ur" secondAttribute="leading" id="LZT-ft-sNH"/>
                             <constraint firstItem="1OU-up-0ur" firstAttribute="trailing" secondItem="Nft-br-d1X" secondAttribute="trailing" id="NWX-XN-ucD"/>
@@ -738,6 +751,7 @@
                         <outlet property="btSetting" destination="a5H-rL-akB" id="jRq-tl-jJ5"/>
                         <outlet property="imgState" destination="G1a-9D-8QY" id="ZbC-qI-tvr"/>
                         <outlet property="lbNameUser" destination="v8o-Uh-8ws" id="QvB-Lk-Tp7"/>
+                        <outlet property="lbNewMessageNotification" destination="WnG-0r-MW0" id="nKh-kg-Hbk"/>
                         <outlet property="listUser" destination="zPB-Qf-ENe" id="Gws-rt-S65"/>
                         <outlet property="messageTable" destination="psM-nP-Hkw" id="jZx-Pn-Lxw"/>
                         <outlet property="searchUser" destination="ZYB-HL-5rY" id="MGY-ch-Zta"/>
@@ -1054,7 +1068,7 @@
         <image name="exclamationmark.lock" catalog="system" width="125" height="128"/>
         <image name="gearshape.fill" catalog="system" width="128" height="123"/>
         <image name="icons8-facebook-50" width="50" height="50"/>
-        <image name="icons8-instagram-50" width="50" height="50"/>
+        <image name="icons8-google-50" width="50" height="50"/>
         <image name="icons8-zalo-50 (1)" width="50" height="50"/>
         <image name="lock" catalog="system" width="125" height="128"/>
         <image name="paperplane.fill" catalog="system" width="128" height="119"/>

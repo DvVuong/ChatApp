@@ -14,6 +14,9 @@ class ListUserTableViewCell: UITableViewCell {
     @IBOutlet private weak var bubbleView: UIView!
     @IBOutlet private weak var imgState: UIImageView!
     
+    
+    @IBOutlet weak var lbTime: UILabel!
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
@@ -37,20 +40,33 @@ class ListUserTableViewCell: UITableViewCell {
         guard let message = message else {return}
         guard let currentUser = currentUser else {return}
         guard let reciverUser = reciverUser else {return}
-        // Show Avatar
-        ImageService.share.fetchImage(with: currentUser.picture) { image in
-            DispatchQueue.main.async {
-                self.imgAvt.image = image
-            }
-        }
+        
+        let time = Date(timeIntervalSince1970: TimeInterval(message.time))
+        let dateFormater = DateFormatter()
+        dateFormater.dateFormat = "hh:mm"
+        
+        lbTime.text = dateFormater.string(from: time)
         // Show Message and State message
         
         if message.sendId == currentUser.id || message.receiverID == reciverUser.id {
             lbMessage.text = "you: \(message.text)"
             lbNameUser.text = message.receivername
+            // Show Avatar
+            ImageService.share.fetchImage(with: message.avatarReciverUser) { image in
+                DispatchQueue.main.async {
+                    self.imgAvt.image = image
+                }
+            }
+            
         } else {
+            
             lbMessage.text = "\(message.nameSender) sent: \(message.text)"
             lbNameUser.text = message.nameSender
+            ImageService.share.fetchImage(with: message.avataSender) { image in
+                DispatchQueue.main.async {
+                    self.imgAvt.image = image
+                }
+            }
         }
         
         if !message.image.isEmpty {

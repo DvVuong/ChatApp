@@ -18,7 +18,7 @@ struct Message {
     let time: Double
     let read: Bool
     let messageID: String
-    let avateSender: String
+    let avataSender: String
     let avatarReciverUser: String
     let ratioImage: CGFloat
     init(dict: [String: Any]) {
@@ -31,8 +31,9 @@ struct Message {
         self.time = dict["time"] as? Double ?? 0
         self.read = dict["read"] as? Bool ?? false
         self.messageID = dict["messageID"] as? String ?? ""
-        self.avateSender = dict["avateSender"] as? String ?? ""
+        self.avataSender = dict["avataSender"] as? String ?? ""
         self.avatarReciverUser = dict["avatarReciverUser"] as? String ?? ""
         self.ratioImage = dict["ratioImage"] as? CGFloat ?? 0
+       
     }
 }

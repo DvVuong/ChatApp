@@ -6,10 +6,12 @@
 //
 
 import Firebase
+import FBSDKLoginKit
 
 protocol SignInPresenterDelegate: NSObject {
     func showUserRegiter(_ email: String, password: String)
 }
+
 class SignInPresenter {
     private weak var view: SignInPresenterDelegate?
     private var users = [User]()
@@ -36,10 +38,28 @@ class SignInPresenter {
     
         FirebaseService.share.registerSocialMedia(name, email: email, id: id, picture: url)
     }
+    
     func loginZalo(_ vc: SiginViewController, completed:@escaping (User?) -> Void) {
-        ZaloService.shared.login(vc) { email, name, id, url in
+        ZaloService.shared.login(vc) {[weak self] email, name, id, url in
             let user = User(name: name, id: id, picture: url, email: email, password: "", isActive: false)
             FirebaseService.share.registerSocialMedia(name, email: email, id: id, picture: url)
+            self?.changeStateUser(user)
+            completed(user)
+        }
+    }
+    
+    func loginWithGoogle(_ vc: SiginViewController, completed:@escaping (User) -> Void) {
+        GoogleService.shared.login(vc) {[weak self] user in
+            FirebaseService.share.registerSocialMedia(user.name, email: user.email, id: user.id, picture: user.picture)
+            self?.changeStateUser(user)
+            completed(user)
+        }
+    }
+    
+    func loginWithFacebook(_ loginButton: FBLoginButton, didCompleteWith result: LoginManagerLoginResult?, error: Error?, completed:@escaping(User) -> Void) {
+        FaceBookService.shared.login(loginButton, didCompleteWith: result, error: error) {[weak self] result, user in
+            self?.registerSocialMediaAccount(result)
+            self?.changeStateUser(user)
             completed(user)
         }
     }
@@ -69,7 +89,6 @@ class SignInPresenter {
     }
     
     func changeStateUser(_ currentUser: User) {
-       
         FirebaseService.share.changeStateActiveForUser(currentUser)
     }
     

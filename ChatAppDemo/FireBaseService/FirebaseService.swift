@@ -64,35 +64,30 @@ class FirebaseService {
             .document(senderUser.id)
             .collection(receiverUser.id)
             .document()
-       
-        document.setData([
-            "nameSender": senderUser.name,
-            "receivername": receiverUser.name,
-            "text": message,
-            "image": imgUrl,
-            "sendId": senderUser.id,
-            "receiverID": receiverUser.id,
-            "time": Date().timeIntervalSince1970,
-            "read": false,
-            "messageKey": autoKey
-        ])
+        let data: [String: Any] = [
+                "nameSender": senderUser.name,
+                "avataSender":senderUser.picture,
+                "senderID":senderUser.id,
+                "receivername": receiverUser.name,
+                "avatarReciverUser": receiverUser.picture,
+                "reciverId":receiverUser.id,
+                "text": message,
+                "image": imgUrl,
+                "sendId": senderUser.id,
+                "receiverID": receiverUser.id,
+                "time": Date().timeIntervalSince1970,
+                "read": false,
+                "messageKey": autoKey
+        ]
+        
+        document.setData(data)
         
         let reciverDocument = db.collection(_message)
             .document(receiverUser.id)
             .collection(senderUser.id)
             .document()
        
-        reciverDocument.setData([
-            "nameSender": senderUser.name,
-            "receivername": receiverUser.name,
-            "text": message,
-            "image": imgUrl,
-            "sendId": senderUser.id,
-            "receiverID": receiverUser.id,
-            "time": Date().timeIntervalSince1970,
-            "read": false,
-            "messageKey": autoKey
-        ])
+        reciverDocument.setData(data)
         
     }
     
@@ -116,40 +111,29 @@ class FirebaseService {
                     .collection(receiverUser.id)
                     .document()
                 
-                document?.setData([
+                let data = [
                     "nameSender": senderUser.name,
-                    "avateSender": senderUser.avatar,
+                    "avataSender": senderUser.picture,
                     "sendId": senderUser.id,
                     "text": "",
                     "image": self?.imgUrl as Any,
                     "receivername": receiverUser.name,
                     "receiverID": receiverUser.id,
-                    "avatarReciverUser": receiverUser.avatar,
+                    "avatarReciverUser": receiverUser.picture,
                     "time": Date().timeIntervalSince1970,
                     "read": false,
                     "ratioImage": ratioImage,
                     "messageKey": autoKey
-                ])
+                ]
+                
+                document?.setData(data)
                 
                guard let reciverdocument = self?.db.collection(self?._message ?? "")
                     .document(receiverUser.id)
                     .collection(senderUser.id)
                     .document() else {return}
                 
-                reciverdocument.setData([
-                    "nameSender": senderUser.name,
-                    "avateSender": senderUser.avatar,
-                    "sendId": senderUser.id,
-                    "text": "",
-                    "image": self?.imgUrl as Any,
-                    "receivername": receiverUser.name,
-                    "receiverID": receiverUser.id,
-                    "avatarReciverUser": receiverUser.avatar,
-                    "time": Date().timeIntervalSince1970,
-                    "read": false,
-                    "ratioImage": ratioImage,
-                    "messageKey": autoKey
-                ])
+                reciverdocument.setData(data)
             }
         }
         
@@ -159,14 +143,22 @@ class FirebaseService {
     
     func changeStateReadMessage(_ senderUser: User, revicerUser: User) {
         self.db.collection(_message)
+            .document(senderUser.id)
+            .collection(revicerUser.id)
+            //.document()
             .whereField("read", isEqualTo: false)
             .getDocuments { querydata, error in
                 if error != nil { return }
                 guard let doc = querydata?.documents else { return }
                 doc.forEach { [weak self] doc in
                     let value = Message(dict: doc.data())
+                    print("vuongdv",value)
                     if value.sendId == revicerUser.id && value.receiverID == senderUser.id {
-                        self?.db.collection(self!._message).document(value.messageID).updateData(["read" : true])
+                        self?.db.collection(self!._message)
+                            .document(senderUser.id)
+                            .collection(revicerUser.id)
+                            .document(value.messageID)
+                            .updateData(["read" : true])
                     }
                 }
             }
@@ -175,28 +167,23 @@ class FirebaseService {
     func createAccount(email: String,  password: String, name: String) {
         let autoKey = self.db.collection(_user).document().documentID
         var imgUrl = ""
-        if self.imgUrl.isEmpty {
-            imgUrl = "https://firebasestorage.googleapis.com/v0/b/chatapp-9c3f7.appspot.com/o/Avatar%2FplaceholderAvatar.jpeg?alt=media&token=7d7eab97-abae-4bc9-8ed7-35569c485423"
-            self.db.collection("user").document(autoKey).setData([
-                "email": email,
-                "password": password,
-                "avatar": imgUrl,
-                "id": autoKey,
-                "name": name,
-                "isActive": false
-            ])
-            return
-        }
-        
-        imgUrl = self.imgUrl
-        self.db.collection(_user).document(autoKey).setData([
+        let data: [String: Any] = [
             "email": email,
             "password": password,
             "avatar": imgUrl,
             "id": autoKey,
             "name": name,
             "isActive": false
-        ])
+        ]
+        
+        if self.imgUrl.isEmpty {
+            imgUrl = "https://firebasestorage.googleapis.com/v0/b/chatapp-9c3f7.appspot.com/o/Avatar%2FplaceholderAvatar.jpeg?alt=media&token=7d7eab97-abae-4bc9-8ed7-35569c485423"
+            self.db.collection("user").document(autoKey).setData(data)
+            return
+        }
+        
+        imgUrl = self.imgUrl
+        self.db.collection(_user).document(autoKey).setData(data)
     }
     
     func fetchAvatarUrl(_ image: UIImage) {
@@ -212,6 +199,17 @@ class FirebaseService {
                 self?.imgUrl = url.absoluteString
             }
         }
+    }
+    
+    func registerSocialMedia(_ name: String, email: String, id: String, picture: String) {
+        let data: [String: Any] = [
+            "name": name,
+            "email": email,
+            "id": id,
+            "picture": picture,
+            "isActive": false
+        ]
+        self.db.collection(_user).document(id).setData(data)
     }
     
     func changeStateActiveForUser(_ currentUser: User) {

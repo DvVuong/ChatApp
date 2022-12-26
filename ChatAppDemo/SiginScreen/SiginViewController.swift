@@ -9,6 +9,7 @@ import UIKit
 import FacebookLogin
 import FBSDKLoginKit
 import ZaloSDK
+import GoogleSignIn
 
 class SiginViewController: UIViewController {
     @IBOutlet private weak var tfEmail: CustomTextField!
@@ -126,8 +127,11 @@ class SiginViewController: UIViewController {
         }
     }
     
-    @IBAction private func loginWithInstargram(_ sender: Any) {
-        
+    @IBAction private func didTapLoginWithGoogle(_ sender: Any) {
+        presenter.loginWithGoogle(self) {[weak self] user in
+            let vc = ListUserViewController.instance(user)
+            self?.navigationController?.pushViewController(vc, animated: true)
+        }
     }
     
     @IBAction private func loginWithZalo(_ sender: Any) {
@@ -157,21 +161,14 @@ extension SiginViewController: RegisterViewcontrollerDelegate {
 
 extension SiginViewController: LoginButtonDelegate {
     func loginButton(_ loginButton: FBLoginButton, didCompleteWith result: LoginManagerLoginResult?, error: Error?) {
-        let token = result?.token?.tokenString
-        let requets = FBSDKLoginKit.GraphRequest.init(graphPath: "me", parameters: ["fields" : "id,email,name, picture.type(large)"], tokenString: token, version: nil, httpMethod: .get)
-
-        requets.start {[weak self ]( connection, result, error ) in
-            if error != nil {return}
-            self?.presenter.registerSocialMediaAccount(result as! [String: Any])
-            let currentUser = User(dict: result as! [String: Any])
-            self?.presenter.validateSocialMediaAccount(currentUser.email) {[weak self] facebookUser, bool in
+        presenter.loginWithFacebook(loginButton, didCompleteWith: result, error: error) {[weak self] user in
+            self?.presenter.validateSocialMediaAccount(user.email, completion: { socialMediaUser, bool in
                 if bool {
-                    guard let facebookUser = facebookUser else {return}
-                    let vc = ListUserViewController.instance(facebookUser)
+                    guard let socialMediaUser = socialMediaUser else {return}
+                    let vc = ListUserViewController.instance(socialMediaUser)
                     self?.navigationController?.pushViewController(vc, animated: true)
-                    return
                 }
-            }
+            })
         }
     }
 

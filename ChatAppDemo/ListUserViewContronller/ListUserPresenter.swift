@@ -39,7 +39,7 @@ class ListUserPresenter {
             self.reciverUser.removeAll()
             snapshot.documents.forEach { doc in
                 let value = User(dict: doc.data())
-                if value.id != currentID {
+                if value.id != currentID && value.isActive == true {
                     self.reciverUser.append(value)
                     self.finalUser = self.reciverUser
                 }

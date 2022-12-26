@@ -22,7 +22,7 @@ class RegisterViewcontroller: UIViewController {
     @IBOutlet private weak var tfPassword: CustomTextField!
     @IBOutlet private weak var tfConfirmPassword: CustomTextField!
     @IBOutlet private weak var imgAvtar: CustomImage!
-    @IBOutlet private weak var btSignUp: CustomButton!
+    @IBOutlet private weak var btSignUp: UIButton!
     @IBOutlet private weak var tfName: CustomTextField!
     @IBOutlet private weak var lbErrorEmail: UILabel!
     @IBOutlet private weak var lbPasswordError: UILabel!
@@ -64,6 +64,8 @@ class RegisterViewcontroller: UIViewController {
     }
     
     private func setupBtSigup() {
+        btSignUp.layer.cornerRadius = 6
+        btSignUp.layer.masksToBounds = true
         btSignUp.addTarget(self, action: #selector(didTapSignUp(_:)), for: .touchUpInside)
     }
     

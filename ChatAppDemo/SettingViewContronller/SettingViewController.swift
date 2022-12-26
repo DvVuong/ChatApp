@@ -90,9 +90,9 @@ final class SettingViewController: UIViewController {
     
     @objc private func didTapLogOut(_ sender: UIButton) {
         presenter.setStateUserForLogOut()
-        FBSDKLoginKit.LoginManager().logOut()
+        presenter.logoutFacebook()
         presenter.logoutZalo()
-        ZaloSDK.sharedInstance().unauthenticate()
+        presenter.logoutGoogle()
         navigationController?.popToRootViewController(animated: true)
     }
     
