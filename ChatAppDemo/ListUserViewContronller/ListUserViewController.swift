@@ -15,20 +15,35 @@ class ListUserViewController: UIViewController {
     }
     
     private var presenter: ListUserPresenter!
-    lazy var presenterCell = ListCellPresenter()
+    lazy private var presenterCell = ListCellPresenter()
     @IBOutlet private weak var messageTable: UITableView!
     @IBOutlet private weak var searchUser: UITextField!
     @IBOutlet private weak var avatar: UIImageView!
     @IBOutlet private weak var btSetting: UIButton!
     @IBOutlet private weak var lbNameUser: UILabel!
     @IBOutlet private weak var imgState: UIImageView!
-    @IBOutlet private weak var listUser: UICollectionView!
+    @IBOutlet private weak var listUserActive: UICollectionView!
     @IBOutlet private weak var lbNewMessageNotification: UILabel!
+    @IBOutlet private weak var listAllUser: UITableView!
+    @IBOutlet private weak var viewUser: UIView!
+    
+    @IBOutlet weak var btCancelSearchUser: UIButton!
+    
+    
+    
+    @IBOutlet private weak var listAllUserTopContrain: NSLayoutConstraint!
+    
+    @IBOutlet private weak var heightSearchUserContrains: NSLayoutConstraint!
+    @IBOutlet private weak var trailingSearchUserContrains: NSLayoutConstraint!
+    
+    
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
-        setupListUserCollectionTable()
+        setupData()
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -46,16 +61,34 @@ class ListUserViewController: UIViewController {
         setupImageForCurrentUser()
         setupBtSetting()
         setupLbNameUser()
+        setuplbNewMessageNotification()
+        setupListUserCollectionTable()
+        setupListUserTableView()
+        setupBtCacncelSearchUser()
+    }
+    
+    private func setupListUserTableView() {
+        listAllUser.isHidden = true
+        listAllUser.delegate = self
+        listAllUser.dataSource = self
+    }
+    
+    private func setupData() {
         self.presenter.fetchUser {
             self.presenter.fetchMessageForUser {
                 self.messageTable.reloadData()
+                self.listAllUser.reloadData()
             }
-            self.listUser.reloadData()
+            self.listUserActive.reloadData()
+           
         }
-        setuplbNewMessageNotification()
-    
-       
     }
+    
+    private func setupBtCacncelSearchUser() {
+        btCancelSearchUser.isHidden = true
+        btCancelSearchUser.addTarget(self, action: #selector(didtapCancel(_:)), for: .touchUpInside)
+    }
+    
     private func setupMessagetable() {
         messageTable.delegate = self
         messageTable.dataSource = self
@@ -63,26 +96,28 @@ class ListUserViewController: UIViewController {
     }
     
     private func setupListUserCollectionTable() {
-        listUser.delegate = self
-        listUser.dataSource = self
+        listUserActive.delegate = self
+        listUserActive.dataSource = self
         
     }
     
     private func setupSearchUser() {
-        searchUser.layer.cornerRadius = 8
+        searchUser.layer.cornerRadius = 5
         searchUser.layer.masksToBounds = true
-        searchUser.attributedPlaceholder = NSAttributedString(string: "Search User", attributes: [.foregroundColor: UIColor.brown])
+        searchUser.layer.borderWidth = 1
+        searchUser.layer.borderColor = UIColor.black.cgColor
+        searchUser.delegate = self
         searchUser.addTarget(self, action: #selector(handelTextField(_:)), for: .editingChanged)
         
     }
+    
     private func setupImageForCurrentUser() {
-        guard let currentuser = presenter.getcurrentUser() else { return }
         avatar.layer.cornerRadius = avatar.frame.height / 2
         avatar.layer.masksToBounds = true
         avatar.layer.borderWidth = 1
         avatar.layer.borderColor = UIColor.black.cgColor
         avatar.contentMode = .scaleToFill
-        ImageService.share.fetchImage(with: currentuser.picture) { [weak self] image in
+        presenter.getImageForCurrentUser {[weak self] image in
             DispatchQueue.main.async {
                 self?.avatar.image = image
             }
@@ -102,64 +137,111 @@ class ListUserViewController: UIViewController {
         btSetting.setTitle("", for: .normal)
         btSetting.addTarget(self, action: #selector(didTapSetting(_:)), for: .touchUpInside)
     }
+    //MARK: -ACtion
    
-    @objc func handelTextField(_ textfield: UITextField)  {
+    @objc private func handelTextField(_ textfield: UITextField)  {
         presenter.searchUser(textfield.text!)
     }
     
-    @objc func didTapSetting(_ sender: Any) {
+    @objc private func didTapSetting(_ sender: Any) {
        guard let user = presenter.getcurrentUser() else {return}
         let vc = SettingViewController.instance(user)
         navigationController?.pushViewController(vc, animated: true)
+    }
+    @objc private func didtapCancel(_ sender: UIButton) {
+        UIView.animate(withDuration: 0.5) {
+            self.listAllUser.isHidden = true
+            self.listUserActive.isHidden = false
+            self.messageTable.isHidden = false
+            self.viewUser.isHidden = false
+            self.listAllUserTopContrain.constant = 640
+            self.trailingSearchUserContrains.constant = 20
+            self.heightSearchUserContrains.constant = 65
+            self.btCancelSearchUser.isHidden = false
+        }
+        view.endEditing(true)
+        
     }
     
 }
 // MARK: TableView
 extension ListUserViewController: UITableViewDelegate, UITableViewDataSource {
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // show Label Message Notification
-        if presenter.getNumberOfMessage() == 0 {
-            lbNewMessageNotification.isHidden = false
-        } else {
-            lbNewMessageNotification.isHidden = true
+        if tableView === messageTable {
+            // show Label Message Notification
+            if presenter.getNumberOfMessage() == 0 {
+                lbNewMessageNotification.isHidden = false
+            } else {
+                lbNewMessageNotification.isHidden = true
+            }
+            return presenter.getNumberOfMessage()
         }
         
-        return presenter.getNumberOfMessage()
+        else{
+            return presenter.getNumberOfUser()
+        }
+        
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell  = messageTable.dequeueReusableCell(withIdentifier: "userCell", for: indexPath) as! ListUserTableViewCell
-        let currentUser = presenter.getcurrentUser()
-        let reciverUser = presenter.getUsers(indexPath.row)
-        let message = presenter.cellForMessage(indexPath.item)
-        cell.updateUI(currentUser, message: message, reciverUser: reciverUser )
-        return cell
+        if tableView === messageTable {
+            let cell  = messageTable.dequeueReusableCell(withIdentifier: "messageforUserCell", for: indexPath) as! MessageForUserCell
+            let currentUser = presenter.getcurrentUser()
+            let reciverUser = presenter.getUsers(indexPath.row)
+            let message = presenter.cellForMessage(indexPath.item)
+            cell.updateUI(currentUser, message: message, reciverUser: reciverUser )
+            return cell
+        }
+        
+        else if tableView === listAllUser {
+            let cell = listAllUser.dequeueReusableCell(withIdentifier: "listUsertableCell", for: indexPath) as! ListAllUserTableCell
+            cell.updateUI(presenter.getCellForUsers(at: indexPath.row))
+            
+            return cell
+        }
+       return UITableViewCell()
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 100
+        if tableView == messageTable {
+            return 100
+        } else {
+            return 100
+        }
+        
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        guard let currentUser = presenter.getcurrentUser() else { return }
-        guard let reciverUser = presenter.getUsers(indexPath.row) else { return }
-        guard let message = presenter.cellForMessage(indexPath.item) else {return}
         
-        if message.sendId == currentUser.id || message.receiverID == reciverUser.id {
-            let user = User(name: message.receivername, id: message.receiverID, picture: message.avatarReciverUser, email: "", password: "", isActive: false)
-            let vc = DetailViewViewController.instance(user, currentUser: currentUser)
-            navigationController?.pushViewController(vc, animated: true)
-            return
+        if tableView === messageTable {
+            guard let currentUser = presenter.getcurrentUser() else { return }
+            guard let reciverUser = presenter.getUsers(indexPath.row) else { return }
+            guard let message = presenter.cellForMessage(indexPath.row) else {return}
             
-        } else {
-            let user = User(name: message.nameSender, id: message.sendId, picture: message.avataSender, email: "", password: "", isActive: false)
-            let vc = DetailViewViewController.instance(user, currentUser: currentUser)
+            if message.sendId == currentUser.id || message.receiverID == reciverUser.id {
+                let user = User(name: message.receivername, id: message.receiverID, picture: message.avatarReciverUser, email: "", password: "", isActive: false)
+                let vc = DetailViewViewController.instance(user, currentUser: currentUser)
+                navigationController?.pushViewController(vc, animated: true)
+                return
+                
+            } else {
+                let user = User(name: message.nameSender, id: message.sendId, picture: message.avataSender, email: "", password: "", isActive: false)
+                let vc = DetailViewViewController.instance(user, currentUser: currentUser)
+                navigationController?.pushViewController(vc, animated: true)
+            }
+
+            if message.receiverID == currentUser.id {
+                //presenter.setState(currentUser, reciverUser: reciverUser)
+            }
+        }
+        else if tableView === listAllUser {
+            guard let user = presenter.getcurrentUser() else { return }
+            guard let reciver = presenter.getCellForUsers(at: indexPath.row) else {return}
+            let vc = DetailViewViewController.instance(reciver, currentUser: user)
             navigationController?.pushViewController(vc, animated: true)
         }
-
-        if message.receiverID == currentUser.id {
-            //presenter.setState(currentUser, reciverUser: reciverUser)
-        }
+        
                
     }
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
@@ -178,17 +260,17 @@ extension ListUserViewController: UITableViewDelegate, UITableViewDataSource {
 
 extension ListUserViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return presenter.getNumberOfUser()
+        return presenter.getNumberOfActiveUser()
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = listUser.dequeueReusableCell(withReuseIdentifier: "listUserCell", for: indexPath) as! ListUserCollectionViewCell
-        cell.updateUI(presenter.getCellForUsers(at: indexPath.item))
+        let cell = listUserActive.dequeueReusableCell(withReuseIdentifier: "listUserCell", for: indexPath) as! ListUserActiveCollectionCell
+        cell.updateUI(presenter.getIndexOfActiveUser(indexPath.item))
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        guard let user = presenter.getCellForUsers(at: indexPath.item) else {return}
+        guard let user = presenter.getIndexOfActiveUser(indexPath.item) else {return}
         guard let currentUser = presenter.getcurrentUser() else {return}
         let vc = DetailViewViewController.instance(user, currentUser: currentUser)
         navigationController?.pushViewController(vc, animated: true)
@@ -207,7 +289,8 @@ extension ListUserViewController: UICollectionViewDelegate, UICollectionViewData
 extension ListUserViewController: ListUserPresenterDelegate {
     func showSearchUser() {
         self.messageTable.reloadData()
-        self.listUser.reloadData()
+        self.listUserActive.reloadData()
+        self.listAllUser.reloadData()
     }
     func deleteUser(at index: Int) { 
         self.messageTable.deleteRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
@@ -215,9 +298,32 @@ extension ListUserViewController: ListUserPresenterDelegate {
     }
     func showStateMassage() {
         self.messageTable.reloadData()
-        self.listUser.reloadData()
+        self.listUserActive.reloadData()
+        self.listAllUser.reloadData()
     }
     
+}
+
+extension ListUserViewController: UITextFieldDelegate {
+    func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
+        if textField === searchUser {
+            UIView.animate(withDuration: 0.2) {
+                
+                self.listAllUser.isHidden = false
+                self.listUserActive.isHidden = true
+                self.messageTable.isHidden = true
+                self.viewUser.isHidden = true
+                
+                self.listAllUserTopContrain.constant = 40
+                self.trailingSearchUserContrains.constant = 100
+                self.heightSearchUserContrains.constant = 5
+                self.btCancelSearchUser.isHidden = false
+            }
+            
+        }
+        
+        return true
+    }
 }
 
 

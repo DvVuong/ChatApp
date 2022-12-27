@@ -50,24 +50,17 @@ class DetailViewViewController: UIViewController {
     }
     
     private func showStateReciverUser() {
-        presenter.changeStateUser {[weak self] user in
+        presenter.fetchStateUser {[weak self] user, image  in
+            guard let image = image else {return}
             self?.imgStateUser.tintColor = .systemGray
             guard let user = user else {return}
             user.forEach { user in
                 self?.lbNameUser.text = user.name
-                ImageService.share.fetchImage(with: user.picture) { image in
-                    DispatchQueue.main.async {
-                        self?.imgUser.image = image
-                    }
+                DispatchQueue.main.async {
+                    self?.imgUser.image = image
                 }
-                if user.isActive == true {
-                    self?.lbState.text = "Active now"
-                    self?.imgStateUser.tintColor = .green
-                    
-                }else {
-                    self?.lbState.text = "Not active"
-                    self?.imgStateUser.tintColor = .systemGray
-                }
+                self?.lbState.text = user.isActive ? "Active Now" : "Not active"
+                self?.imgStateUser.tintColor = user.isActive ? .green : .systemGray
             }
         }
     }
@@ -130,7 +123,8 @@ class DetailViewViewController: UIViewController {
             self.convertiontable.scrollToRow(at: indexPath, at: .bottom, animated: true)
         }
     }
-    //MARK: Acction
+    
+    //MARK: -Acction
     
     @objc private func handleChangeButton(_ textField: UITextField) {
         if textField === tfMessage {
@@ -160,6 +154,7 @@ class DetailViewViewController: UIViewController {
     }
     
 }
+//MARK: -Extension UIImagePickerControllerDelegate
 extension DetailViewViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         let image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage
@@ -176,7 +171,7 @@ extension DetailViewViewController: UIImagePickerControllerDelegate, UINavigatio
 }
 
 
-
+//MARK: -Extension UitableView
 extension DetailViewViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return presenter.getNumberOfMessage()
@@ -215,6 +210,7 @@ extension DetailViewViewController: UITableViewDelegate, UITableViewDataSource {
     }
 }
 
+//MARK: Extension UItextFiled
 extension DetailViewViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         self.sendMessage()

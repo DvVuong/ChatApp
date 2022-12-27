@@ -13,14 +13,18 @@ protocol SignInPresenterDelegate: NSObject {
 }
 
 class SignInPresenter {
+    //MARK: -Properties
     private weak var view: SignInPresenterDelegate?
     private var users = [User]()
     private var currentUser: User?
     private let db = Firestore.firestore()
+    
+    //MARK: -Init
     init(with view: SignInPresenterDelegate) {
         self.view = view
     }
 
+    //MARK: -Fetch User
     func fetchUser() {
         self.users.removeAll()
         FirebaseService.share.fetchUser { user in
@@ -28,6 +32,7 @@ class SignInPresenter {
         }
     }
     
+    //MARK: Resgiter
     func registerSocialMediaAccount(_ result: [String: Any]) {
         let email = result["email"] as? String ?? ""
         let name = result["name"] as? String ?? ""
@@ -39,6 +44,8 @@ class SignInPresenter {
         FirebaseService.share.registerSocialMedia(name, email: email, id: id, picture: url)
     }
     
+    
+    //MARK: -Login
     func loginZalo(_ vc: SiginViewController, completed:@escaping (User?) -> Void) {
         ZaloService.shared.login(vc) {[weak self] email, name, id, url in
             let user = User(name: name, id: id, picture: url, email: email, password: "", isActive: false)
@@ -64,6 +71,7 @@ class SignInPresenter {
         }
     }
     
+    //MARK: -Validate
     func validateSocialMediaAccount(_ email: String, completion: (_ socialMediaUser : User?, Bool) -> Void) {
         var currentUser: User?
         var isvalid: Bool = false
@@ -88,6 +96,7 @@ class SignInPresenter {
         completion(currentUser, isvalid)
     }
     
+    //MARK: Change State User
     func changeStateUser(_ currentUser: User) {
         FirebaseService.share.changeStateActiveForUser(currentUser)
     }
@@ -100,11 +109,11 @@ class SignInPresenter {
     func showUserInfo() -> (email: String, password: String )  {
         var email: String = ""
         var password: String = ""
-        let info = DataManager.shareInstance.getUser()
-        _ = info.map { item in
-            email = item.email
-            password = item.password
-        }
+//        let info = DataManager.shareInstance.getUser()
+//        _ = info.map { item in
+//            email = item.email
+//            password = item.password
+//        }
         return (email, password)
     }
     

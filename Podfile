@@ -13,7 +13,8 @@ pod 'FirebaseStorage'
 pod 'Firebase/Firestore'
 pod 'IQKeyboardManagerSwift'
 pod 'FacebookLogin'
-
+pod 'ZaloSDK'
+pod 'GoogleSignIn'
 
 
 end

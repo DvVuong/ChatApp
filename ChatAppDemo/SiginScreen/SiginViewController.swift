@@ -16,12 +16,10 @@ class SiginViewController: UIViewController {
     @IBOutlet private weak var tfPassword: CustomTextField!
     @IBOutlet private weak var btSaveData: CustomButton!
     @IBOutlet private weak var btSigin: UIButton!
-    @IBOutlet weak var btSignup: CustomButton!
-    
-    @IBOutlet weak var btLoginFaceBook: FBLoginButton!
-    
-    private var selected: Bool = false
-    lazy var presenter = SignInPresenter(with: self)
+    @IBOutlet private weak var btSignup: CustomButton!
+    @IBOutlet private weak var btLoginFaceBook: FBLoginButton!
+
+    lazy private var presenter = SignInPresenter(with: self)
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
@@ -52,18 +50,8 @@ class SiginViewController: UIViewController {
     }
     
     private func setupUITextField() {
-        //
-        tfEmail.textColor = .white
-        
         tfEmail.text = "long@gmail.com"
         tfPassword.text = "123456"
-        // TextField Email
-        tfEmail.attributedPlaceholder = NSAttributedString(string: "Enter Your Email", attributes: [.foregroundColor: UIColor.white])
-        
-        // TextField Password
-        tfPassword.textColor = .white
-        tfPassword.attributedPlaceholder = NSAttributedString(string: "Enter Your Password", attributes: [.foregroundColor: UIColor.white])
-        
 }
     private func setupButtonLoginFaceBook() {
         btLoginFaceBook.setTitle("", for: .normal)
@@ -85,7 +73,8 @@ class SiginViewController: UIViewController {
     }
     
     // MARK: Action
-    @objc func didTapSaveData(_ sender: UIButton) {
+    @objc private func didTapSaveData(_ sender: UIButton) {
+         var selected: Bool = false
         if sender === btSaveData {
             selected = !selected
             if selected  {
@@ -96,7 +85,7 @@ class SiginViewController: UIViewController {
             }
     }
 }
-    @objc func didTapSigin(_ sender: UIButton) {
+    @objc private func didTapSigin(_ sender: UIButton) {
         presenter.validateEmailPassword(tfEmail.text!, tfPassword.text!) { currentUser, bool in
             if bool {
                 guard let currentUser = currentUser else { return }
@@ -111,7 +100,7 @@ class SiginViewController: UIViewController {
 
     }
    
-    @objc func didTapSigup(_ sender: UIButton) {
+    @objc private func didTapSigup(_ sender: UIButton) {
         let vc  = RegisterViewcontroller.instance(presenter.getUserData())
         vc.delegate = self
         navigationController?.pushViewController(vc, animated: true)

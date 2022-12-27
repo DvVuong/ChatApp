@@ -14,11 +14,12 @@ protocol ListUserPresenterDelegate: NSObject {
 }
 
 class ListUserPresenter {
-    // properties phai set private
+    //MARK: -Properties
     private weak var view: ListUserPresenterDelegate?
     private var db = Firestore.firestore()
     private var reciverUser = [User]()
     private var finalUser = [User]()
+    private var activeUsers = [User]()
     private var currentUser: User?
     private var message = [Message]()
     private var allMessages = [String: Message]()
@@ -26,11 +27,14 @@ class ListUserPresenter {
     private var temparr = [Message]()
     private var messageByUser = [String: Message]()
     
+    //MARK: - Init
     init(with view: ListUserPresenterDelegate, data: User) {
         self.view = view
         self.currentUser = data
     }
     
+    
+    //MARK: - FetchUser
     func fetchUser(_ completed: @escaping() -> Void) {
         guard let currentID = currentUser?.id else { return }
         db.collection("user").addSnapshotListener { (querySnapshot, error) in
@@ -39,9 +43,12 @@ class ListUserPresenter {
             self.reciverUser.removeAll()
             snapshot.documents.forEach { doc in
                 let value = User(dict: doc.data())
-                if value.id != currentID && value.isActive == true {
+                if value.id != currentID {
                     self.reciverUser.append(value)
                     self.finalUser = self.reciverUser
+                }
+                if value.id != currentID && value.isActive == true {
+                    self.activeUsers.append(value)
                 }
                 
             }
@@ -49,7 +56,9 @@ class ListUserPresenter {
         }
     }
     
+    //MARK: - FetchMessage
     func fetchMessageForUser( completed: @escaping () -> Void) {
+        self.message.removeAll()
         guard let currentUser = currentUser else {return}
         reciverUser.forEach { user in
             
@@ -59,7 +68,7 @@ class ListUserPresenter {
                         self?.allMessages[user.id] = mess
                         self?.message = Array((self?.allMessages.values)!)
                         self?.message = self?.message.sorted {
-                            return $0.time < $1.time
+                            return $0.time > $1.time
                         } ?? []
                     }
                     completed()
@@ -67,11 +76,14 @@ class ListUserPresenter {
             }
         }
     }
+    
+    //MARK: - ChangeState Active User
     func setState(_ sender: User, reciverUser: User) {
         FirebaseService.share.changeStateReadMessage(sender, revicerUser: reciverUser)
         self.view?.showStateMassage()
     }
     
+    //MARK: Search User
     func searchUser(_ text: String) {
         let lowcaseText = text.lowercased()
         if text.isEmpty {
@@ -85,34 +97,44 @@ class ListUserPresenter {
         }
         view?.showSearchUser()
     }
+    //MARK: -Getter -Setter
     
     func getUsers(_ index: Int) -> User? {
         return reciverUser[index]
     }
 
-    func getMessageKeyForState(_ index: Int) -> Message? {
-        return message[index]
+    func getNumberOfActiveUser() -> Int {
+        return activeUsers.count
     }
+    
+    func getIndexOfActiveUser(_ index: Int) -> User? {
+        return activeUsers[index]
+    }
+    
     
     func getcurrentUser() -> User?{
         return currentUser
     }
     
-    func getNumberOfUser() -> Int {
-        return finalUser.count
-    }
     
     func getNumberOfMessage() -> Int {
         
         return message.count
-    } 
+    }
     
     func cellForMessage(_ index: Int) -> Message? {
+        if index <= 0 && index > getNumberOfMessage() {
+            return nil
+        }
         return message[index]
-    } 
+    }
     
     func getAllMessage(_ id: String) -> Message? {
         return allMessages[id]
+    }
+    
+    func getNumberOfUser() -> Int {
+        return finalUser.count
     }
     
     func getCellForUsers(at index: Int) -> User? {
@@ -122,9 +144,17 @@ class ListUserPresenter {
         return finalUser[index]
     }
     
+    func getImageForCurrentUser(_ completed: @escaping(UIImage) -> Void) {
+        guard let currentuser = getcurrentUser() else { return }
+        ImageService.share.fetchImage(with: currentuser.picture) {  image in
+            completed(image)
+        }
+    }
+    
     func deleteUser(_ index: Int, completion:() -> Void) {
         self.finalUser.remove(at: index)
         completion()
     }
+    
     
 }
